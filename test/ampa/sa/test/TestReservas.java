@@ -1,9 +1,10 @@
+package ampa.sa.test;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
 
-public class TestActividades {
+public class TestReservas {
 
 	@Test
 	public void test() {
