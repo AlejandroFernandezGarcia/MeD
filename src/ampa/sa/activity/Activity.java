@@ -9,10 +9,10 @@ public class Activity {
 	private long id;
 	private String name;
 	private int places;
-	private int prize;
+	private double prize;
 	private Set<Student> students;
 
-	public Activity(long id, String name, int places, int prize,
+	public Activity(long id, String name, int places, double prize,
 			Set<Student> students) {
 		super();
 		this.id = id;
@@ -46,11 +46,11 @@ public class Activity {
 		this.places = places;
 	}
 
-	public int getPrize() {
+	public double getPrize() {
 		return prize;
 	}
 
-	public void setPrize(int prize) {
+	public void setPrize(double prize) {
 		this.prize = prize;
 	}
 
