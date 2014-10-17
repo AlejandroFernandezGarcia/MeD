@@ -34,19 +34,19 @@ public class FamiliaService implements Serializable {
 		this.students = bookings;
 	}
 
-	public void crearAlumno() {
+	public void crearAlumno(Student student) {
 
 	}
 
-	public void crearNucleoFamiliar() {
+	public void crearNucleoFamiliar(Household household) {
 
 	}
 
-	public void borrarAlumno() {
+	public void borrarAlumno(long id) {
 
 	}
 
-	public void borrarNucleoFamiliar() {
+	public void borrarNucleoFamiliar(long id) {
 
 	}
 
@@ -55,22 +55,22 @@ public class FamiliaService implements Serializable {
 
 	}
 
-	public List<Student> listarAlumnosNucleofamiliar() {
+	public List<Student> listarAlumnosNucleofamiliar(Household household) {
 		return students;
 
 	}
 
-	public BigDecimal obtenerGastoNucleoFamiliar() {
+	public BigDecimal obtenerGastoNucleoFamiliar(Household household) {
 		return null;
 
 	}
 
-	public Student buscarAlumno() {
+	public Student buscarAlumno(Student student) {
 		return null;
 
 	}
 
-	public Household buscarNucleoFamiliar() {
+	public Household buscarNucleoFamiliar(long id) {
 		return null;
 
 	}

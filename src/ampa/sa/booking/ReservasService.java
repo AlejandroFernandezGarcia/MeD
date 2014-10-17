@@ -36,30 +36,30 @@ public class ReservasService implements Serializable {
 		this.bookings = bookings;
 	}
 
-	public void crearReserva(Booking reserva) {
+	public void create(Booking booking) {
 
 	}
 
-	public void borrarReserva(Booking reserva) {
+	public void remove(Booking booking) {
 
 	}
 
-	public Booking buscarReserva(long id) {
+	public Booking find(long id) {
 		return null;
 
 	}
 
-	public void modificarReserva(Booking reserva) {
+	public void update(Booking booking) {
 
 	}
 
-	public List<Booking> listarReservasAlumnoFecha(Student alumno,
-			Calendar periodo) {
+	public List<Booking> listarReservasAlumnoFecha(Student student,
+			Calendar period) {
 		return null;
 
 	}
 
-	public long obtenerPrecioReservasFecha(List<Booking> reservas) {
+	public long obtenerPrecioReservasFecha(List<Booking> bookings) {
 		return 0;
 
 	}
