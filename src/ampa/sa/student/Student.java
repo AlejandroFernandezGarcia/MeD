@@ -84,4 +84,69 @@ public class Student {
 		this.bookings = bookings;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((activities == null) ? 0 : activities.hashCode());
+		result = prime * result
+				+ ((bookings == null) ? 0 : bookings.hashCode());
+		result = prime * result
+				+ ((dateBorn == null) ? 0 : dateBorn.hashCode());
+		result = prime * result
+				+ ((houseHold == null) ? 0 : houseHold.hashCode());
+		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result
+				+ ((lastname == null) ? 0 : lastname.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Student other = (Student) obj;
+		if (activities == null) {
+			if (other.activities != null)
+				return false;
+		} else if (!activities.equals(other.activities))
+			return false;
+		if (bookings == null) {
+			if (other.bookings != null)
+				return false;
+		} else if (!bookings.equals(other.bookings))
+			return false;
+		if (dateBorn == null) {
+			if (other.dateBorn != null)
+				return false;
+		} else if (!dateBorn.equals(other.dateBorn))
+			return false;
+		if (houseHold == null) {
+			if (other.houseHold != null)
+				return false;
+		} else if (!houseHold.equals(other.houseHold))
+			return false;
+		if (id != other.id)
+			return false;
+		if (lastname == null) {
+			if (other.lastname != null)
+				return false;
+		} else if (!lastname.equals(other.lastname))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		return true;
+	}
+	
+	
+
 }

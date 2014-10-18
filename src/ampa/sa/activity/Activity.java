@@ -1,5 +1,6 @@
 package ampa.sa.activity;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 import ampa.sa.student.Student;
@@ -9,10 +10,10 @@ public class Activity {
 	private long id;
 	private String name;
 	private int places;
-	private double prize;
+	private BigDecimal prize;
 	private Set<Student> students;
 
-	public Activity(long id, String name, int places, double prize,
+	public Activity(long id, String name, int places, BigDecimal prize,
 			Set<Student> students) {
 		super();
 		this.id = id;
@@ -46,11 +47,11 @@ public class Activity {
 		this.places = places;
 	}
 
-	public double getPrize() {
+	public BigDecimal getPrize() {
 		return prize;
 	}
 
-	public void setPrize(double prize) {
+	public void setPrize(BigDecimal prize) {
 		this.prize = prize;
 	}
 

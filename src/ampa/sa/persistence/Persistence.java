@@ -7,14 +7,14 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import ampa.sa.activity.ActividadService;
-import ampa.sa.booking.ReservasService;
-import ampa.sa.student.FamiliaService;
+import ampa.sa.activity.ActivityService;
+import ampa.sa.booking.BookingService;
+import ampa.sa.student.FamilyService;
 
 public class Persistence {
-	ActividadService activityService = ActividadService.getInstance();
-	ReservasService bookingService = ReservasService.getInstance();
-	FamiliaService familyService = FamiliaService.getInstance();
+	ActivityService activityService = ActivityService.getInstance();
+	BookingService bookingService = BookingService.getInstance();
+	FamilyService familyService = FamilyService.getInstance();
 	private static Persistence instance = null;
 	private static String pathDB = "DB.bin";
 
