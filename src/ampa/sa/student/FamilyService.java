@@ -17,6 +17,7 @@ import ampa.sa.util.exceptions.InstanceNotFoundException;
 public class FamilyService implements Serializable {
 
 	List<Student> students = new ArrayList<Student>();
+	List<Household> households = new ArrayList<Household>();
 
 	private static FamilyService instance = null;
 
@@ -42,6 +43,14 @@ public class FamilyService implements Serializable {
 		this.students = bookings;
 	}
 
+	public List<Household> getHousehold() {
+		return households;
+	}
+
+	public void setHousehold(List<Household> household) {
+		this.households = household;
+	}
+
 	public void createStudent(Student student)
 			throws DuplicateInstanceException {
 		if (!students.contains(student)) {
@@ -52,8 +61,14 @@ public class FamilyService implements Serializable {
 		}
 	}
 
-	public void createHousehold(Household household) {
-
+	public void createHousehold(Household household)
+			throws DuplicateInstanceException {
+		if (!this.households.contains(household)) {
+			this.households.add(household);
+			Persistence.getInstance().save();
+		} else {
+			throw new DuplicateInstanceException(household, "Household");
+		}
 	}
 
 	public void removeStudent(long id) throws InstanceNotFoundException {
@@ -72,12 +87,29 @@ public class FamilyService implements Serializable {
 		}
 	}
 
-	public void removeHousehold(long id) {
-
+	public void removeHousehold(String bankAccount) throws InstanceNotFoundException {
+		boolean found = false;
+		Iterator<Household> iter;
+		Household aux;
+		iter = households.iterator();
+		while (iter.hasNext() && !found) {
+			if ((aux = iter.next()).getBanckAccount() == bankAccount) {
+				found = true;
+				households.remove(aux);
+				Persistence.getInstance().save();
+			}
+		}
+		if (!found) {
+			throw new InstanceNotFoundException(bankAccount, "Household");
+		}
 	}
 
 	public List<Student> findStudents() {
 		return students;
+	}
+
+	public List<Household> findHouseholds() {
+		return households;
 	}
 
 	public List<Student> findStudents(Household household) {
@@ -116,8 +148,13 @@ public class FamilyService implements Serializable {
 		throw new InstanceNotFoundException(id, "Student");
 	}
 
-	public Household findHousehold(long id) {
-		return null;
+	public Household findHousehold(String bankAccount) throws InstanceNotFoundException {
+		for (Household h : households) {
+			if (h.getBanckAccount() == bankAccount) {
+				return h;
+			}
+		}
+		throw new InstanceNotFoundException(bankAccount, "Household");
 
 	}
 }

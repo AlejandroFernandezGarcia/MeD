@@ -13,6 +13,7 @@ import ampa.sa.activity.Activity;
 import ampa.sa.activity.ActivityService;
 import ampa.sa.persistence.Persistence;
 import ampa.sa.student.Student;
+import ampa.sa.test.DatosMock;
 import ampa.sa.util.exceptions.DuplicateInstanceException;
 import ampa.sa.util.exceptions.InstanceNotFoundException;
 
@@ -28,9 +29,8 @@ public class TestActividades {
 	@Test
 	public void addActivity() {
 
-		ActivityService activityService = ActivityService.getInstance();
-		Activity activity = new Activity(4, "Baloncesto", 10, new BigDecimal(
-				20.0), new HashSet<Student>());
+		Activity activity = new Activity(8, "Baloncesto Primaria", 10,
+				new BigDecimal(20.0), new HashSet<Student>());
 
 		try {
 			activityService.create(activity);
@@ -40,7 +40,7 @@ public class TestActividades {
 		}
 
 		try {
-			assertEquals(activityService.find(4), activity);
+			assertEquals(activityService.find(8), activity);
 		} catch (InstanceNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -49,42 +49,32 @@ public class TestActividades {
 	}
 
 	@Test(expected = DuplicateInstanceException.class)
-	public void addDuplicateActivity() {
+	public void addDuplicateActivity() throws DuplicateInstanceException {
 
-		ActivityService activityService = ActivityService.getInstance();
-		Activity activity = new Activity(4, "Baloncesto", 10, new BigDecimal(
-				20.0), new HashSet<Student>());
-
+		Activity activity = null;
 		try {
-			activityService.create(activity);
-			activityService.create(activity);
-		} catch (DuplicateInstanceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}
-
-	@Test(expected = InstanceNotFoundException.class)
-	public void removeActivity() {
-
-		ActivityService activityService = ActivityService.getInstance();
-		Activity activity = new Activity(4, "Baloncesto", 10, new BigDecimal(
-				20.0), new HashSet<Student>());
-
-		try {
-			activityService.create(activity);
-		} catch (DuplicateInstanceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		try {
-			assertEquals(activityService.find(4), activity);
+			activity = activityService.find(4);
 		} catch (InstanceNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+		activityService.create(activity);
+
+	}
+
+	@Test(expected = InstanceNotFoundException.class)
+	public void removeActivity() throws InstanceNotFoundException {
+
+		Activity activity = null;
+		try {
+			activity = activityService.find(4);
+		} catch (InstanceNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		assertEquals(activityService.getActivities().size(), 7);
 
 		try {
 			activityService.remove(activity);
@@ -93,40 +83,27 @@ public class TestActividades {
 			e.printStackTrace();
 		}
 
-		try {
-			assertEquals(activityService.find(4), activity);
-		} catch (InstanceNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		assertEquals(activityService.getActivities().size(), 6);
+		activityService.find(4);
 
 	}
 
 	@Test(expected = InstanceNotFoundException.class)
-	public void removeInexistentActivity() {
+	public void removeInexistentActivity() throws InstanceNotFoundException {
 
-		ActivityService activityService = ActivityService.getInstance();
-		Activity activity = new Activity(4, "Baloncesto", 10, new BigDecimal(
-				20.0), new HashSet<Student>());
+		Activity activity = new Activity(8, "Baloncesto de mentira", 10,
+				new BigDecimal(20.0), new HashSet<Student>());
 
-		try {
-			activityService.remove(activity);
-		} catch (InstanceNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		activityService.remove(activity);
 	}
 
 	@Test
 	public void updateActivity() {
 
-		ActivityService activityService = ActivityService.getInstance();
-		Activity activity = new Activity(4, "Baloncesto", 10, new BigDecimal(
-				20.0), new HashSet<Student>());
-
+		Activity activity = null;
 		try {
-			activityService.create(activity);
-		} catch (DuplicateInstanceException e) {
+			activity = activityService.find(4);
+		} catch (InstanceNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -135,21 +112,19 @@ public class TestActividades {
 
 		activityService.update(activity);
 
-	}
-
-	@Test
-	public void findInexistantActivity() {
-
-		ActivityService activityService = ActivityService.getInstance();
-		Activity activity = new Activity(4, "Baloncesto", 10, new BigDecimal(
-				20.0), new HashSet<Student>());
-
 		try {
 			assertEquals(activityService.find(4), activity);
 		} catch (InstanceNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+	}
+
+	@Test(expected = InstanceNotFoundException.class)
+	public void findInexistantActivity() throws InstanceNotFoundException {
+		activityService.find(8);
+
 	}
 
 }

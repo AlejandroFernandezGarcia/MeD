@@ -7,10 +7,12 @@ import java.util.List;
 import ampa.sa.activity.Activity;
 import ampa.sa.booking.Booking;
 import ampa.sa.student.Student;
+import ampa.sa.student.Household;;
 
 @SuppressWarnings("serial")
 public class Database implements Serializable {
 	private List<Student> students = new ArrayList<Student>();
+	private List<Household> households = new ArrayList<Household>();
 	private List<Activity> activities = new ArrayList<Activity>();
 	private List<Booking> bookings = new ArrayList<Booking>();
 
@@ -19,7 +21,8 @@ public class Database implements Serializable {
 	}
 
 	public Database(List<Student> students, List<Activity> activities,
-			List<Booking> bookings) {
+			List<Booking> bookings, List<Household> household) {
+		this.households = household;
 		this.students = students;
 		this.activities = activities;
 		this.bookings = bookings;
@@ -47,6 +50,14 @@ public class Database implements Serializable {
 
 	public void setBookings(List<Booking> bookings) {
 		this.bookings = bookings;
+	}
+
+	public List<Household> getHouseholds() {
+		return households;
+	}
+
+	public void setHouseholds(List<Household> households) {
+		this.households = households;
 	}
 
 }

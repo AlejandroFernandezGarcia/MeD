@@ -53,11 +53,12 @@ public class ActivityService implements Serializable {
 	public void remove(Activity activity) throws InstanceNotFoundException {
 		boolean found = false;
 		Iterator<Activity> iter;
+		Activity aux;
 		iter = activities.iterator();
 		while (iter.hasNext() && !found) {
-			if (iter.next().getId() == activity.getId()) {
+			if ((aux = iter.next()).getId() == activity.getId()) {
 				found = true;
-				activities.remove(iter.next());
+				activities.remove(aux);
 				Persistence.getInstance().save();
 			}
 		}

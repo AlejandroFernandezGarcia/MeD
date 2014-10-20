@@ -14,6 +14,7 @@ import ampa.sa.booking.Booking;
 import ampa.sa.booking.BookingService;
 import ampa.sa.student.FamilyService;
 import ampa.sa.student.Student;
+import ampa.sa.student.Household;
 
 public class Persistence {
 	ActivityService activityService = ActivityService.getInstance();
@@ -61,7 +62,7 @@ public class Persistence {
 
 	public void save() {
 		Database database = new Database(familyService.getStudents(),
-				activityService.getActivities(), bookingService.getBookings());
+				activityService.getActivities(), bookingService.getBookings(), familyService.getHousehold());
 
 		// AQUI GUARDO LOS OBJETOS (usarlo cuando cierras la iu)
 		try {
@@ -69,7 +70,7 @@ public class Persistence {
 			ObjectOutputStream os = new ObjectOutputStream(fs);
 			if(pathDB.compareTo("DBTest.bin")==0){
 				database = new Database(new ArrayList<Student>(),new ArrayList<Activity>()
-						,new ArrayList<Booking>());
+						,new ArrayList<Booking>(), new ArrayList<Household>());
 			}
 			os.writeObject(database);
 

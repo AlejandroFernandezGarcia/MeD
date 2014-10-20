@@ -19,7 +19,7 @@ import ampa.sa.student.Household;
 import ampa.sa.student.Student;
 
 public class DatosMock {
-	private List<Household> houseHold = new ArrayList<Household>();
+	private List<Household> households = new ArrayList<Household>();
 	private List<Student> students = new ArrayList<Student>();
 	private List<Activity> activities = new ArrayList<Activity>();
 	private List<Booking> bookings = new ArrayList<Booking>();
@@ -79,6 +79,7 @@ public class DatosMock {
 
 		activityService.setActivities(activities);
 		bookingService.setBookings(bookings);
+		familyService.setHousehold(households);
 		familyService.setStudents(students);
 		
 	}

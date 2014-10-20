@@ -52,11 +52,12 @@ public class BookingService implements Serializable {
 	public void remove(Booking booking) throws InstanceNotFoundException {
 		boolean found = false;
 		Iterator<Booking> iter;
+		Booking aux;
 		iter = bookings.iterator();
 		while (iter.hasNext() && !found) {
-			if (iter.next().getId() == booking.getId()) {
+			if ((aux=iter.next()).getId() == booking.getId()) {
 				found = true;
-				bookings.remove(iter.next());
+				bookings.remove(aux);
 				Persistence.getInstance().save();
 			}
 		}
