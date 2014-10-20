@@ -1,22 +1,30 @@
 package ampa.sa.test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.HashSet;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import ampa.sa.activity.Activity;
 import ampa.sa.activity.ActivityService;
+import ampa.sa.persistence.Persistence;
 import ampa.sa.student.Student;
 import ampa.sa.util.exceptions.DuplicateInstanceException;
 import ampa.sa.util.exceptions.InstanceNotFoundException;
 
-
 public class TestActividades {
 
 	private ActivityService activityService = ActivityService.getInstance();
-	
+
+	@Before
+	public void before() throws ParseException {
+		new DatosMock();
+	}
+
 	@Test
 	public void addActivity() {
 
@@ -125,12 +133,7 @@ public class TestActividades {
 
 		activity.setName("Baloncesto Primaria");
 
-		try {
-			activityService.update(activity);
-		} catch (InstanceNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		activityService.update(activity);
 
 	}
 

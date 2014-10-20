@@ -18,8 +18,6 @@ public class BookingService implements Serializable {
 
 	private static BookingService instance = null;
 
-	private Persistence persistence = Persistence.getInstance();
-
 	private BookingService() {
 	}
 
@@ -45,7 +43,7 @@ public class BookingService implements Serializable {
 	public void create(Booking booking) throws InstanceNotFoundException {
 		if (!bookings.contains(booking)) {
 			bookings.add(booking);
-			persistence.save();
+			Persistence.getInstance().save();
 		} else {
 			throw new InstanceNotFoundException(booking, "Booking");
 		}
@@ -59,7 +57,7 @@ public class BookingService implements Serializable {
 			if (iter.next().getId() == booking.getId()) {
 				found = true;
 				bookings.remove(iter.next());
-				persistence.save();
+				Persistence.getInstance().save();
 			}
 		}
 		if (!found) {
@@ -87,7 +85,7 @@ public class BookingService implements Serializable {
 				b.setDate(booking.getDate());
 				b.setStudent(booking.getStudent());
 				b.setDiningHall(booking.getDiningHall());
-				persistence.save();
+				Persistence.getInstance().save();
 			}
 		}
 	}

@@ -6,10 +6,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 
+import ampa.sa.activity.Activity;
 import ampa.sa.activity.ActivityService;
+import ampa.sa.booking.Booking;
 import ampa.sa.booking.BookingService;
 import ampa.sa.student.FamilyService;
+import ampa.sa.student.Student;
 
 public class Persistence {
 	ActivityService activityService = ActivityService.getInstance();
@@ -46,6 +50,7 @@ public class Persistence {
 			familyService.setStudents(database.getStudents());
 			ois.close();
 		} catch (FileNotFoundException e) {
+			this.save();
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -62,6 +67,10 @@ public class Persistence {
 		try {
 			FileOutputStream fs = new FileOutputStream(pathDB);
 			ObjectOutputStream os = new ObjectOutputStream(fs);
+			if(pathDB.compareTo("DBTest.bin")==0){
+				database = new Database(new ArrayList<Student>(),new ArrayList<Activity>()
+						,new ArrayList<Booking>());
+			}
 			os.writeObject(database);
 
 			os.close();

@@ -1,8 +1,10 @@
 package ampa.sa.student;
 
+import java.io.Serializable;
 import java.util.Set;
 
-public class Household {
+@SuppressWarnings("serial")
+public class Household implements Serializable{
 
 	private String banckAccount;
 	private Set<Student> mentored;

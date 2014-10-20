@@ -30,7 +30,7 @@ public class DatosMock {
 
 	public static final String DATE_FORMAT = "dd/MM/yyyy";
 
-	private DatosMock() throws ParseException {
+	public DatosMock() throws ParseException {
 		Persistence.getInstanceTest();
 		
 		// Actividades

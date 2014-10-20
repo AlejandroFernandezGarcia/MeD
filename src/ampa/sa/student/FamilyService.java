@@ -20,8 +20,6 @@ public class FamilyService implements Serializable {
 
 	private static FamilyService instance = null;
 
-	private Persistence persistence = Persistence.getInstance();
-
 	private FamilyService() {
 	}
 
@@ -48,7 +46,7 @@ public class FamilyService implements Serializable {
 			throws DuplicateInstanceException {
 		if (!students.contains(student)) {
 			students.add(student);
-			persistence.save();
+			Persistence.getInstance().save();
 		} else {
 			throw new DuplicateInstanceException(student, "Student");
 		}
@@ -66,7 +64,7 @@ public class FamilyService implements Serializable {
 			if (iter.next().getId() == id) {
 				found = true;
 				students.remove(iter.next());
-				persistence.save();
+				Persistence.getInstance().save();
 			}
 		}
 		if (!found) {

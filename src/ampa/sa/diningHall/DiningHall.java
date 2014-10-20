@@ -1,10 +1,12 @@
 package ampa.sa.diningHall;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 import ampa.sa.util.Schedule;
 
-public class DiningHall {
+@SuppressWarnings("serial")
+public class DiningHall implements Serializable{
 
 	//FIXME Enum type necesario? Sabiendo el horario no haria falta
 	/*private enum type {

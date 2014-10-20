@@ -1,12 +1,14 @@
 package ampa.sa.student;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Set;
 
 import ampa.sa.activity.Activity;
 import ampa.sa.booking.Booking;
 
-public class Student {
+@SuppressWarnings("serial")
+public class Student implements Serializable{
 
 	private long id;
 	private Household houseHold;

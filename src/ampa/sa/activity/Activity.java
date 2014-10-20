@@ -1,11 +1,13 @@
 package ampa.sa.activity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Set;
 
 import ampa.sa.student.Student;
 
-public class Activity {
+@SuppressWarnings("serial")
+public class Activity implements Serializable{
 
 	private long id;
 	private String name;

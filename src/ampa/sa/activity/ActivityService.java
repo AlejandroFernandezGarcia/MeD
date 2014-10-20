@@ -19,8 +19,6 @@ public class ActivityService implements Serializable {
 
 	private static ActivityService instance = null;
 
-	private Persistence persistence = Persistence.getInstance();
-
 	private ActivityService() {
 	}
 
@@ -46,7 +44,7 @@ public class ActivityService implements Serializable {
 	public void create(Activity activity) throws DuplicateInstanceException {
 		if (!activities.contains(activity)) {
 			activities.add(activity);
-			persistence.save();
+			Persistence.getInstance().save();
 		} else {
 			throw new DuplicateInstanceException(activity, "Activity");
 		}
@@ -60,7 +58,7 @@ public class ActivityService implements Serializable {
 			if (iter.next().getId() == activity.getId()) {
 				found = true;
 				activities.remove(iter.next());
-				persistence.save();
+				Persistence.getInstance().save();
 			}
 		}
 		if (!found) {
@@ -80,7 +78,7 @@ public class ActivityService implements Serializable {
 				a.setPlaces(activity.getPlaces());
 				a.setPrize(activity.getPrize());
 				a.setStudents(activity.getStudents());
-				persistence.save();
+				Persistence.getInstance().save();
 			}
 		}
 	}
