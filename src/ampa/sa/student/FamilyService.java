@@ -87,7 +87,8 @@ public class FamilyService implements Serializable {
 		}
 	}
 
-	public void removeHousehold(String bankAccount) throws InstanceNotFoundException {
+	public void removeHousehold(String bankAccount)
+			throws InstanceNotFoundException {
 		boolean found = false;
 		Iterator<Household> iter;
 		Household aux;
@@ -148,7 +149,8 @@ public class FamilyService implements Serializable {
 		throw new InstanceNotFoundException(id, "Student");
 	}
 
-	public Household findHousehold(String bankAccount) throws InstanceNotFoundException {
+	public Household findHousehold(String bankAccount)
+			throws InstanceNotFoundException {
 		for (Household h : households) {
 			if (h.getBanckAccount() == bankAccount) {
 				return h;
@@ -156,5 +158,20 @@ public class FamilyService implements Serializable {
 		}
 		throw new InstanceNotFoundException(bankAccount, "Household");
 
+	}
+
+	public BigDecimal getStudentExpenses(Student s) {
+		BigDecimal amount = new BigDecimal(0.0);
+		// 1º Get activities prize
+		Set<Activity> activities = s.getActivities();
+		for (Activity a : activities) {
+			amount = amount.add(a.getPrize());
+		}
+		// 2º Get bookings prize
+		Set<Booking> bookings = s.getBookings();
+		for (Booking b : bookings) {
+			amount = amount.add(b.getDiningHall().getPrice());
+		}
+		return amount;
 	}
 }

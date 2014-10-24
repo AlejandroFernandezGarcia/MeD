@@ -1,33 +1,42 @@
 package ampa.sa.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.EventQueue;
+import java.awt.GridLayout;
+import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Set;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.JScrollPane;
+import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
-import java.awt.GridLayout;
-import java.awt.Component;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
-import javax.swing.JMenuBar;
-import javax.swing.JButton;
-import javax.swing.Box;
-import javax.swing.JMenuItem;
-import javax.swing.JMenu;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+
+import ampa.sa.activity.Activity;
+import ampa.sa.booking.Booking;
+import ampa.sa.persistence.Persistence;
+import ampa.sa.student.FamilyService;
+import ampa.sa.student.Student;
 
 public class MainWindow extends JFrame {
 
 	private JPanel contentPane;
-	private JTable table;
-	private JTable table_1;
+	private JTable studentsTable;
+	private FamilyService familyService;
 
 	/**
 	 * Launch the application.
@@ -45,193 +54,323 @@ public class MainWindow extends JFrame {
 		});
 	}
 
+	public void fillStudentsTable() {
+		familyService = FamilyService.getInstance();
+		List<Student> students = familyService.getStudents();
+
+		DefaultTableModel dtm = (DefaultTableModel) studentsTable.getModel();
+		for (int i = 0; i < dtm.getRowCount(); i++) {
+			dtm.removeRow(i);
+		}
+
+		// FIXME Ordenar students
+		for (Student student : students) {
+			Calendar date = student.getDateBorn();
+			String dateS = date.get(Calendar.DAY_OF_MONTH) + "/"
+					+ (date.get(Calendar.MONTH) + 1) + date.get(Calendar.YEAR);
+			Object[] data = { student.getName(), student.getLastname(), dateS };
+			dtm.addRow(data);
+		}
+		studentsTable.updateUI();// DUDA Es necesario?
+	}
+	
+	private void fillConceptTable(Student student, JTable table){
+		DefaultTableModel dtm = (DefaultTableModel) table.getModel();
+		for (int i = 0; i < dtm.getRowCount(); i++) {
+			dtm.removeRow(i);
+		}
+		
+		Set<Activity> activities = student.getActivities();
+		for (Activity a : activities) {
+			Object[] data = { a.getName(), a.getPrize() };
+			dtm.addRow(data);
+		}
+		Set<Booking> bookings = student.getBookings();
+		for (Booking b : bookings) {
+			Object[] data = { b.getDiningHall().getSchedule(), b.getDiningHall().getPrice() };
+			dtm.addRow(data);
+			//TODO Juntar 
+		}
+		
+		table.updateUI();// DUDA Es necesario?
+	}
+
+	private JPanel createExplainPanel(Student student){
+		JLabel lblName = new JLabel("Nombre:"+student.getLastname()+", "+student.getName());
+		lblName.setHorizontalTextPosition(SwingConstants.CENTER);
+		lblName.setHorizontalAlignment(SwingConstants.LEFT);
+
+		JLabel lblTotalStudent = new JLabel("Total alumno:"+familyService.getStudentExpenses(student)+"€");
+		lblTotalStudent.setHorizontalTextPosition(SwingConstants.CENTER);
+		lblTotalStudent.setHorizontalAlignment(SwingConstants.LEFT);
+		JPanel explainPanel = new JPanel();
+		JScrollPane scrollPane_1 = new JScrollPane();
+		GroupLayout gl_explainPanel = new GroupLayout(explainPanel);
+		gl_explainPanel.setHorizontalGroup(
+			gl_explainPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(Alignment.TRAILING, gl_explainPanel.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_explainPanel.createParallelGroup(Alignment.TRAILING)
+						.addComponent(scrollPane_1, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
+						.addComponent(lblName, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
+						.addComponent(lblTotalStudent, GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE))
+					.addContainerGap())
+		);
+		gl_explainPanel.setVerticalGroup(
+			gl_explainPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_explainPanel.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(lblName)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(lblTotalStudent, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)
+					.addContainerGap())
+		);
+
+		JTable tablaConcepto = new JTable();
+		tablaConcepto.setModel(new DefaultTableModel(new Object[][] { { null,
+				null }, }, new String[] { "Concepto", "Precio" }) {
+			Class[] columnTypes = new Class[] { String.class, Object.class };
+
+			public Class getColumnClass(int columnIndex) {
+				return columnTypes[columnIndex];
+			}
+
+			boolean[] columnEditables = new boolean[] { false, false };
+
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		scrollPane_1.setViewportView(tablaConcepto);
+		explainPanel.setLayout(gl_explainPanel);
+		
+		fillConceptTable(student, tablaConcepto);
+		
+		return explainPanel;
+	}
+	
+	private void fillRightPanel(JPanel panel) {
+		if(studentsTable.getRowCount()==0){
+			return;
+		}
+		// FIXME Ordenar students
+		JTabbedPane tabPanel=null;
+		List<Student> students = familyService.getStudents();
+		Student studentSelected = students.get(studentsTable.getSelectedRow());
+		Component[] componentsPanel = panel.getComponents();
+		for (Component component : componentsPanel) {
+			if (component.getClass() == JTabbedPane.class) {
+				tabPanel = (JTabbedPane) component;
+			} else {
+				if (component.getName().compareTo("lblHouseHold") == 0) {
+					((JLabel) component).setText((((JLabel) component)
+							.getText())
+							+ studentSelected.getHouseHold().getBanckAccount());
+				} else {
+					BigDecimal amount = familyService.getHouseholdExpenses(studentSelected.getHouseHold());
+					((JLabel) component).setText((((JLabel) component)
+							.getText())
+							+ amount + " €");
+				}
+			}
+		}
+		List<Student> studentsOfHouseHold = familyService.findStudents(studentSelected.getHouseHold());
+		for (Student student : studentsOfHouseHold) {
+			tabPanel.addTab(student.getName(), createExplainPanel(student));
+		}
+		
+	}
+
 	/**
 	 * Create the frame.
 	 */
 	public MainWindow() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 657, 462);
-		
+
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
-		
+
 		JMenu mnAlumno = new JMenu("Alumno");
 		menuBar.add(mnAlumno);
-		
+
 		JMenuItem mntmAadirAlumno = new JMenuItem("Añadir alumno");
 		mnAlumno.add(mntmAadirAlumno);
-		
+
 		JMenu mnActividad = new JMenu("Actividad");
 		menuBar.add(mnActividad);
-		
+
 		JMenuItem mntmAadirActividad = new JMenuItem("Añadir actividad");
 		mnActividad.add(mntmAadirActividad);
-		
+
 		JMenuItem mntmModificarActividad = new JMenuItem("Modificar actividad");
 		mnActividad.add(mntmModificarActividad);
-		
+
 		JMenuItem mntmBorrarActividad = new JMenuItem("Borrar actividad");
 		mnActividad.add(mntmBorrarActividad);
-		
+
 		JMenu mnComedor = new JMenu("Comedor");
 		menuBar.add(mnComedor);
-		
+
 		JMenuItem mntmModificar = new JMenuItem("Modificar");
 		mnComedor.add(mntmModificar);
-		
+
 		JMenuItem mntmAadirNuevoHorario = new JMenuItem("Añadir nuevo horario");
 		mnComedor.add(mntmAadirNuevoHorario);
-		
+
 		JMenu mnAyuda = new JMenu("Ayuda");
 		menuBar.add(mnAyuda);
-		
+
 		JMenuItem mntmAcercaDe = new JMenuItem("Acerca de");
 		mnAyuda.add(mntmAcercaDe);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(new GridLayout(1, 0, 0, 0));
-		
-		JPanel panel = new JPanel();
-		contentPane.add(panel);
-		panel.setLayout(new BorderLayout(0, 0));
-		
-		JScrollPane scrollPane = new JScrollPane();
-		panel.add(scrollPane);
-		
-		table = new JTable();
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null},
-			},
-			new String[] {
-				"Nombre", "Apellidos", "Fecha nacimiento"
-			}
-		) {
-			Class[] columnTypes = new Class[] {
-				String.class, String.class, String.class
-			};
+
+		JPanel leftPanel = new JPanel();
+		contentPane.add(leftPanel);
+		leftPanel.setLayout(new BorderLayout(0, 0));
+
+		JScrollPane scrollStudents = new JScrollPane();
+		leftPanel.add(scrollStudents);
+
+		studentsTable = new JTable();
+		studentsTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+		studentsTable.setModel(new DefaultTableModel(new Object[][] { { null,
+				null, null }, }, new String[] { "Nombre", "Apellidos",
+				"Fecha nacimiento" }) {
+			Class[] columnTypes = new Class[] { String.class, String.class,
+					String.class };
+
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
 			}
-			boolean[] columnEditables = new boolean[] {
-				false, true, true
-			};
+
+			boolean[] columnEditables = new boolean[] { false, true, true };
+
 			public boolean isCellEditable(int row, int column) {
 				return columnEditables[column];
 			}
 		});
-		scrollPane.setViewportView(table);
+		scrollStudents.setViewportView(studentsTable);
+
+		JPanel rigthPanel = new JPanel();
+		contentPane.add(rigthPanel);
+
+		JLabel lblHouseHold = new JLabel("Núcleo familiar: ");
+		lblHouseHold.setHorizontalTextPosition(SwingConstants.CENTER);
+		lblHouseHold.setHorizontalAlignment(SwingConstants.CENTER);
+		lblHouseHold.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+		JTabbedPane tabAlumno = new JTabbedPane(JTabbedPane.TOP);
+
+		JLabel lblTotalHouseHold = new JLabel("Total núcleo familiar:");
+		lblTotalHouseHold.setHorizontalTextPosition(SwingConstants.CENTER);
+		lblTotalHouseHold.setHorizontalAlignment(SwingConstants.CENTER);
 		
-		JPanel panel_1 = new JPanel();
-		contentPane.add(panel_1);
+				JButton btnMatricularEnActividad = new JButton(
+						"Matricular en actividad");
 		
-		JLabel lblNewLabel = new JLabel("Núcleo familiar: ");
-		lblNewLabel.setHorizontalTextPosition(SwingConstants.CENTER);
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-		
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		
-		JLabel lblTotalNcleoFamiliar = new JLabel("Total núcleo familiar:");
-		lblTotalNcleoFamiliar.setHorizontalTextPosition(SwingConstants.CENTER);
-		lblTotalNcleoFamiliar.setHorizontalAlignment(SwingConstants.CENTER);
-		GroupLayout gl_panel_1 = new GroupLayout(panel_1);
-		gl_panel_1.setHorizontalGroup(
-			gl_panel_1.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_1.createSequentialGroup()
+				JButton btnReservasComedor = new JButton("Reservas comedor");
+		GroupLayout gl_rigthPanel = new GroupLayout(rigthPanel);
+		gl_rigthPanel.setHorizontalGroup(
+			gl_rigthPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_rigthPanel.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_panel_1.createSequentialGroup()
-							.addComponent(tabbedPane, GroupLayout.DEFAULT_SIZE, 298, Short.MAX_VALUE)
+					.addGroup(gl_rigthPanel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_rigthPanel.createSequentialGroup()
+							.addComponent(tabAlumno, GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)
 							.addContainerGap())
-						.addGroup(Alignment.TRAILING, gl_panel_1.createSequentialGroup()
-							.addGroup(gl_panel_1.createParallelGroup(Alignment.TRAILING)
-								.addComponent(lblTotalNcleoFamiliar, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 285, Short.MAX_VALUE)
-								.addComponent(lblNewLabel, GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE))
-							.addGap(25))))
+						.addGroup(gl_rigthPanel.createSequentialGroup()
+							.addGroup(gl_rigthPanel.createParallelGroup(Alignment.TRAILING)
+								.addComponent(lblTotalHouseHold, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE)
+								.addComponent(lblHouseHold, GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE))
+							.addGap(25))
+						.addGroup(gl_rigthPanel.createSequentialGroup()
+							.addComponent(btnMatricularEnActividad)
+							.addContainerGap(115, Short.MAX_VALUE))
+						.addGroup(gl_rigthPanel.createSequentialGroup()
+							.addComponent(btnReservasComedor)
+							.addContainerGap(147, Short.MAX_VALUE))))
 		);
-		gl_panel_1.setVerticalGroup(
-			gl_panel_1.createParallelGroup(Alignment.TRAILING)
-				.addGroup(gl_panel_1.createSequentialGroup()
+		gl_rigthPanel.setVerticalGroup(
+			gl_rigthPanel.createParallelGroup(Alignment.TRAILING)
+				.addGroup(Alignment.LEADING, gl_rigthPanel.createSequentialGroup()
 					.addGap(18)
-					.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
+					.addComponent(lblHouseHold, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
 					.addGap(10)
-					.addComponent(lblTotalNcleoFamiliar)
+					.addComponent(lblTotalHouseHold)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(tabbedPane, GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE))
-		);
-		
-		JPanel panel_2 = new JPanel();
-		tabbedPane.addTab("New tab", null, panel_2, null);
-		
-		JLabel lblNombre = new JLabel("Nombre:");
-		lblNombre.setHorizontalTextPosition(SwingConstants.CENTER);
-		lblNombre.setHorizontalAlignment(SwingConstants.LEFT);
-		
-		JLabel lblTotalAlumno = new JLabel("Total alumno:");
-		lblTotalAlumno.setHorizontalTextPosition(SwingConstants.CENTER);
-		lblTotalAlumno.setHorizontalAlignment(SwingConstants.LEFT);
-		
-		JScrollPane scrollPane_1 = new JScrollPane();
-		
-		JButton btnMatricularEnActividad = new JButton("Matricular en actividad");
-		
-		JButton btnReservasComedor = new JButton("Reservas comedor");
-		GroupLayout gl_panel_2 = new GroupLayout(panel_2);
-		gl_panel_2.setHorizontalGroup(
-			gl_panel_2.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_2.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING)
-						.addComponent(scrollPane_1, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 269, Short.MAX_VALUE)
-						.addComponent(lblNombre, GroupLayout.DEFAULT_SIZE, 269, Short.MAX_VALUE)
-						.addComponent(lblTotalAlumno, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 269, Short.MAX_VALUE)
-						.addComponent(btnMatricularEnActividad)
-						.addComponent(btnReservasComedor))
-					.addContainerGap())
-		);
-		gl_panel_2.setVerticalGroup(
-			gl_panel_2.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_2.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(lblNombre)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(lblTotalAlumno, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(tabAlumno, GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE)
+					.addGap(18)
 					.addComponent(btnMatricularEnActividad)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(btnReservasComedor)
-					.addGap(19))
+					.addGap(46))
 		);
-		
-		table_1 = new JTable();
-		table_1.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null},
-			},
-			new String[] {
-				"Concepto", "Precio"
-			}
-		) {
-			Class[] columnTypes = new Class[] {
-				String.class, Object.class
-			};
+
+		JPanel explainPanel = new JPanel();
+		tabAlumno.addTab("New tab", null, explainPanel, null);
+		tabAlumno.setEnabledAt(0, true);
+
+		JLabel lblName = new JLabel("Nombre:");
+		lblName.setHorizontalTextPosition(SwingConstants.CENTER);
+		lblName.setHorizontalAlignment(SwingConstants.LEFT);
+
+		JLabel lblTotalStudent = new JLabel("Total alumno:");
+		lblTotalStudent.setHorizontalTextPosition(SwingConstants.CENTER);
+		lblTotalStudent.setHorizontalAlignment(SwingConstants.LEFT);
+
+		JScrollPane scrollPane_1 = new JScrollPane();
+		GroupLayout gl_explainPanel = new GroupLayout(explainPanel);
+		gl_explainPanel.setHorizontalGroup(
+			gl_explainPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(Alignment.TRAILING, gl_explainPanel.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_explainPanel.createParallelGroup(Alignment.TRAILING)
+						.addComponent(scrollPane_1, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
+						.addComponent(lblName, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
+						.addComponent(lblTotalStudent, GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE))
+					.addContainerGap())
+		);
+		gl_explainPanel.setVerticalGroup(
+			gl_explainPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_explainPanel.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(lblName)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(lblTotalStudent, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)
+					.addContainerGap())
+		);
+
+		JTable tablaConcepto = new JTable();
+		tablaConcepto.setModel(new DefaultTableModel(new Object[][] { { null,
+				null }, }, new String[] { "Concepto", "Precio" }) {
+			Class[] columnTypes = new Class[] { String.class, Object.class };
+
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
 			}
-			boolean[] columnEditables = new boolean[] {
-				false, false
-			};
+
+			boolean[] columnEditables = new boolean[] { false, false };
+
 			public boolean isCellEditable(int row, int column) {
 				return columnEditables[column];
 			}
 		});
-		scrollPane_1.setViewportView(table_1);
-		panel_2.setLayout(gl_panel_2);
-		panel_1.setLayout(gl_panel_1);
+		scrollPane_1.setViewportView(tablaConcepto);
+		explainPanel.setLayout(gl_explainPanel);
+		rigthPanel.setLayout(gl_rigthPanel);
+
+		// Editado
+
+		Persistence.getInstance();
+		fillStudentsTable();
+		fillRightPanel(rigthPanel);
 	}
 }
