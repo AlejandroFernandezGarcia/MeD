@@ -31,6 +31,8 @@ import ampa.sa.booking.Booking;
 import ampa.sa.persistence.Persistence;
 import ampa.sa.student.FamilyService;
 import ampa.sa.student.Student;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class MainWindow extends JFrame {
 
@@ -89,7 +91,7 @@ public class MainWindow extends JFrame {
 		for (Booking b : bookings) {
 			Object[] data = { b.getDiningHall().getSchedule(), b.getDiningHall().getPrice() };
 			dtm.addRow(data);
-			//TODO Juntar 
+			//FIXME Juntar 
 		}
 		
 		table.updateUI();// DUDA Es necesario?
@@ -275,6 +277,11 @@ public class MainWindow extends JFrame {
 						"Matricular en actividad");
 		
 				JButton btnReservasComedor = new JButton("Reservas comedor");
+				btnReservasComedor.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						//TODO Aqui se lanza la ventana nueva
+					}
+				});
 		GroupLayout gl_rigthPanel = new GroupLayout(rigthPanel);
 		gl_rigthPanel.setHorizontalGroup(
 			gl_rigthPanel.createParallelGroup(Alignment.LEADING)

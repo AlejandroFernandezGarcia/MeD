@@ -8,11 +8,6 @@ import ampa.sa.util.Schedule;
 @SuppressWarnings("serial")
 public class DiningHall implements Serializable{
 
-	//FIXME Enum type necesario? Sabiendo el horario no haria falta
-	/*private enum type {
-		EARLYBIRD, NORMAL
-	};*/
-
 	private int id;
 	private Schedule schedule;
 	private int places;

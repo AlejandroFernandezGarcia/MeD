@@ -160,6 +160,7 @@ public class FamilyService implements Serializable {
 
 	}
 
+	//TODO Falta test de este
 	public BigDecimal getStudentExpenses(Student s) {
 		BigDecimal amount = new BigDecimal(0.0);
 		// 1º Get activities prize
