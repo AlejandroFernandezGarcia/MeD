@@ -1,6 +1,7 @@
 package ampa.sa.booking;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import ampa.sa.diningHall.DiningHall;
@@ -14,6 +15,8 @@ public class Booking implements Serializable{
 	private Student student;
 	private DiningHall diningHall;
 
+	private static final String DATE_FORMAT = "dd/MM/yyyy";
+	
 	public Booking(long id, Calendar date, Student student,
 			DiningHall diningHall) {
 		super();
@@ -96,6 +99,11 @@ public class Booking implements Serializable{
 		return true;
 	}
 	
-	
+	@Override
+	public String toString(){
+		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+		return this.student.getName() + " " + this.student.getLastname() + " | "
+				+ sdf.format(this.date.getTime()) + " | " + this.getDiningHall().getSchedule().toString() + "\n";
+	}
 
 }

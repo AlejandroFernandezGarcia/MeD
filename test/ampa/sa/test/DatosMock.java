@@ -75,7 +75,7 @@ public class DatosMock {
 		students.add(new Student(3, house3, "Alejandro", "Fortes", cal3,
 				new HashSet<Activity>(), new HashSet<Booking>()));
 		cal3.setTime(sdf.parse("12/03/2006"));
-		students.add(new Student(3, house4, "Alejandro", "Apellido", cal3,
+		students.add(new Student(4, house4, "Alejandro", "Apellido", cal3,
 				new HashSet<Activity>(), new HashSet<Booking>()));
 
 		Schedule sc1 = new Schedule();
@@ -88,20 +88,28 @@ public class DatosMock {
 		sc2.setStartTime("12:30pm");
 		sc2.setEndTime("14:00pm");
 		
-		DiningHall d2 = new DiningHall(1,sc2,24,BigDecimal.valueOf(4.00));
+		DiningHall d2 = new DiningHall(2,sc2,20,BigDecimal.valueOf(4.00));
 		
 		diningHall.add(d1);
 		diningHall.add(d2);
+		
+		Calendar cb1 = Calendar.getInstance();
+		cb1.setTime(sdf.parse("27/10/2014"));
+		Booking b1 = new Booking(1, cb1, students.get(0),
+				d1);
+		Calendar cb2 = Calendar.getInstance();
+		cb2.setTime(sdf.parse("24/10/2014"));
+		Booking b2 = new Booking(2, cb2, students.get(1),
+				d1);
+		
+		bookings.add(b1);
+		bookings.add(b2);
 		
 		activityService.setActivities(activities);
 		bookingService.setBookings(bookings);
 		bookingService.setDiningHall(diningHall);
 		familyService.setHousehold(households);
 		familyService.setStudents(students);
-		
-
-		
-		
 		
 	}
 

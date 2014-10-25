@@ -55,6 +55,7 @@ public class BookingService implements Serializable {
 	public void create(Booking booking) throws InstanceNotFoundException {
 		if (!bookings.contains(booking)) {
 			bookings.add(booking);
+		
 			//Persistence.getInstance().save();
 		} else {
 			throw new InstanceNotFoundException(booking, "Booking");
@@ -124,7 +125,9 @@ public class BookingService implements Serializable {
 		iter = bookings.iterator();
 		while (iter.hasNext()) {
 			Booking booking = iter.next();
-			if ((booking.getDate().compareTo(date) == 0)
+			if ((booking.getDate().get(Calendar.DAY_OF_MONTH) == date.get(Calendar.DAY_OF_MONTH))
+					&& booking.getDate().get(Calendar.MONTH) == date.get(Calendar.MONTH)
+					&& booking.getDate().get(Calendar.YEAR) == date.get(Calendar.YEAR)
 					&& (booking.getStudent().equals(student))) {
 				b.add(booking);
 			}
@@ -140,6 +143,24 @@ public class BookingService implements Serializable {
 			amount = amount.add(iter.next().getDiningHall().getPrice());
 		}
 		return amount;
+	}
+
+	public void createByDayOfWeek(List<Integer> days, Student st, DiningHall dh) throws InstanceNotFoundException {
+		int actualMonth = Calendar.getInstance().get(Calendar.MONTH);
+		Calendar cal1 = Calendar.getInstance();
+		while(cal1.get(Calendar.MONTH) == actualMonth)
+		{
+			if(days.contains(cal1.get(Calendar.DAY_OF_WEEK)))
+			{
+				Calendar c = Calendar.getInstance();
+				c.setTime(cal1.getTime());
+				Booking b = new Booking(1, c, st,
+						dh);
+				this.create(b);
+			}
+			cal1.add(Calendar.DATE, 1);
+		}
+		
 	}
 
 }
