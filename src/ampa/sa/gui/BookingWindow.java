@@ -78,7 +78,6 @@ public class BookingWindow extends JFrame {
 	private JPanel contentPane;
 	private JTextField fldAlumno;
 	private JTextField fldCurso;
-	private JTable bookingsTable;
 	private JTextField fldPlaces;
 	private JCalendar calendar;
 	private JComboBox comboBox;
@@ -97,6 +96,7 @@ public class BookingWindow extends JFrame {
 	
 	SimpleDateFormat sdf;	
 	private JTextField fldPruebas;
+	private JTable bookingsTable;
 
 	/**
 	 * Launch the application.
@@ -230,7 +230,6 @@ public class BookingWindow extends JFrame {
 					else
 					{
 						createBookingsPerMonth();
-						//fldPruebas.setText("TUESDAY " + String.valueOf(Calendar.TUESDAY) + "," + String.valueOf(calendar.getCalendar().get(Calendar.DAY_OF_WEEK)));
 					}
 				} catch (InstanceNotFoundException e) {
 					// TODO Auto-generated catch block
@@ -270,12 +269,29 @@ public class BookingWindow extends JFrame {
 		fldPruebas = new JTextField();
 		fldPruebas.setColumns(10);
 		fldPruebas.setText(calendar.getDate().toString());
+		
+		JButton btnDeleteBooking = new JButton("Cancelar reserva");
+		btnDeleteBooking.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Booking selected = (Booking) bookingsTable.getModel().getValueAt(bookingsTable.getSelectedRow(), 2);
+				//FIX ME
+				System.out.println(selected);
+				try {
+					bookingService.remove(selected);
+				} catch (InstanceNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				fillBookings();
+			}
+		});
 		GroupLayout gl_panel_1 = new GroupLayout(panel_1);
 		gl_panel_1.setHorizontalGroup(
 			gl_panel_1.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_panel_1.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 295, Short.MAX_VALUE)
 						.addComponent(separator, GroupLayout.DEFAULT_SIZE, 295, Short.MAX_VALUE)
 						.addGroup(gl_panel_1.createSequentialGroup()
 							.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
@@ -285,7 +301,6 @@ public class BookingWindow extends JFrame {
 							.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
 								.addComponent(fldCurso, GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
 								.addComponent(fldAlumno, GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)))
-						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 295, Short.MAX_VALUE)
 						.addComponent(panel_2, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 295, Short.MAX_VALUE)
 						.addGroup(gl_panel_1.createSequentialGroup()
 							.addGroup(gl_panel_1.createParallelGroup(Alignment.TRAILING)
@@ -293,12 +308,13 @@ public class BookingWindow extends JFrame {
 								.addComponent(lblHorario))
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
-								.addComponent(comboBox, 0, 246, Short.MAX_VALUE)
+								.addComponent(comboBox, 0, 234, Short.MAX_VALUE)
 								.addGroup(gl_panel_1.createSequentialGroup()
 									.addComponent(fldPlaces, GroupLayout.PREFERRED_SIZE, 58, GroupLayout.PREFERRED_SIZE)
 									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(fldPruebas, GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE))))
-						.addComponent(btnReservar))
+									.addComponent(fldPruebas, GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE))))
+						.addComponent(btnReservar)
+						.addComponent(btnDeleteBooking, Alignment.TRAILING))
 					.addContainerGap())
 		);
 		gl_panel_1.setVerticalGroup(
@@ -313,8 +329,10 @@ public class BookingWindow extends JFrame {
 						.addComponent(lblCurso)
 						.addComponent(fldCurso, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 135, GroupLayout.PREFERRED_SIZE)
+					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(btnDeleteBooking)
+					.addGap(5)
 					.addComponent(separator, GroupLayout.PREFERRED_SIZE, 10, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(gl_panel_1.createParallelGroup(Alignment.BASELINE)
@@ -331,6 +349,19 @@ public class BookingWindow extends JFrame {
 					.addComponent(btnReservar)
 					.addContainerGap())
 		);
+		
+		bookingsTable = new JTable();
+		bookingsTable.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"Fecha", "Tipo horario", "Objeto"
+			}
+		));
+		bookingsTable.getColumnModel().getColumn(2).setMinWidth(0);
+		bookingsTable.getColumnModel().getColumn(2).setMaxWidth(0);
+		bookingsTable.getColumnModel().getColumn(2).setWidth(0);
+		scrollPane.setViewportView(bookingsTable);
 		
 		JLabel lblReservaSemanal = new JLabel("Reserva mensual : ");
 		
@@ -377,16 +408,6 @@ public class BookingWindow extends JFrame {
 					.addContainerGap(45, Short.MAX_VALUE))
 		);
 		panel_2.setLayout(gl_panel_2);
-		
-		bookingsTable = new JTable();
-		bookingsTable.setModel(new DefaultTableModel(
-			new Object[][] {
-			},
-			new String[] {
-				"Reserva", "Tipo de horario"
-			}
-		));
-		scrollPane.setViewportView(bookingsTable);
 		panel_1.setLayout(gl_panel_1);
 
 	}
@@ -407,7 +428,7 @@ public class BookingWindow extends JFrame {
 		for (Booking booking : bookings) {
 			Calendar date = booking.getDate();
 			String dateS = sdf.format(date.getTime());
-			Object[] data = { dateS , booking.getDiningHall().getSchedule().toString() };
+			Object[] data = { dateS , booking.getDiningHall().getSchedule().toString(), booking };
 			modelTB.addRow(data);
 		}
 	}
