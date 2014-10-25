@@ -7,14 +7,18 @@ import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
+import ampa.sa.diningHall.DiningHall;
 import ampa.sa.persistence.Persistence;
 import ampa.sa.student.Student;
+import ampa.sa.util.exceptions.DuplicateInstanceException;
 import ampa.sa.util.exceptions.InstanceNotFoundException;
 
 @SuppressWarnings("serial")
 public class BookingService implements Serializable {
 
-	List<Booking> bookings = new ArrayList<Booking>();
+	private static List<Booking> bookings = new ArrayList<Booking>();
+	private static List<DiningHall> diningHall = new ArrayList<DiningHall>();
+	
 
 	private static BookingService instance = null;
 
@@ -32,6 +36,14 @@ public class BookingService implements Serializable {
 		return instance;
 	}
 
+	public List<DiningHall> getDiningHall() {
+		return diningHall;
+	}
+
+	public void setDiningHall(List<DiningHall> diningHall) {
+		this.diningHall = diningHall;
+	}
+	
 	public List<Booking> getBookings() {
 		return bookings;
 	}
@@ -43,10 +55,25 @@ public class BookingService implements Serializable {
 	public void create(Booking booking) throws InstanceNotFoundException {
 		if (!bookings.contains(booking)) {
 			bookings.add(booking);
-			Persistence.getInstance().save();
+			//Persistence.getInstance().save();
 		} else {
 			throw new InstanceNotFoundException(booking, "Booking");
 		}
+	}
+	
+	//TODO Nuevo método
+	public int getPlacesForDiningSchedule(Calendar cal,DiningHall dh){
+		Iterator<Booking> iter;
+		iter = bookings.iterator();
+		int places = 0;
+		while (iter.hasNext()) {
+			Booking booking = iter.next();
+			if ((booking.getDate().compareTo(cal) == 0)
+					&& (booking.getDiningHall().equals(dh))) {
+				places++;
+			}
+		}
+		return (dh.getPlaces() - places);
 	}
 
 	public void remove(Booking booking) throws InstanceNotFoundException {
@@ -97,9 +124,9 @@ public class BookingService implements Serializable {
 		iter = bookings.iterator();
 		while (iter.hasNext()) {
 			Booking booking = iter.next();
-			if ((booking.getDate() == date)
+			if ((booking.getDate().compareTo(date) == 0)
 					&& (booking.getStudent().equals(student))) {
-				b.add(iter.next());
+				b.add(booking);
 			}
 		}
 		return b;
