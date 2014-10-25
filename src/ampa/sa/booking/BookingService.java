@@ -58,13 +58,13 @@ public class BookingService implements Serializable {
 			checkCapacity(booking);
 			bookings.add(booking);
 		
-			//Persistence.getInstance().save();
+			Persistence.getInstance().save();
 		} else {
 			throw new DuplicateInstanceException(booking, "Booking");
 		}
 	}
 	
-	//TODO Nuevo método
+	//TODO Nuevo mï¿½todo
 	public int getPlacesForDiningSchedule(Calendar cal,DiningHall dh){
 		Iterator<Booking> iter;
 		iter = bookings.iterator();
@@ -147,7 +147,7 @@ public class BookingService implements Serializable {
 		return amount;
 	}
 
-	//TODO tests y que no reserve ninguna si algún día falla
+	//TODO tests y que no reserve ninguna si algï¿½n dï¿½a falla
 	public void createByDayOfWeek(List<Integer> days, Student st, DiningHall dh) throws DuplicateInstanceException, MaxCapacityException {
 		int actualMonth = Calendar.getInstance().get(Calendar.MONTH);
 		Calendar cal1 = Calendar.getInstance();
@@ -167,7 +167,7 @@ public class BookingService implements Serializable {
 	}
 
 	
-	//FIX ME no distingue cursos todavía
+	//FIXME no distingue cursos todavï¿½a
 	//TODO tests
 	public void checkCapacity(Booking b) throws MaxCapacityException{
 		DiningHall dh = b.getDiningHall();

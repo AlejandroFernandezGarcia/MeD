@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.GridLayout;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
@@ -33,6 +34,7 @@ import ampa.sa.booking.Booking;
 import ampa.sa.persistence.Persistence;
 import ampa.sa.student.FamilyService;
 import ampa.sa.student.Student;
+import ampa.sa.util.exceptions.InstanceNotFoundException;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -74,19 +76,20 @@ public class MainWindow extends JFrame {
 		for (Student student : students) {
 			Calendar date = student.getDateBorn();
 			String dateS = date.get(Calendar.DAY_OF_MONTH) + "/"
-					+ (date.get(Calendar.MONTH) + 1) +"/"+ date.get(Calendar.YEAR);
+					+ (date.get(Calendar.MONTH) + 1) + "/"
+					+ date.get(Calendar.YEAR);
 			Object[] data = { student.getName(), student.getLastname(), dateS };
 			dtm.addRow(data);
 		}
 		studentsTable.updateUI();// DUDA Es necesario?
 	}
-	
-	private void fillConceptTable(Student student, JTable table){
+
+	private void fillConceptTable(Student student, JTable table) {
 		DefaultTableModel dtm = (DefaultTableModel) table.getModel();
 		for (int i = 0; i < dtm.getRowCount(); i++) {
 			dtm.removeRow(i);
 		}
-		
+
 		Set<Activity> activities = student.getActivities();
 		for (Activity a : activities) {
 			Object[] data = { a.getName(), a.getPrize() };
@@ -94,46 +97,71 @@ public class MainWindow extends JFrame {
 		}
 		Set<Booking> bookings = student.getBookings();
 		for (Booking b : bookings) {
-			Object[] data = { b.getDiningHall().getSchedule(), b.getDiningHall().getPrice() };
+			Object[] data = { b.getDiningHall().getSchedule(),
+					b.getDiningHall().getPrice() };
 			dtm.addRow(data);
-			//FIXME Juntar 
+			// FIXME Juntar
 		}
-		
+
 		table.updateUI();// DUDA Es necesario?
 	}
 
-	private JPanel createExplainPanel(Student student){
-		JLabel lblName = new JLabel("Nombre: "+student.getLastname()+", "+student.getName());
+	private JPanel createExplainPanel(Student student) {
+		JLabel lblName = new JLabel("Nombre: " + student.getLastname() + ", "
+				+ student.getName());
 		lblName.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblName.setHorizontalAlignment(SwingConstants.LEFT);
 
-		JLabel lblTotalStudent = new JLabel("Total alumno: "+familyService.getStudentExpenses(student)+"€");
+		JLabel lblTotalStudent = new JLabel("Total alumno: "
+				+ familyService.getStudentExpenses(student) + "€");
 		lblTotalStudent.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblTotalStudent.setHorizontalAlignment(SwingConstants.LEFT);
 		JPanel explainPanel = new JPanel();
 		JScrollPane scrollPane_1 = new JScrollPane();
 		GroupLayout gl_explainPanel = new GroupLayout(explainPanel);
-		gl_explainPanel.setHorizontalGroup(
-			gl_explainPanel.createParallelGroup(Alignment.LEADING)
-				.addGroup(Alignment.TRAILING, gl_explainPanel.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(gl_explainPanel.createParallelGroup(Alignment.TRAILING)
-						.addComponent(scrollPane_1, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
-						.addComponent(lblName, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
-						.addComponent(lblTotalStudent, GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE))
-					.addContainerGap())
-		);
-		gl_explainPanel.setVerticalGroup(
-			gl_explainPanel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_explainPanel.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(lblName)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(lblTotalStudent, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)
-					.addContainerGap())
-		);
+		gl_explainPanel
+				.setHorizontalGroup(gl_explainPanel
+						.createParallelGroup(Alignment.LEADING)
+						.addGroup(
+								Alignment.TRAILING,
+								gl_explainPanel
+										.createSequentialGroup()
+										.addContainerGap()
+										.addGroup(
+												gl_explainPanel
+														.createParallelGroup(
+																Alignment.TRAILING)
+														.addComponent(
+																scrollPane_1,
+																Alignment.LEADING,
+																GroupLayout.DEFAULT_SIZE,
+																270,
+																Short.MAX_VALUE)
+														.addComponent(
+																lblName,
+																Alignment.LEADING,
+																GroupLayout.DEFAULT_SIZE,
+																270,
+																Short.MAX_VALUE)
+														.addComponent(
+																lblTotalStudent,
+																GroupLayout.DEFAULT_SIZE,
+																270,
+																Short.MAX_VALUE))
+										.addContainerGap()));
+		gl_explainPanel.setVerticalGroup(gl_explainPanel.createParallelGroup(
+				Alignment.LEADING).addGroup(
+				gl_explainPanel
+						.createSequentialGroup()
+						.addContainerGap()
+						.addComponent(lblName)
+						.addPreferredGap(ComponentPlacement.RELATED)
+						.addComponent(lblTotalStudent,
+								GroupLayout.PREFERRED_SIZE, 23,
+								GroupLayout.PREFERRED_SIZE)
+						.addPreferredGap(ComponentPlacement.RELATED)
+						.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE,
+								138, Short.MAX_VALUE).addContainerGap()));
 
 		JTable tablaConcepto = new JTable();
 		tablaConcepto.setModel(new DefaultTableModel(new Object[][] { { null,
@@ -152,41 +180,60 @@ public class MainWindow extends JFrame {
 		});
 		scrollPane_1.setViewportView(tablaConcepto);
 		explainPanel.setLayout(gl_explainPanel);
-		
+
 		fillConceptTable(student, tablaConcepto);
-		
+
 		return explainPanel;
 	}
-	
+
 	private void fillRightPanel(JPanel panel) {
-		if(studentsTable.getRowCount()==0){
+		if (studentsTable.getRowCount() == 0) {
 			return;
 		}
 		// FIXME Ordenar students
-		JTabbedPane tabPanel=null;
+		JTabbedPane tabPanel = null;
 		List<Student> students = familyService.getStudents();
-		Student studentSelected = students.get(studentsTable.getSelectedRow());
+		final Student studentSelected = students.get(studentsTable.getSelectedRow());
 		Component[] componentsPanel = panel.getComponents();
 		for (Component component : componentsPanel) {
 			if (component.getClass() == JTabbedPane.class) {
 				tabPanel = (JTabbedPane) component;
-			} else if (component.getName() != null){
+			} else if (component.getName() != null) {
 				if (component.getName().compareTo("lblHouseHold") == 0) {
 					((JLabel) component).setText("Núcleo familiar: "
 							+ studentSelected.getHouseHold().getBanckAccount());
-				} else if (component.getName().compareTo("lblTotalHouseHold") == 0){
-					BigDecimal amount = familyService.getHouseholdExpenses(studentSelected.getHouseHold());
+				} else if (component.getName().compareTo("lblTotalHouseHold") == 0) {
+					BigDecimal amount = familyService
+							.getHouseholdExpenses(studentSelected
+									.getHouseHold());
 					((JLabel) component).setText("Total núcleo familiar: "
 							+ amount + " €");
-				}
+				} else if (component.getName().compareTo("btnCreateBooking") == 0) {
+
+					((JButton) component)
+							.addActionListener(new ActionListener() {
+								public void actionPerformed(ActionEvent e) {
+									try {
+										BookingWindow bW = new BookingWindow(
+												studentSelected);
+										bW.setVisible(true);
+									} catch (InstanceNotFoundException
+											| ParseException e1) {
+										e1.printStackTrace();
+									}
+								}
+							});
+
+				}// TODO Añadir funcionalidad demás botones
 			}
 		}
-		List<Student> studentsOfHouseHold = familyService.findStudents(studentSelected.getHouseHold());
+		List<Student> studentsOfHouseHold = familyService
+				.findStudents(studentSelected.getHouseHold());
 		tabPanel.removeAll();
 		for (Student student : studentsOfHouseHold) {
 			tabPanel.addTab(student.getName(), createExplainPanel(student));
 		}
-		
+
 	}
 
 	/**
@@ -219,6 +266,7 @@ public class MainWindow extends JFrame {
 
 		JMenu mnComedor = new JMenu("Comedor");
 		menuBar.add(mnComedor);
+
 
 		JMenuItem mntmModificar = new JMenuItem("Modificar");
 		mnComedor.add(mntmModificar);
@@ -279,52 +327,85 @@ public class MainWindow extends JFrame {
 		lblTotalHouseHold.setName("lblTotalHouseHold");
 		lblTotalHouseHold.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblTotalHouseHold.setHorizontalAlignment(SwingConstants.CENTER);
-		
-				JButton btnMatricularEnActividad = new JButton(
-						"Matricular en actividad");
-		
-				JButton btnReservasComedor = new JButton("Reservas comedor");
-				btnReservasComedor.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						//TODO Aqui se lanza la ventana nueva
-					}
-				});
+
+		JButton btnMatricularEnActividad = new JButton(
+				"Matricular en actividad");
+
+		JButton btnReservasComedor = new JButton("Reservas comedor");
+		btnReservasComedor.setName("btnCreateBooking");
+
 		GroupLayout gl_rigthPanel = new GroupLayout(rigthPanel);
-		gl_rigthPanel.setHorizontalGroup(
-			gl_rigthPanel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_rigthPanel.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(gl_rigthPanel.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_rigthPanel.createSequentialGroup()
-							.addComponent(tabAlumno, GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)
-							.addContainerGap())
-						.addGroup(gl_rigthPanel.createSequentialGroup()
-							.addGroup(gl_rigthPanel.createParallelGroup(Alignment.TRAILING)
-								.addComponent(lblTotalHouseHold, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE)
-								.addComponent(lblHouseHold, GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE))
-							.addGap(25))
-						.addGroup(gl_rigthPanel.createSequentialGroup()
-							.addComponent(btnMatricularEnActividad)
-							.addContainerGap(115, Short.MAX_VALUE))
-						.addGroup(gl_rigthPanel.createSequentialGroup()
-							.addComponent(btnReservasComedor)
-							.addContainerGap(147, Short.MAX_VALUE))))
-		);
-		gl_rigthPanel.setVerticalGroup(
-			gl_rigthPanel.createParallelGroup(Alignment.TRAILING)
-				.addGroup(Alignment.LEADING, gl_rigthPanel.createSequentialGroup()
-					.addGap(18)
-					.addComponent(lblHouseHold, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
-					.addGap(10)
-					.addComponent(lblTotalHouseHold)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(tabAlumno, GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE)
-					.addGap(18)
-					.addComponent(btnMatricularEnActividad)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(btnReservasComedor)
-					.addGap(46))
-		);
+		gl_rigthPanel
+				.setHorizontalGroup(gl_rigthPanel
+						.createParallelGroup(Alignment.LEADING)
+						.addGroup(
+								gl_rigthPanel
+										.createSequentialGroup()
+										.addContainerGap()
+										.addGroup(
+												gl_rigthPanel
+														.createParallelGroup(
+																Alignment.LEADING)
+														.addGroup(
+																gl_rigthPanel
+																		.createSequentialGroup()
+																		.addComponent(
+																				tabAlumno,
+																				GroupLayout.DEFAULT_SIZE,
+																				299,
+																				Short.MAX_VALUE)
+																		.addContainerGap())
+														.addGroup(
+																gl_rigthPanel
+																		.createSequentialGroup()
+																		.addGroup(
+																				gl_rigthPanel
+																						.createParallelGroup(
+																								Alignment.TRAILING)
+																						.addComponent(
+																								lblTotalHouseHold,
+																								Alignment.LEADING,
+																								GroupLayout.DEFAULT_SIZE,
+																								286,
+																								Short.MAX_VALUE)
+																						.addComponent(
+																								lblHouseHold,
+																								GroupLayout.DEFAULT_SIZE,
+																								286,
+																								Short.MAX_VALUE))
+																		.addGap(25))
+														.addGroup(
+																gl_rigthPanel
+																		.createSequentialGroup()
+																		.addComponent(
+																				btnMatricularEnActividad)
+																		.addContainerGap(
+																				115,
+																				Short.MAX_VALUE))
+														.addGroup(
+																gl_rigthPanel
+																		.createSequentialGroup()
+																		.addComponent(
+																				btnReservasComedor)
+																		.addContainerGap(
+																				147,
+																				Short.MAX_VALUE)))));
+		gl_rigthPanel.setVerticalGroup(gl_rigthPanel.createParallelGroup(
+				Alignment.TRAILING).addGroup(
+				Alignment.LEADING,
+				gl_rigthPanel
+						.createSequentialGroup()
+						.addGap(18)
+						.addComponent(lblHouseHold, GroupLayout.PREFERRED_SIZE,
+								23, GroupLayout.PREFERRED_SIZE)
+						.addGap(10)
+						.addComponent(lblTotalHouseHold)
+						.addPreferredGap(ComponentPlacement.RELATED)
+						.addComponent(tabAlumno, GroupLayout.DEFAULT_SIZE, 239,
+								Short.MAX_VALUE).addGap(18)
+						.addComponent(btnMatricularEnActividad)
+						.addPreferredGap(ComponentPlacement.RELATED)
+						.addComponent(btnReservasComedor).addGap(46)));
 
 		JPanel explainPanel = new JPanel();
 		tabAlumno.addTab("New tab", null, explainPanel, null);
@@ -340,27 +421,49 @@ public class MainWindow extends JFrame {
 
 		JScrollPane scrollPane_1 = new JScrollPane();
 		GroupLayout gl_explainPanel = new GroupLayout(explainPanel);
-		gl_explainPanel.setHorizontalGroup(
-			gl_explainPanel.createParallelGroup(Alignment.LEADING)
-				.addGroup(Alignment.TRAILING, gl_explainPanel.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(gl_explainPanel.createParallelGroup(Alignment.TRAILING)
-						.addComponent(scrollPane_1, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
-						.addComponent(lblName, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
-						.addComponent(lblTotalStudent, GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE))
-					.addContainerGap())
-		);
-		gl_explainPanel.setVerticalGroup(
-			gl_explainPanel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_explainPanel.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(lblName)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(lblTotalStudent, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)
-					.addContainerGap())
-		);
+		gl_explainPanel
+				.setHorizontalGroup(gl_explainPanel
+						.createParallelGroup(Alignment.LEADING)
+						.addGroup(
+								Alignment.TRAILING,
+								gl_explainPanel
+										.createSequentialGroup()
+										.addContainerGap()
+										.addGroup(
+												gl_explainPanel
+														.createParallelGroup(
+																Alignment.TRAILING)
+														.addComponent(
+																scrollPane_1,
+																Alignment.LEADING,
+																GroupLayout.DEFAULT_SIZE,
+																270,
+																Short.MAX_VALUE)
+														.addComponent(
+																lblName,
+																Alignment.LEADING,
+																GroupLayout.DEFAULT_SIZE,
+																270,
+																Short.MAX_VALUE)
+														.addComponent(
+																lblTotalStudent,
+																GroupLayout.DEFAULT_SIZE,
+																270,
+																Short.MAX_VALUE))
+										.addContainerGap()));
+		gl_explainPanel.setVerticalGroup(gl_explainPanel.createParallelGroup(
+				Alignment.LEADING).addGroup(
+				gl_explainPanel
+						.createSequentialGroup()
+						.addContainerGap()
+						.addComponent(lblName)
+						.addPreferredGap(ComponentPlacement.RELATED)
+						.addComponent(lblTotalStudent,
+								GroupLayout.PREFERRED_SIZE, 23,
+								GroupLayout.PREFERRED_SIZE)
+						.addPreferredGap(ComponentPlacement.RELATED)
+						.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE,
+								138, Short.MAX_VALUE).addContainerGap()));
 
 		JTable tablaConcepto = new JTable();
 		tablaConcepto.setModel(new DefaultTableModel(new Object[][] { { null,
@@ -387,11 +490,12 @@ public class MainWindow extends JFrame {
 		fillStudentsTable();
 		studentsTable.setRowSelectionInterval(0, 0);
 		fillRightPanel(rigthPanel);
-		
-		studentsTable.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
-	        public void valueChanged(ListSelectionEvent event) {
-	            fillRightPanel(rigthPanel);
-	        }
-	    });
+
+		studentsTable.getSelectionModel().addListSelectionListener(
+				new ListSelectionListener() {
+					public void valueChanged(ListSelectionEvent event) {
+						fillRightPanel(rigthPanel);
+					}
+				});
 	}
 }

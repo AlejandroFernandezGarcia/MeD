@@ -1,6 +1,5 @@
 bin/
 .settings
-.classpath
 .project
 /DB.bin
 /DBTest.bin

@@ -1,11 +1,18 @@
 package ampa.sa.util;
 
-public class Schedule {
+import java.io.Serializable;
 
-
+@SuppressWarnings("serial")
+public class Schedule implements Serializable {
 
 	private String startTime;
 	private String endTime;
+
+	public Schedule(String startTime, String endTime) {
+		super();
+		this.startTime = startTime;
+		this.endTime = endTime;
+	}
 
 	public String getStartTime() {
 		return startTime;
@@ -54,7 +61,7 @@ public class Schedule {
 			return false;
 		return true;
 	}
-	
+
 	@Override
 	public String toString() {
 		return startTime + " - " + endTime;

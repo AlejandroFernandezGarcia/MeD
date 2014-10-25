@@ -12,9 +12,10 @@ import ampa.sa.activity.Activity;
 import ampa.sa.activity.ActivityService;
 import ampa.sa.booking.Booking;
 import ampa.sa.booking.BookingService;
+import ampa.sa.diningHall.DiningHall;
 import ampa.sa.student.FamilyService;
-import ampa.sa.student.Student;
 import ampa.sa.student.Household;
+import ampa.sa.student.Student;
 
 public class Persistence {
 	ActivityService activityService = ActivityService.getInstance();
@@ -34,12 +35,12 @@ public class Persistence {
 		return instance;
 	}
 
-	public static Persistence getInstanceTest(){
+	public static Persistence getInstanceTest() {
 		pathDB = "DBTest.bin";
 		createInstance();
 		return instance;
 	}
-	
+
 	public Persistence() {
 		// AQUI LOS RECUPERO (usarlo cuando abres la iu)
 		try {
@@ -49,6 +50,8 @@ public class Persistence {
 			activityService.setActivities(database.getActivities());
 			bookingService.setBookings(database.getBookings());
 			familyService.setStudents(database.getStudents());
+			bookingService.setDiningHall(database.getDiningHall());
+			familyService.setHousehold(database.getHouseholds());
 			ois.close();
 		} catch (FileNotFoundException e) {
 			this.save();
@@ -62,15 +65,17 @@ public class Persistence {
 
 	public void save() {
 		Database database = new Database(familyService.getStudents(),
-				activityService.getActivities(), bookingService.getBookings(), familyService.getHousehold());
+				familyService.getHousehold(), activityService.getActivities(),
+				bookingService.getBookings(), bookingService.getDiningHall());
 
 		// AQUI GUARDO LOS OBJETOS (usarlo cuando cierras la iu)
 		try {
 			FileOutputStream fs = new FileOutputStream(pathDB);
 			ObjectOutputStream os = new ObjectOutputStream(fs);
-			if(pathDB.compareTo("DBTest.bin")==0){
-				database = new Database(new ArrayList<Student>(),new ArrayList<Activity>()
-						,new ArrayList<Booking>(), new ArrayList<Household>());
+			if (pathDB.compareTo("DBTest.bin") == 0) {
+				database = new Database(new ArrayList<Student>(),
+						new ArrayList<Household>(), new ArrayList<Activity>(),
+						new ArrayList<Booking>(), new ArrayList<DiningHall>());
 			}
 			os.writeObject(database);
 
