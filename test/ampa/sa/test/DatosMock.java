@@ -17,6 +17,7 @@ import ampa.sa.persistence.Persistence;
 import ampa.sa.student.FamilyService;
 import ampa.sa.student.Household;
 import ampa.sa.student.Student;
+import ampa.sa.util.Schedule;
 
 public class DatosMock {
 	private List<Household> households = new ArrayList<Household>();
@@ -62,25 +63,45 @@ public class DatosMock {
 		// Estudiantes
 		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
 		Calendar cal1 = Calendar.getInstance();
-		cal1.setTime(sdf.parse("20/05/1992"));
+		cal1.setTime(sdf.parse("20/05/2003"));
 		students.add(new Student(1, house1, "Alberto", "Pérez", cal1,
 				new HashSet<Activity>(), new HashSet<Booking>()));
 		Calendar cal2 = Calendar.getInstance();
-		cal2.setTime(sdf.parse("29/05/1987"));
+		cal2.setTime(sdf.parse("29/05/2002"));
 		students.add(new Student(2, house2, "Miguel", "Vinha", cal1,
 				new HashSet<Activity>(), new HashSet<Booking>()));
 		Calendar cal3 = Calendar.getInstance();
-		cal3.setTime(sdf.parse("12/03/1989"));
+		cal3.setTime(sdf.parse("12/03/2006"));
 		students.add(new Student(3, house3, "Alejandro", "Fortes", cal3,
 				new HashSet<Activity>(), new HashSet<Booking>()));
-		cal3.setTime(sdf.parse("12/03/1989"));
+		cal3.setTime(sdf.parse("12/03/2006"));
 		students.add(new Student(3, house4, "Alejandro", "Apellido", cal3,
 				new HashSet<Activity>(), new HashSet<Booking>()));
 
+		Schedule sc1 = new Schedule();
+		sc1.setStartTime("8:00am");
+		sc1.setEndTime("9:30am");
+		
+		DiningHall d1 = new DiningHall(1,sc1,24,BigDecimal.valueOf(4.00));
+		
+		Schedule sc2 = new Schedule();
+		sc2.setStartTime("12:30pm");
+		sc2.setEndTime("14:00pm");
+		
+		DiningHall d2 = new DiningHall(1,sc2,24,BigDecimal.valueOf(4.00));
+		
+		diningHall.add(d1);
+		diningHall.add(d2);
+		
 		activityService.setActivities(activities);
 		bookingService.setBookings(bookings);
+		bookingService.setDiningHall(diningHall);
 		familyService.setHousehold(households);
 		familyService.setStudents(students);
+		
+
+		
+		
 		
 	}
 

@@ -1,17 +1,11 @@
 package ampa.sa.util;
 
 public class Schedule {
-	private String day;
+
+
+
 	private String startTime;
 	private String endTime;
-
-	public String getDay() {
-		return day;
-	}
-
-	public void setDay(String day) {
-		this.day = day;
-	}
 
 	public String getStartTime() {
 		return startTime;
@@ -33,7 +27,6 @@ public class Schedule {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((day == null) ? 0 : day.hashCode());
 		result = prime * result + ((endTime == null) ? 0 : endTime.hashCode());
 		result = prime * result
 				+ ((startTime == null) ? 0 : startTime.hashCode());
@@ -49,11 +42,6 @@ public class Schedule {
 		if (getClass() != obj.getClass())
 			return false;
 		Schedule other = (Schedule) obj;
-		if (day == null) {
-			if (other.day != null)
-				return false;
-		} else if (!day.equals(other.day))
-			return false;
 		if (endTime == null) {
 			if (other.endTime != null)
 				return false;
@@ -67,4 +55,8 @@ public class Schedule {
 		return true;
 	}
 	
+	@Override
+	public String toString() {
+		return startTime + " - " + endTime;
+	}
 }
