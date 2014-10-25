@@ -54,6 +54,7 @@ public class MainWindow extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					Persistence.getInstance();
 					MainWindow frame = new MainWindow();
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -486,7 +487,6 @@ public class MainWindow extends JFrame {
 
 		// Editado
 
-		Persistence.getInstance();
 		fillStudentsTable();
 		studentsTable.setRowSelectionInterval(0, 0);
 		fillRightPanel(rigthPanel);
