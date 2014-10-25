@@ -24,6 +24,8 @@ import javax.swing.JTable;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 import ampa.sa.activity.Activity;
@@ -31,8 +33,11 @@ import ampa.sa.booking.Booking;
 import ampa.sa.persistence.Persistence;
 import ampa.sa.student.FamilyService;
 import ampa.sa.student.Student;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
+import javax.swing.ListSelectionModel;
 
 public class MainWindow extends JFrame {
 
@@ -69,7 +74,7 @@ public class MainWindow extends JFrame {
 		for (Student student : students) {
 			Calendar date = student.getDateBorn();
 			String dateS = date.get(Calendar.DAY_OF_MONTH) + "/"
-					+ (date.get(Calendar.MONTH) + 1) + date.get(Calendar.YEAR);
+					+ (date.get(Calendar.MONTH) + 1) +"/"+ date.get(Calendar.YEAR);
 			Object[] data = { student.getName(), student.getLastname(), dateS };
 			dtm.addRow(data);
 		}
@@ -98,11 +103,11 @@ public class MainWindow extends JFrame {
 	}
 
 	private JPanel createExplainPanel(Student student){
-		JLabel lblName = new JLabel("Nombre:"+student.getLastname()+", "+student.getName());
+		JLabel lblName = new JLabel("Nombre: "+student.getLastname()+", "+student.getName());
 		lblName.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblName.setHorizontalAlignment(SwingConstants.LEFT);
 
-		JLabel lblTotalStudent = new JLabel("Total alumno:"+familyService.getStudentExpenses(student)+"€");
+		JLabel lblTotalStudent = new JLabel("Total alumno: "+familyService.getStudentExpenses(student)+"€");
 		lblTotalStudent.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblTotalStudent.setHorizontalAlignment(SwingConstants.LEFT);
 		JPanel explainPanel = new JPanel();
@@ -165,20 +170,19 @@ public class MainWindow extends JFrame {
 		for (Component component : componentsPanel) {
 			if (component.getClass() == JTabbedPane.class) {
 				tabPanel = (JTabbedPane) component;
-			} else {
+			} else if (component.getName() != null){
 				if (component.getName().compareTo("lblHouseHold") == 0) {
-					((JLabel) component).setText((((JLabel) component)
-							.getText())
+					((JLabel) component).setText("Núcleo familiar: "
 							+ studentSelected.getHouseHold().getBanckAccount());
-				} else {
+				} else if (component.getName().compareTo("lblTotalHouseHold") == 0){
 					BigDecimal amount = familyService.getHouseholdExpenses(studentSelected.getHouseHold());
-					((JLabel) component).setText((((JLabel) component)
-							.getText())
+					((JLabel) component).setText("Total núcleo familiar: "
 							+ amount + " €");
 				}
 			}
 		}
 		List<Student> studentsOfHouseHold = familyService.findStudents(studentSelected.getHouseHold());
+		tabPanel.removeAll();
 		for (Student student : studentsOfHouseHold) {
 			tabPanel.addTab(student.getName(), createExplainPanel(student));
 		}
@@ -240,6 +244,7 @@ public class MainWindow extends JFrame {
 		leftPanel.add(scrollStudents);
 
 		studentsTable = new JTable();
+		studentsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		studentsTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		studentsTable.setModel(new DefaultTableModel(new Object[][] { { null,
 				null, null }, }, new String[] { "Nombre", "Apellidos",
@@ -259,10 +264,11 @@ public class MainWindow extends JFrame {
 		});
 		scrollStudents.setViewportView(studentsTable);
 
-		JPanel rigthPanel = new JPanel();
+		final JPanel rigthPanel = new JPanel();
 		contentPane.add(rigthPanel);
 
 		JLabel lblHouseHold = new JLabel("Núcleo familiar: ");
+		lblHouseHold.setName("lblHouseHold");
 		lblHouseHold.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblHouseHold.setHorizontalAlignment(SwingConstants.CENTER);
 		lblHouseHold.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -270,6 +276,7 @@ public class MainWindow extends JFrame {
 		JTabbedPane tabAlumno = new JTabbedPane(JTabbedPane.TOP);
 
 		JLabel lblTotalHouseHold = new JLabel("Total núcleo familiar:");
+		lblTotalHouseHold.setName("lblTotalHouseHold");
 		lblTotalHouseHold.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblTotalHouseHold.setHorizontalAlignment(SwingConstants.CENTER);
 		
@@ -378,6 +385,13 @@ public class MainWindow extends JFrame {
 
 		Persistence.getInstance();
 		fillStudentsTable();
+		studentsTable.setRowSelectionInterval(0, 0);
 		fillRightPanel(rigthPanel);
+		
+		studentsTable.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+	        public void valueChanged(ListSelectionEvent event) {
+	            fillRightPanel(rigthPanel);
+	        }
+	    });
 	}
 }
