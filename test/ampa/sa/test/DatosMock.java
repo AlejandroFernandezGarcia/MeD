@@ -98,7 +98,7 @@ public class DatosMock {
 		Booking b1 = new Booking(1, cb1, students.get(0),
 				d1);
 		Calendar cb2 = Calendar.getInstance();
-		cb2.setTime(sdf.parse("24/10/2014"));
+		cb2.setTime(sdf.parse("31/10/2014"));
 		Booking b2 = new Booking(2, cb2, students.get(1),
 				d1);
 		

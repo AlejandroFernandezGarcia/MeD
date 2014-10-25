@@ -16,6 +16,7 @@ import javax.swing.JLabel;
 import java.awt.GridLayout;
 import java.awt.Component;
 
+import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
@@ -36,6 +37,7 @@ import ampa.sa.test.DatosMock;
 import ampa.sa.util.Schedule;
 import ampa.sa.util.exceptions.DuplicateInstanceException;
 import ampa.sa.util.exceptions.InstanceNotFoundException;
+import ampa.sa.util.exceptions.MaxCapacityException;
 
 import com.toedter.calendar.JCalendar;
 
@@ -231,9 +233,10 @@ public class BookingWindow extends JFrame {
 					{
 						createBookingsPerMonth();
 					}
-				} catch (InstanceNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				} catch (DuplicateInstanceException e) {
+					JOptionPane.showMessageDialog(null, "La reserva para el alumno y el horario establecido ya existe");
+				} catch (MaxCapacityException e) {
+					JOptionPane.showMessageDialog(null, "No quedan plazas disponibles para el horario seleccionado");
 				}
 				fillBookings();
 			}
@@ -447,21 +450,49 @@ public class BookingWindow extends JFrame {
 				||chckbxJue.isSelected()||chckbxVie.isSelected());
 	}
 	
-	public void createBookingsPerMonth() throws InstanceNotFoundException{
+	public void createBookingsPerMonth(){
 		List<Integer> days = new ArrayList<Integer>();
+		List<Booking> transaction = new ArrayList<Booking>();
 		if(chckbxLun.isSelected())
 			days.add(Calendar.MONDAY);
 		if(chckbxMar.isSelected())
 			days.add(Calendar.TUESDAY);
 		if(chckbxMie.isSelected())
-			days.add(Calendar.THURSDAY);
-		if(chckbxJue.isSelected())
 			days.add(Calendar.WEDNESDAY);
+		if(chckbxJue.isSelected())
+			days.add(Calendar.THURSDAY);
 		if(chckbxVie.isSelected())
 			days.add(Calendar.FRIDAY);
 		
+		int actualMonth = Calendar.getInstance().get(Calendar.MONTH);
+		Calendar cal1 = Calendar.getInstance();
+		while(cal1.get(Calendar.MONTH) == actualMonth)
+		{
+			if(days.contains(cal1.get(Calendar.DAY_OF_WEEK)))
+			{
+				Calendar c = Calendar.getInstance();
+				c.setTime(cal1.getTime());
+				DiningHall dh = (DiningHall) comboBox.getSelectedItem();
+				Booking b = new Booking(1, c, student, dh);
+				try {
+					bookingService.create(b);
+					transaction.add(b);
+				} catch (DuplicateInstanceException | MaxCapacityException e) {
+					JOptionPane.showMessageDialog(null, "Error creando reserva para " + dh.getSchedule().toString() + " (Día "+cal1.get(Calendar.DAY_OF_MONTH)+"). Operación de reservas canceladas");
+					for(int i = 0; i < transaction.size(); i++){
+						try {
+							bookingService.remove(transaction.get(i));
+						} catch (InstanceNotFoundException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+				}
+			}
+			cal1.add(Calendar.DATE, 1);
+		}
+		
 		fldPruebas.setText(days.toString());
-		bookingService.createByDayOfWeek(days,student,(DiningHall) comboBox.getSelectedItem());
 		fillBookings();
 	}
 }

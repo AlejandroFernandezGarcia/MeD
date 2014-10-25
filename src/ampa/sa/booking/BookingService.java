@@ -12,6 +12,7 @@ import ampa.sa.persistence.Persistence;
 import ampa.sa.student.Student;
 import ampa.sa.util.exceptions.DuplicateInstanceException;
 import ampa.sa.util.exceptions.InstanceNotFoundException;
+import ampa.sa.util.exceptions.MaxCapacityException;
 
 @SuppressWarnings("serial")
 public class BookingService implements Serializable {
@@ -52,13 +53,14 @@ public class BookingService implements Serializable {
 		this.bookings = bookings;
 	}
 
-	public void create(Booking booking) throws InstanceNotFoundException {
+	public void create(Booking booking) throws DuplicateInstanceException, MaxCapacityException {
 		if (!bookings.contains(booking)) {
+			checkCapacity(booking);
 			bookings.add(booking);
 		
 			//Persistence.getInstance().save();
 		} else {
-			throw new InstanceNotFoundException(booking, "Booking");
+			throw new DuplicateInstanceException(booking, "Booking");
 		}
 	}
 	
@@ -145,7 +147,8 @@ public class BookingService implements Serializable {
 		return amount;
 	}
 
-	public void createByDayOfWeek(List<Integer> days, Student st, DiningHall dh) throws InstanceNotFoundException {
+	//TODO tests y que no reserve ninguna si algún día falla
+	public void createByDayOfWeek(List<Integer> days, Student st, DiningHall dh) throws DuplicateInstanceException, MaxCapacityException {
 		int actualMonth = Calendar.getInstance().get(Calendar.MONTH);
 		Calendar cal1 = Calendar.getInstance();
 		while(cal1.get(Calendar.MONTH) == actualMonth)
@@ -163,4 +166,23 @@ public class BookingService implements Serializable {
 		
 	}
 
+	
+	//FIX ME no distingue cursos todavía
+	//TODO tests
+	public void checkCapacity(Booking b) throws MaxCapacityException{
+		DiningHall dh = b.getDiningHall();
+		int countBookings = 0;
+		Iterator<Booking> iter;
+		iter = bookings.iterator();
+		while (iter.hasNext()) {
+			Booking booking = iter.next();
+			if (booking.getDiningHall().equals(dh)
+					&& (booking.getDate().compareTo(b.getDate())==0)) {
+				countBookings++;
+			}
+		}
+		if ((countBookings + 1) > dh.CAPACITY)
+			throw new MaxCapacityException(b,"Booking");
+				
+	}
 }
