@@ -92,6 +92,37 @@ public class MockForGUI {
 			diningHall.add(new DiningHall(1, new Schedule("07:00","08:00"),100, new BigDecimal(15.2)));
 			diningHall.add(new DiningHall(2, new Schedule("14:00","15:00"),100, new BigDecimal(18.2)));
 			
+			Calendar cb1 = Calendar.getInstance();
+			cb1.setTime(sdf.parse("27/10/2014"));
+			Booking b1 = new Booking(1, cb1, students.get(0),
+					diningHall.get(0));
+			Calendar cb2 = Calendar.getInstance();
+			cb2.setTime(sdf.parse("31/10/2014"));
+			Booking b2 = new Booking(2, cb2, students.get(1),
+					diningHall.get(0));
+			Calendar cb3 = Calendar.getInstance();
+			cb3.setTime(sdf.parse("31/10/2014"));
+			Booking b3 = new Booking(1, cb3, students.get(0),
+					diningHall.get(0));
+			Calendar cb4 = Calendar.getInstance();
+			cb4.setTime(sdf.parse("29/10/2014"));
+			Booking b4 = new Booking(2, cb4, students.get(0),
+					diningHall.get(1));
+			Calendar cb5 = Calendar.getInstance();
+			cb5.setTime(sdf.parse("31/10/2014"));
+			Booking b5 = new Booking(2, cb5, students.get(2),
+					diningHall.get(0));
+			Calendar cb6 = Calendar.getInstance();
+			cb6.setTime(sdf.parse("31/10/2014"));
+			Booking b6 = new Booking(2, cb6, students.get(2),
+					diningHall.get(1));	
+			bookings.add(b1);
+			bookings.add(b2);
+			bookings.add(b3);
+			bookings.add(b4);
+			bookings.add(b5);
+			bookings.add(b6);
+			
 			activityService.setActivities(activities);
 			bookingService.setBookings(bookings);
 			familyService.setHousehold(households);

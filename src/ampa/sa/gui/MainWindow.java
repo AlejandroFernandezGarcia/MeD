@@ -209,7 +209,7 @@ public class MainWindow extends JFrame {
 									.getHouseHold());
 					((JLabel) component).setText("Total núcleo familiar: "
 							+ amount + " €");
-				} else if (component.getName().compareTo("btnCreateBooking") == 0) {
+				}/* else if (component.getName().compareTo("btnCreateBooking") == 0) {
 
 					((JButton) component)
 							.addActionListener(new ActionListener() {
@@ -225,7 +225,7 @@ public class MainWindow extends JFrame {
 								}
 							});
 
-				}// TODO Añadir funcionalidad demás botones
+				}// TODO Añadir funcionalidad demás botones*/
 			}
 		}
 		List<Student> studentsOfHouseHold = familyService
@@ -333,6 +333,19 @@ public class MainWindow extends JFrame {
 				"Matricular en actividad");
 
 		JButton btnReservasComedor = new JButton("Reservas comedor");
+		btnReservasComedor.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					List<Student> students = familyService.getStudents();
+					final Student studentSelected = students.get(studentsTable.getSelectedRow());
+					BookingWindow bW = new BookingWindow(studentSelected);
+					bW.setVisible(true);
+				} catch (InstanceNotFoundException
+						| ParseException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
 		btnReservasComedor.setName("btnCreateBooking");
 
 		GroupLayout gl_rigthPanel = new GroupLayout(rigthPanel);
