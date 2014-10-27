@@ -105,6 +105,40 @@ public class FamilyService implements Serializable {
 			throw new InstanceNotFoundException(bankAccount, "Household");
 		}
 	}
+	
+	public void updateStudent(Student student) {
+		boolean found = false;
+		Iterator<Student> iter;
+		iter = students.iterator();
+		while (iter.hasNext() && !found) {
+			Student s = iter.next();
+			if (s.getId() == student.getId()) {
+				found = true;
+				s.setHouseHold(student.getHouseHold());
+				s.setName(student.getName());
+				s.setLastname(student.getLastname());
+				s.setDateBorn(student.getDateBorn());
+				s.setActivities(student.getActivities());
+				s.setBookings(student.getBookings());
+				Persistence.getInstance().save();
+			}
+		}
+	}
+	
+	public void updateHousehold(Household household) {
+		boolean found = false;
+		Iterator<Household> iter;
+		iter = households.iterator();
+		while (iter.hasNext() && !found) {
+			Household h = iter.next();
+			if(h.getBanckAccount() == household.getBanckAccount()) {
+				found = true;
+				h.setBanckAccount(household.getBanckAccount());
+				h.setMentored(household.getMentored());
+				Persistence.getInstance().save();
+			}
+		}
+	}
 
 	public List<Student> findStudents() {
 		return students;
@@ -187,9 +221,11 @@ public class FamilyService implements Serializable {
 	    	long msYear = 1000L * 60 * 60 * 24 * 365;
 	    	int yearsDiff = (int) Math.round(diff / msYear);
 	    	if(yearsDiff <= 12 )
-	    		return "Primaria (" + yearsDiff + "años)";
+	    		//return "Primaria";
+	    		return "Primary (" + yearsDiff + " years)";
 	    	else
-	    		return "Secundaria (" + yearsDiff + "años)";
+	    		//return "Secundaria";
+	    		return "Secundary (" + yearsDiff + " years)";
 	    }
 	    return null;
 	}

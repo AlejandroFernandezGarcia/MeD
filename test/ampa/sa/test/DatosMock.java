@@ -59,6 +59,10 @@ public class DatosMock {
 				new HashSet<Student>());
 		Household house4 = new Household("000-999-888-777",
 				new HashSet<Student>());
+		households.add(house1);
+		households.add(house2);
+		households.add(house3);
+		households.add(house4);	
 
 		// Estudiantes
 		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
