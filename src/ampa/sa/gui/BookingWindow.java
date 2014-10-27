@@ -201,6 +201,8 @@ public class BookingWindow extends JFrame {
 		btnDeleteBooking = new JButton("Cancelar reserva");
 		btnDeleteBooking.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				JOptionPane.showConfirmDialog(null, "¿Realmente desea cancelar la reserva?"
+						, "Cancelar reserva", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 				Booking selected = (Booking) bookingsTable.getModel()
 						.getValueAt(bookingsTable.getSelectedRow(), 2);
 				// FIX ME
