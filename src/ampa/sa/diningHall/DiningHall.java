@@ -8,7 +8,7 @@ import ampa.sa.util.Schedule;
 @SuppressWarnings("serial")
 public class DiningHall implements Serializable{
 
-	public static final int CAPACITY = 1;
+	public static final int CAPACITY = 70;
 	private int id;
 	private Schedule schedule;
 	private int places;

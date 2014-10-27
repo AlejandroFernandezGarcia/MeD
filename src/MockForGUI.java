@@ -131,6 +131,13 @@ public class MockForGUI {
 			bookings.add(b4);
 			bookings.add(b5);
 			bookings.add(b6);
+			students.get(0).getBookings().add(b1);
+			students.get(0).getBookings().add(b3);
+			students.get(0).getBookings().add(b4);
+			students.get(1).getBookings().add(b2);
+			students.get(2).getBookings().add(b5);
+			students.get(2).getBookings().add(b6);
+			
 			
 			activityService.setActivities(activities);
 			bookingService.setBookings(bookings);
