@@ -59,7 +59,7 @@ public class TestStudents {
 
 		familyService.updateStudent(student);
 
-		assertEquals(familyService.getStudentExpenses(student), new BigDecimal("68.0"));
+		assertEquals(familyService.getStudentExpenses(student), new BigDecimal("68.00"));
 
 	}
 	
@@ -91,7 +91,7 @@ public class TestStudents {
 		familyService.createHousehold(household);
 		
 		assertEquals(familyService.getHouseholdExpenses(familyService
-				.findHousehold("111-222-111-222")), new BigDecimal("68.0"));
+				.findHousehold("111-222-111-222")), new BigDecimal("68.00"));
 	}
 	
 	@Test

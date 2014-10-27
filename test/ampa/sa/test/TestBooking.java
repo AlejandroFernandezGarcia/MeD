@@ -246,7 +246,7 @@ public class TestBooking {
 		List<Booking> lb = bookingService.getStudentBookingsByDate(s,
 				b.getDate());
 		assertEquals(bookingService.getBookingsPrize(lb),
-				BigDecimal.valueOf(4.00));
+				new BigDecimal("4.00"));
 
 		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
 		Calendar cb1 = Calendar.getInstance();
@@ -266,7 +266,7 @@ public class TestBooking {
 
 		lb = bookingService.getStudentBookingsByDate(s, b.getDate());
 		assertEquals(bookingService.getBookingsPrize(lb),
-				BigDecimal.valueOf(9.00));
+				new BigDecimal("9.00"));
 	}
 
 }

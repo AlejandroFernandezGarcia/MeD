@@ -2,6 +2,7 @@ package ampa.sa.activity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Set;
 
 import ampa.sa.student.Student;
@@ -15,13 +16,13 @@ public class Activity implements Serializable{
 	private BigDecimal prize;
 	private Set<Student> students;
 
-	public Activity(long id, String name, int places, BigDecimal prize,
+	public Activity(long id, String name, int places, BigDecimal price,
 			Set<Student> students) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.places = places;
-		this.prize = prize;
+		this.prize = price.setScale(2,RoundingMode.HALF_UP);;
 		this.students = students;
 	}
 
