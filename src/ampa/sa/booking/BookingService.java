@@ -89,7 +89,7 @@ public class BookingService implements Serializable {
 			if ((aux = iter.next()).getId() == booking.getId()) {
 				found = true;
 				bookings.remove(aux);
-				//FIXME aux.getStudent().getBookings().remove(aux);
+				aux.getStudent().getBookings().remove(aux);
 				Persistence.getInstance().save();
 			}
 		}
