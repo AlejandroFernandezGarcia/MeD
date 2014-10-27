@@ -88,7 +88,7 @@ public class DatosMock {
 		sc2.setStartTime("12:30pm");
 		sc2.setEndTime("14:00pm");
 		
-		DiningHall d2 = new DiningHall(2,sc2,20,BigDecimal.valueOf(4.00));
+		DiningHall d2 = new DiningHall(2,sc2,20,BigDecimal.valueOf(5.00));
 		
 		diningHall.add(d1);
 		diningHall.add(d2);

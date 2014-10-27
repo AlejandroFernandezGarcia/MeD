@@ -8,6 +8,8 @@ public class Schedule implements Serializable {
 	private String startTime;
 	private String endTime;
 
+	public Schedule(){};
+	
 	public Schedule(String startTime, String endTime) {
 		super();
 		this.startTime = startTime;
