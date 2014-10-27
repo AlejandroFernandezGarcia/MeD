@@ -69,7 +69,7 @@ public class MockForGUI {
 					new HashSet<Activity>(), new HashSet<Booking>()));
 			Calendar cal2 = Calendar.getInstance();
 			cal2.setTime(sdf.parse("29/05/1987"));
-			students.add(new Student(2, house2, "Miguel", "Vinha", cal1,
+			students.add(new Student(2, house1, "Miguel", "Vinha", cal1,
 					new HashSet<Activity>(), new HashSet<Booking>()));
 			Calendar cal3 = Calendar.getInstance();
 			cal3.setTime(sdf.parse("12/03/1989"));
@@ -98,8 +98,8 @@ public class MockForGUI {
 			households.add(house2);
 			
 			
-			diningHall.add(new DiningHall(1, new Schedule("07:00","08:00"),100, new BigDecimal(15.2)));
-			diningHall.add(new DiningHall(2, new Schedule("14:00","15:00"),100, new BigDecimal(18.2)));
+			diningHall.add(new DiningHall(1, new Schedule("07:00","08:00"),10, new BigDecimal(15.2)));
+			diningHall.add(new DiningHall(2, new Schedule("14:00","15:00"),10, new BigDecimal(18.2)));
 			
 			Calendar cb1 = Calendar.getInstance();
 			cb1.setTime(sdf.parse("27/10/2014"));
