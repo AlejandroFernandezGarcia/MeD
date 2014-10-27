@@ -347,14 +347,6 @@ public class BookingWindow extends JFrame {
 		chckbxVie = new JCheckBox("vie");
 		chckbxVie.setEnabled(false);
 		
-		ButtonGroup groupDays = new ButtonGroup();
-		
-		groupDays.add(chckbxLun);
-		groupDays.add(chckbxMar);
-		groupDays.add(chckbxMie);
-		groupDays.add(chckbxJue);
-		groupDays.add(chckbxVie);
-		
 		
 		JRadioButton rdbtnDay = new JRadioButton("diaria");
 		rdbtnDay.setSelected(true);
