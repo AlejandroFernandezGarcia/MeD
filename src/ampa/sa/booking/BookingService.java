@@ -57,7 +57,8 @@ public class BookingService implements Serializable {
 		if (!bookings.contains(booking)) {
 			checkCapacity(booking);
 			bookings.add(booking);
-
+			booking.getStudent().getBookings().add(booking);
+			
 			Persistence.getInstance().save();
 		} else {
 			throw new DuplicateInstanceException(booking, "Booking");
@@ -88,6 +89,7 @@ public class BookingService implements Serializable {
 			if ((aux = iter.next()).getId() == booking.getId()) {
 				found = true;
 				bookings.remove(aux);
+				//FIXME aux.getStudent().getBookings().remove(aux);
 				Persistence.getInstance().save();
 			}
 		}

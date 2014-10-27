@@ -1,6 +1,8 @@
 package ampa.sa.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -11,7 +13,6 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import ampa.sa.activity.ActivityService;
 import ampa.sa.booking.Booking;
 import ampa.sa.booking.BookingService;
 import ampa.sa.student.FamilyService;
@@ -38,23 +39,20 @@ public class TestBooking {
 		try {
 			s = familyService.findStudent(4);
 		} catch (InstanceNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			assertTrue("Student not found",false);
 		}
 		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
 		Calendar cb = Calendar.getInstance();
 		try {
 			cb.setTime(sdf.parse("27/10/2014"));
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			assertTrue("Bad format to calendar",false);
 		}
 		try {
 			bookingService.create(new Booking(3, cb, s, bookingService
 					.getDiningHall().get(0)));
 		} catch (DuplicateInstanceException | MaxCapacityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			assertTrue("Booking has already been created",false);
 		}
 		Student ss = null;
 		try {
@@ -64,8 +62,7 @@ public class TestBooking {
 			assertEquals(bookingService.find(3).getDiningHall(), bookingService
 					.getDiningHall().get(0));
 		} catch (InstanceNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			assertTrue("Booking not found",false);
 		}
 
 	}
@@ -78,38 +75,23 @@ public class TestBooking {
 		try {
 			s = familyService.findStudent(4);
 		} catch (InstanceNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			assertTrue("Student not found",false);
 		}
 		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
 		Calendar cb = Calendar.getInstance();
 		try {
 			cb.setTime(sdf.parse("27/10/2014"));
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			assertTrue("Bad format to calendar",false);
 		}
 		b = new Booking(3, cb, s, bookingService.getDiningHall().get(0));
 
 		try {
-			try {
-				bookingService.create(b);
-			} catch (DuplicateInstanceException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} catch (MaxCapacityException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-
-		try {
 			bookingService.create(b);
-		} catch (MaxCapacityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			bookingService.create(b);
+		} catch (MaxCapacityException e1) {
+			assertTrue("Full dining hall ",false);
 		}
-
 	}
 
 	@Test
@@ -119,23 +101,20 @@ public class TestBooking {
 		try {
 			s = familyService.findStudent(4);
 		} catch (InstanceNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			assertTrue("Student not found",false);
 		}
 		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
 		Calendar cb = Calendar.getInstance();
 		try {
 			cb.setTime(sdf.parse("27/10/2014"));
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			assertTrue("Bad format to calendar",false);
 		}
 		try {
 			bookingService.create(new Booking(3, cb, s, bookingService
 					.getDiningHall().get(0)));
 		} catch (DuplicateInstanceException | MaxCapacityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			assertTrue("Duplicate booking or full dining hall",false);
 		}
 
 		assertEquals(bookingService.getPlacesForDiningSchedule(cb,
@@ -146,12 +125,9 @@ public class TestBooking {
 	public void removeBookingTest() throws InstanceNotFoundException {
 
 		Booking b = null;
-		try {
-			b = bookingService.find(1);
-			bookingService.remove(b);
-		} catch (InstanceNotFoundException e) {
-
-		}
+		
+		b = bookingService.find(1);
+		bookingService.remove(b);
 
 		bookingService.find(1);
 
@@ -161,12 +137,10 @@ public class TestBooking {
 	public void removeInexistantBookingTest() throws InstanceNotFoundException {
 
 		Booking b = null;
-		try {
-			b = bookingService.find(1);
-			bookingService.remove(b);
-		} catch (InstanceNotFoundException e) {
-
-		}
+		
+		b = bookingService.find(1);
+		bookingService.remove(b);
+			
 		bookingService.remove(b);
 
 	}
@@ -180,8 +154,7 @@ public class TestBooking {
 			b = bookingService.find(1);
 			d = b.getDate();
 		} catch (InstanceNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			assertTrue("Booking not found",false);
 		}
 
 		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
@@ -189,8 +162,7 @@ public class TestBooking {
 		try {
 			cb.setTime(sdf.parse("28/10/2014"));
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			assertTrue("Bad format to calendar",false);
 		}
 
 		b.setDate(cb);
@@ -198,15 +170,13 @@ public class TestBooking {
 		try {
 			bookingService.update(b);
 		} catch (InstanceNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			assertTrue("Booking not exists",false);
 		}
 
 		try {
 			bookingService.find(1);
 		} catch (InstanceNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			assertTrue("Booking not exsists",false);
 		}
 
 		assertNotEquals(b.getDate(), d);
@@ -216,12 +186,10 @@ public class TestBooking {
 	public void updateInexistentBookingTest() throws InstanceNotFoundException {
 
 		Booking b = null;
-		try {
-			b = bookingService.find(1);
-			bookingService.remove(b);
-		} catch (InstanceNotFoundException e) {
 
-		}
+		b = bookingService.find(1);
+		bookingService.remove(b);
+		
 		bookingService.update(b);
 	}
 
@@ -234,7 +202,7 @@ public class TestBooking {
 			b = bookingService.find(1);
 			s = b.getStudent();
 		} catch (InstanceNotFoundException e) {
-
+			assertTrue("Booking not found",false);
 		}
 
 		List<Booking> lb = bookingService.getStudentBookingsByDate(s,
@@ -246,8 +214,7 @@ public class TestBooking {
 		try {
 			cb1.setTime(sdf.parse("27/10/2014"));
 		} catch (ParseException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			assertTrue("Bad format to calendar",false);
 		}
 
 		try {
@@ -255,11 +222,10 @@ public class TestBooking {
 					.findDiningHall(2)));
 		} catch (DuplicateInstanceException | MaxCapacityException
 				| InstanceNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			assertTrue("Error in getStudentBookingByDateTest",false);
 		}
 
-		// esto solo busca si un estudiante tiene reservas ese dia, de mañana o
+		// esto solo busca si un estudiante tiene reservas ese dia, de maï¿½ana o
 		// de tarde
 		lb = bookingService.getStudentBookingsByDate(s, b.getDate());
 		assertEquals(lb.size(), 2);
@@ -274,7 +240,7 @@ public class TestBooking {
 			b = bookingService.find(1);
 			s = b.getStudent();
 		} catch (InstanceNotFoundException e) {
-
+			assertTrue("Booking not found",false);
 		}
 
 		List<Booking> lb = bookingService.getStudentBookingsByDate(s,
@@ -287,8 +253,7 @@ public class TestBooking {
 		try {
 			cb1.setTime(sdf.parse("27/10/2014"));
 		} catch (ParseException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			assertTrue("Bad format to calendar",false);
 		}
 
 		try {
@@ -296,8 +261,7 @@ public class TestBooking {
 					.findDiningHall(2)));
 		} catch (DuplicateInstanceException | MaxCapacityException
 				| InstanceNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			assertTrue("Error in getStudentBookingByDateTest",false);
 		}
 
 		lb = bookingService.getStudentBookingsByDate(s, b.getDate());

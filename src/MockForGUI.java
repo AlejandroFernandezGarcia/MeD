@@ -83,11 +83,20 @@ public class MockForGUI {
 			sa.add(activities.get(0));
 			sa.add(activities.get(1));
 			students.get(0).setActivities(sa);
+			students.get(2).setActivities(sa);
 			
 			Set<Student> hs = new HashSet<Student>();
 			hs.add(students.get(0));
 			hs.add(students.get(1));
 			house1.setMentored(hs);
+			
+			Set<Student> hs2 = new HashSet<Student>();
+			hs2.add(students.get(1));
+			house2.setMentored(hs2);
+			
+			households.add(house1);
+			households.add(house2);
+			
 			
 			diningHall.add(new DiningHall(1, new Schedule("07:00","08:00"),100, new BigDecimal(15.2)));
 			diningHall.add(new DiningHall(2, new Schedule("14:00","15:00"),100, new BigDecimal(18.2)));
@@ -133,7 +142,7 @@ public class MockForGUI {
 	public static void main(String[] args) throws ParseException {
 		new MockForGUI();
 		Persistence.getInstance().save();
-
+		System.out.println("Finalizada ejecucion del mock");
 	}
 
 }
