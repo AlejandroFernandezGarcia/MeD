@@ -98,7 +98,7 @@ public class MainWindow extends JFrame {
 		}
 		Set<Booking> bookings = student.getBookings();
 		for (Booking b : bookings) {
-			Object[] data = { b.getDiningHall().getSchedule(),
+			Object[] data = { "Comedor "+ b.getDiningHall().getSchedule(),
 					b.getDiningHall().getPrice() };
 			dtm.addRow(data);
 			// FIXME Juntar
