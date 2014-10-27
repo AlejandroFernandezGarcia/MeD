@@ -98,8 +98,8 @@ public class MockForGUI {
 			households.add(house2);
 			
 			
-			diningHall.add(new DiningHall(1, new Schedule("07:00","08:00"),10, new BigDecimal(15.2)));
-			diningHall.add(new DiningHall(2, new Schedule("14:00","15:00"),10, new BigDecimal(18.2)));
+			diningHall.add(new DiningHall(1, new Schedule("07:00","08:00"),10, new BigDecimal(6.2)));
+			diningHall.add(new DiningHall(2, new Schedule("14:00","15:00"),10, new BigDecimal(5.2)));
 			
 			Calendar cb1 = Calendar.getInstance();
 			cb1.setTime(sdf.parse("27/10/2014"));

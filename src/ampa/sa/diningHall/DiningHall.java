@@ -2,6 +2,7 @@ package ampa.sa.diningHall;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import ampa.sa.util.Schedule;
 
@@ -18,7 +19,7 @@ public class DiningHall implements Serializable{
 		this.id = id;
 		this.schedule = schedule;
 		this.places = places;
-		this.price = price;
+		this.price = price.setScale(2,RoundingMode.HALF_UP);
 	}
 
 	public int getId() {
