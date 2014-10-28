@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Calendar;
@@ -23,6 +25,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
@@ -31,21 +34,19 @@ import javax.swing.table.DefaultTableModel;
 
 import ampa.sa.activity.Activity;
 import ampa.sa.booking.Booking;
+import ampa.sa.booking.BookingService;
+import ampa.sa.diningHall.DiningHall;
 import ampa.sa.persistence.Persistence;
 import ampa.sa.student.FamilyService;
 import ampa.sa.student.Student;
 import ampa.sa.util.exceptions.InstanceNotFoundException;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-
-import javax.swing.ListSelectionModel;
 
 public class MainWindow extends JFrame {
 
 	private JPanel contentPane;
 	private JTable studentsTable;
 	private FamilyService familyService;
+	private BookingService bookingService;
 
 	/**
 	 * Launch the application.
@@ -86,6 +87,7 @@ public class MainWindow extends JFrame {
 	}
 
 	private void fillConceptTable(Student student, JTable table) {
+		bookingService = BookingService.getInstance();
 		DefaultTableModel dtm = (DefaultTableModel) table.getModel();
 		for (int i = 0; i < dtm.getRowCount(); i++) {
 			dtm.removeRow(i);
@@ -97,11 +99,20 @@ public class MainWindow extends JFrame {
 			dtm.addRow(data);
 		}
 		Set<Booking> bookings = student.getBookings();
-		for (Booking b : bookings) {
-			Object[] data = { "Comedor "+ b.getDiningHall().getSchedule(),
-					b.getDiningHall().getPrice() };
-			dtm.addRow(data);
-			// FIXME Juntar
+		List<DiningHall> dhs = bookingService.getDiningHall();
+		int count;
+		for (DiningHall dh : dhs) {
+			count = 0;
+			for (Booking b : bookings) {
+				if(b.getDiningHall().equals(dh)){
+					count++;
+				}
+			}
+			if(count != 0){
+				Object[] data = { count + "x Comedor " + dh.getSchedule(),
+						dh.getPrice().multiply(new BigDecimal(count))+" ("+dh.getPrice()+" ud )"};
+				dtm.addRow(data);			
+			}
 		}
 
 		table.updateUI();// DUDA Es necesario?
@@ -194,7 +205,8 @@ public class MainWindow extends JFrame {
 		// FIXME Ordenar students
 		JTabbedPane tabPanel = null;
 		List<Student> students = familyService.getStudents();
-		final Student studentSelected = students.get(studentsTable.getSelectedRow());
+		final Student studentSelected = students.get(studentsTable
+				.getSelectedRow());
 		Component[] componentsPanel = panel.getComponents();
 		for (Component component : componentsPanel) {
 			if (component.getClass() == JTabbedPane.class) {
@@ -210,8 +222,9 @@ public class MainWindow extends JFrame {
 					((JLabel) component).setText("Total núcleo familiar: "
 							+ amount + " €");
 				} else if (component.getName().compareTo("btnCreateBooking") == 0) {
-					ActionListener [] al = ((JButton) component).getListeners(ActionListener.class);
-					if(al.length != 0) {
+					ActionListener[] al = ((JButton) component)
+							.getListeners(ActionListener.class);
+					if (al.length != 0) {
 						((JButton) component).removeActionListener(al[0]);
 					}
 					((JButton) component)
@@ -234,8 +247,13 @@ public class MainWindow extends JFrame {
 		List<Student> studentsOfHouseHold = familyService
 				.findStudents(studentSelected.getHouseHold());
 		tabPanel.removeAll();
+		int i = 0;
 		for (Student student : studentsOfHouseHold) {
 			tabPanel.addTab(student.getName(), createExplainPanel(student));
+			if (student.equals(studentSelected)) {
+				tabPanel.setSelectedIndex(i);
+			}
+			i++;
 		}
 
 	}
@@ -270,7 +288,6 @@ public class MainWindow extends JFrame {
 
 		JMenu mnComedor = new JMenu("Comedor");
 		menuBar.add(mnComedor);
-
 
 		JMenuItem mntmModificar = new JMenuItem("Modificar");
 		mnComedor.add(mntmModificar);
@@ -336,19 +353,15 @@ public class MainWindow extends JFrame {
 				"Matricular en actividad");
 
 		JButton btnReservasComedor = new JButton("Reservas comedor");
-		/*btnReservasComedor.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					List<Student> students = familyService.getStudents();
-					final Student studentSelected = students.get(studentsTable.getSelectedRow());
-					BookingWindow bW = new BookingWindow(studentSelected);
-					bW.setVisible(true);
-				} catch (InstanceNotFoundException
-						| ParseException e1) {
-					e1.printStackTrace();
-				}
-			}
-		});*/
+		/*
+		 * btnReservasComedor.addActionListener(new ActionListener() { public
+		 * void actionPerformed(ActionEvent e) { try { List<Student> students =
+		 * familyService.getStudents(); final Student studentSelected =
+		 * students.get(studentsTable.getSelectedRow()); BookingWindow bW = new
+		 * BookingWindow(studentSelected); bW.setVisible(true); } catch
+		 * (InstanceNotFoundException | ParseException e1) {
+		 * e1.printStackTrace(); } } });
+		 */
 		btnReservasComedor.setName("btnCreateBooking");
 
 		GroupLayout gl_rigthPanel = new GroupLayout(rigthPanel);

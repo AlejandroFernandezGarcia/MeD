@@ -17,7 +17,7 @@ import ampa.sa.test.DatosMock;
 import ampa.sa.util.exceptions.DuplicateInstanceException;
 import ampa.sa.util.exceptions.InstanceNotFoundException;
 
-public class TestActividades {
+public class ActivityTest {
 
 	private ActivityService activityService = ActivityService.getInstance();
 

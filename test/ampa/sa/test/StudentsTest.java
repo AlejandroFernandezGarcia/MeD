@@ -25,7 +25,7 @@ import ampa.sa.student.Student;
 import ampa.sa.util.exceptions.DuplicateInstanceException;
 import ampa.sa.util.exceptions.InstanceNotFoundException;
 
-public class TestStudents {
+public class StudentsTest {
 
 	private FamilyService familyService = FamilyService.getInstance();
 	private ActivityService activityService = ActivityService.getInstance();

@@ -105,7 +105,7 @@ public class FamilyService implements Serializable {
 			throw new InstanceNotFoundException(bankAccount, "Household");
 		}
 	}
-	
+
 	public void updateStudent(Student student) {
 		boolean found = false;
 		Iterator<Student> iter;
@@ -124,14 +124,14 @@ public class FamilyService implements Serializable {
 			}
 		}
 	}
-	
+
 	public void updateHousehold(Household household) {
 		boolean found = false;
 		Iterator<Household> iter;
 		iter = households.iterator();
 		while (iter.hasNext() && !found) {
 			Household h = iter.next();
-			if(h.getBanckAccount() == household.getBanckAccount()) {
+			if (h.getBanckAccount() == household.getBanckAccount()) {
 				found = true;
 				h.setBanckAccount(household.getBanckAccount());
 				h.setMentored(household.getMentored());
@@ -195,7 +195,6 @@ public class FamilyService implements Serializable {
 
 	}
 
-	//TODO Falta test de este
 	public BigDecimal getStudentExpenses(Student s) {
 		BigDecimal amount = new BigDecimal(0.0);
 		// 1º Get activities prize
@@ -210,23 +209,22 @@ public class FamilyService implements Serializable {
 		}
 		return amount;
 	}
-	
-	//TODO Falta test
-	public String getStudentType(Student student){
+
+	public String getStudentType(Student student) {
 		Calendar cal = Calendar.getInstance();
 		Calendar dateBorn = student.getDateBorn();
-		
-	    if (dateBorn.compareTo(cal)<0){
-	    	double diff = cal.getTimeInMillis() - dateBorn.getTimeInMillis();
-	    	long msYear = 1000L * 60 * 60 * 24 * 365;
-	    	int yearsDiff = (int) Math.round(diff / msYear);
-	    	if(yearsDiff <= 12 )
-	    		//return "Primaria";
-	    		return "Primary (" + yearsDiff + " years)";
-	    	else
-	    		//return "Secundaria";
-	    		return "Secundary (" + yearsDiff + " years)";
-	    }
-	    return null;
+
+		if (dateBorn.compareTo(cal) < 0) {
+			double diff = cal.getTimeInMillis() - dateBorn.getTimeInMillis();
+			long msYear = 1000L * 60 * 60 * 24 * 365;
+			int yearsDiff = (int) Math.round(diff / msYear);
+			if (yearsDiff <= 12)
+				// return "Primaria";
+				return "Primary (" + yearsDiff + " years)";
+			else
+				// return "Secundaria";
+				return "Secundary (" + yearsDiff + " years)";
+		}
+		return null;
 	}
 }

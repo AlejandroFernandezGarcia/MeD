@@ -58,14 +58,13 @@ public class BookingService implements Serializable {
 			checkCapacity(booking);
 			bookings.add(booking);
 			booking.getStudent().getBookings().add(booking);
-			
+
 			Persistence.getInstance().save();
 		} else {
 			throw new DuplicateInstanceException(booking, "Booking");
 		}
 	}
 
-	// TODO Nuevo m�todo
 	public int getPlacesForDiningSchedule(Calendar cal, DiningHall dh) {
 		Iterator<Booking> iter;
 		iter = bookings.iterator();
@@ -115,7 +114,7 @@ public class BookingService implements Serializable {
 		}
 		throw new InstanceNotFoundException(id, "DiningHall");
 	}
-	
+
 	public void update(Booking booking) throws InstanceNotFoundException {
 		boolean found = false;
 		Iterator<Booking> iter;
@@ -130,8 +129,8 @@ public class BookingService implements Serializable {
 				Persistence.getInstance().save();
 			}
 		}
-		if (!found){
-			throw new InstanceNotFoundException(booking, "Booking");			
+		if (!found) {
+			throw new InstanceNotFoundException(booking, "Booking");
 		}
 	}
 
@@ -182,7 +181,6 @@ public class BookingService implements Serializable {
 	}
 
 	// FIXME no distingue cursos todav�a
-	// TODO tests
 	public void checkCapacity(Booking b) throws MaxCapacityException {
 		DiningHall dh = b.getDiningHall();
 		int countBookings = 0;
@@ -214,4 +212,22 @@ public class BookingService implements Serializable {
 		}
 		return countBookings;
 	}
+
+	public List<Booking> findStudentBookingsByMonthAndYear(Student student,
+			Calendar date) {
+		List<Booking> b = new ArrayList<Booking>();
+		Iterator<Booking> iter;
+		iter = student.getBookings().iterator();
+		while (iter.hasNext()) {
+			Booking booking = iter.next();
+			if ((booking.getDate().get(Calendar.MONTH) == date
+					.get(Calendar.MONTH))
+					&& (booking.getDate().get(Calendar.YEAR) == date
+							.get(Calendar.YEAR))) {
+				b.add(booking);
+			}
+		}
+		return b;
+	}
+
 }

@@ -21,7 +21,7 @@ import ampa.sa.util.exceptions.DuplicateInstanceException;
 import ampa.sa.util.exceptions.InstanceNotFoundException;
 import ampa.sa.util.exceptions.MaxCapacityException;
 
-public class TestBooking {
+public class BookingTest {
 
 	private BookingService bookingService = BookingService.getInstance();
 	private FamilyService familyService = FamilyService.getInstance();
