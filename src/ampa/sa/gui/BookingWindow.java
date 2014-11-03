@@ -46,12 +46,15 @@ import ampa.sa.test.DatosMock;
 import ampa.sa.util.exceptions.DuplicateInstanceException;
 import ampa.sa.util.exceptions.InstanceNotFoundException;
 import ampa.sa.util.exceptions.MaxCapacityException;
+import ampa.sa.util.exceptions.NotValidDateException;
 
 import com.toedter.calendar.JCalendar;
 
 import javax.swing.JRadioButton;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 
@@ -231,7 +234,13 @@ public class BookingWindow extends JFrame {
 								cal.setTime(calendar.getCalendar().getTime());
 								Booking b = new Booking(1, cal, student,
 										(DiningHall) comboBox.getSelectedItem());
-								bookingService.create(b);
+								try {
+									bookingService.create(b);
+								} catch (NotValidDateException e) {
+									JOptionPane
+									.showMessageDialog(null,
+											"El dia "+sdf.format(cal.getTime())+" es festivo");
+								}
 								fldPlaces.setText(String.valueOf(bookingService.getPlacesForDiningSchedule(
 										calendar.getCalendar(),
 										(DiningHall) comboBox.getSelectedItem())));
@@ -502,6 +511,10 @@ public class BookingWindow extends JFrame {
 							e1.printStackTrace();
 						}
 					}
+				} catch (NotValidDateException e) {
+					JOptionPane
+					.showMessageDialog(null,
+							"AVISO: Alguno de los días es festivo");
 				}
 			}
 			cal1.add(Calendar.DATE, 1);

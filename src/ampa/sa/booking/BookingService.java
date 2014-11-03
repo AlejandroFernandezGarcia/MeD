@@ -2,6 +2,7 @@ package ampa.sa.booking;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -10,9 +11,11 @@ import java.util.List;
 import ampa.sa.diningHall.DiningHall;
 import ampa.sa.persistence.Persistence;
 import ampa.sa.student.Student;
+import ampa.sa.util.SchoolCalendar;
 import ampa.sa.util.exceptions.DuplicateInstanceException;
 import ampa.sa.util.exceptions.InstanceNotFoundException;
 import ampa.sa.util.exceptions.MaxCapacityException;
+import ampa.sa.util.exceptions.NotValidDateException;
 
 @SuppressWarnings("serial")
 public class BookingService implements Serializable {
@@ -53,10 +56,21 @@ public class BookingService implements Serializable {
 	}
 
 	public void create(Booking booking) throws DuplicateInstanceException,
-			MaxCapacityException {
+			MaxCapacityException, NotValidDateException {
 		if (!bookings.contains(booking)) {
 			checkCapacity(booking);
-			bookings.add(booking);
+			try {
+				if(SchoolCalendar.isNotHoliday(booking.getDate()))
+				{
+					bookings.add(booking);
+				}
+				else
+				{
+					throw new NotValidDateException(booking, "Booking");
+				}
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
 			booking.getStudent().getBookings().add(booking);
 
 			Persistence.getInstance().save();
@@ -165,7 +179,7 @@ public class BookingService implements Serializable {
 
 	// TODO tests y que no reserve ninguna si alg�n d�a falla
 	public void createByDayOfWeek(List<Integer> days, Student st, DiningHall dh)
-			throws DuplicateInstanceException, MaxCapacityException {
+			throws DuplicateInstanceException, MaxCapacityException, NotValidDateException {
 		int actualMonth = Calendar.getInstance().get(Calendar.MONTH);
 		Calendar cal1 = Calendar.getInstance();
 		while (cal1.get(Calendar.MONTH) == actualMonth) {
