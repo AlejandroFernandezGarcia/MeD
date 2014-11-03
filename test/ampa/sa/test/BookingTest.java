@@ -20,6 +20,7 @@ import ampa.sa.student.Student;
 import ampa.sa.util.exceptions.DuplicateInstanceException;
 import ampa.sa.util.exceptions.InstanceNotFoundException;
 import ampa.sa.util.exceptions.MaxCapacityException;
+import ampa.sa.util.exceptions.NotValidDateException;
 
 public class BookingTest {
 
@@ -53,6 +54,9 @@ public class BookingTest {
 					.getDiningHall().get(0)));
 		} catch (DuplicateInstanceException | MaxCapacityException e) {
 			assertTrue("Booking has already been created",false);
+		} catch (NotValidDateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		Student ss = null;
 		try {
@@ -91,6 +95,8 @@ public class BookingTest {
 			bookingService.create(b);
 		} catch (MaxCapacityException e1) {
 			assertTrue("Full dining hall ",false);
+		} catch (NotValidDateException e) {
+			assertTrue("Invalid date",false);
 		}
 	}
 
@@ -115,6 +121,8 @@ public class BookingTest {
 					.getDiningHall().get(0)));
 		} catch (DuplicateInstanceException | MaxCapacityException e) {
 			assertTrue("Duplicate booking or full dining hall",false);
+		} catch (NotValidDateException e) {
+			assertTrue("Invalid date",false);
 		}
 
 		assertEquals(bookingService.getPlacesForDiningSchedule(cb,
@@ -221,7 +229,7 @@ public class BookingTest {
 			bookingService.create(new Booking(3, cb1, s, bookingService
 					.findDiningHall(2)));
 		} catch (DuplicateInstanceException | MaxCapacityException
-				| InstanceNotFoundException e) {
+				| NotValidDateException | InstanceNotFoundException e) {
 			assertTrue("Error in getStudentBookingByDateTest",false);
 		}
 
@@ -260,7 +268,7 @@ public class BookingTest {
 			bookingService.create(new Booking(3, cb1, s, bookingService
 					.findDiningHall(2)));
 		} catch (DuplicateInstanceException | MaxCapacityException
-				| InstanceNotFoundException e) {
+				| NotValidDateException | InstanceNotFoundException e) {
 			assertTrue("Error in getStudentBookingByDateTest",false);
 		}
 
