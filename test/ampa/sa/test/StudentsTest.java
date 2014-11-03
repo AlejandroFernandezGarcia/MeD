@@ -99,25 +99,22 @@ public class StudentsTest {
 			ParseException, DuplicateInstanceException {
 		Student student1 = familyService.findStudent(1);
 		String type = familyService.getStudentType(student1);
-		assertEquals(type, "Primary (11 years)");
+		assertEquals(type, "INFANTIL");
 		
-		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-		Calendar cal1 = Calendar.getInstance();
-		cal1.setTime(sdf.parse("20/05/2001"));		
-		student1.setDateBorn(cal1);
+		student1.setCategory(Student.Category.PRIMARIA);;
 		familyService.updateStudent(student1);
 		
 		type = familyService.getStudentType(student1);
-		assertEquals(type, "Secundary (13 years)");
+		assertEquals(type, "PRIMARIA");
 
 	}
 	
-	@Test
+	/*@Test
 	public void TestGetStudentTypeNull() throws InstanceNotFoundException,
 			ParseException, DuplicateInstanceException {
 		Student student1 = familyService.findStudent(1);
 		String type = familyService.getStudentType(student1);
-		assertEquals(type, "Primary (11 years)");
+		assertEquals(type, "INFANTIL");
 		
 		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
 		Calendar cal1 = Calendar.getInstance();
@@ -128,7 +125,7 @@ public class StudentsTest {
 		type = familyService.getStudentType(student1);
 		assertNull(type);
 
-	}
+	}*/
 	
 	@Test
 	public void TestCreateStudent() throws InstanceNotFoundException, ParseException {
@@ -137,7 +134,7 @@ public class StudentsTest {
 		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
 		Calendar cal3 = Calendar.getInstance();
 		cal3.setTime(sdf.parse("12/03/2006"));
-		Student student = new Student(5, household, "Alejandro", "Fortes",
+		Student student = new Student(5, household, "Alejandro", "Fortes", Student.Category.PRIMARIA,
 				cal3, new HashSet<Activity>(), new HashSet<Booking>());
 
 		try {
@@ -155,7 +152,7 @@ public class StudentsTest {
 
 		Student student = null;
 		try {
-			student = familyService.findStudent(4);
+			student = familyService.findStudent(3);
 		} catch (InstanceNotFoundException e) {
 			e.printStackTrace();
 		}

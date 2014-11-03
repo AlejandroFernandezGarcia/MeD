@@ -3,7 +3,6 @@ package ampa.sa.student;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -211,20 +210,9 @@ public class FamilyService implements Serializable {
 	}
 
 	public String getStudentType(Student student) {
-		Calendar cal = Calendar.getInstance();
-		Calendar dateBorn = student.getDateBorn();
-
-		if (dateBorn.compareTo(cal) < 0) {
-			double diff = cal.getTimeInMillis() - dateBorn.getTimeInMillis();
-			long msYear = 1000L * 60 * 60 * 24 * 365;
-			int yearsDiff = (int) Math.round(diff / msYear);
-			if (yearsDiff <= 12)
-				// return "Primaria";
-				return "Primary (" + yearsDiff + " years)";
+			if(student.getCategory() == Student.Category.PRIMARIA)
+				return "PRIMARIA";
 			else
-				// return "Secundaria";
-				return "Secundary (" + yearsDiff + " years)";
-		}
-		return null;
+				return "INFANTIL";
 	}
 }

@@ -38,7 +38,7 @@ public class BookingTest {
 
 		Student s = null;
 		try {
-			s = familyService.findStudent(4);
+			s = familyService.findStudent(3);
 		} catch (InstanceNotFoundException e) {
 			assertTrue("Student not found",false);
 		}
@@ -77,7 +77,7 @@ public class BookingTest {
 		Student s = null;
 		Booking b = null;
 		try {
-			s = familyService.findStudent(4);
+			s = familyService.findStudent(3);
 		} catch (InstanceNotFoundException e) {
 			assertTrue("Student not found",false);
 		}

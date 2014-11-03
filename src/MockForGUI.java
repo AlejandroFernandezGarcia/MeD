@@ -64,19 +64,19 @@ public class MockForGUI {
 			// Estudiantes
 			SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
 			Calendar cal1 = Calendar.getInstance();
-			cal1.setTime(sdf.parse("20/05/1992"));
-			students.add(new Student(1, house1, "Alberto", "Pérez", cal1,
+			cal1.setTime(sdf.parse("20/05/2009"));
+			students.add(new Student(1, house1, "Alberto", "Pérez", Student.Category.INFANTIL, cal1,
 					new HashSet<Activity>(), new HashSet<Booking>()));
 			Calendar cal2 = Calendar.getInstance();
-			cal2.setTime(sdf.parse("29/05/1987"));
-			students.add(new Student(2, house1, "Miguel", "Vinha", cal1,
+			cal2.setTime(sdf.parse("29/05/2006"));
+			students.add(new Student(2, house1, "Miguel", "Vinha", Student.Category.PRIMARIA, cal1,
 					new HashSet<Activity>(), new HashSet<Booking>()));
 			Calendar cal3 = Calendar.getInstance();
-			cal3.setTime(sdf.parse("12/03/1989"));
-			students.add(new Student(3, house3, "Alejandro", "Fortes", cal3,
+			cal3.setTime(sdf.parse("12/03/2005"));
+			students.add(new Student(3, house3, "Alejandro", "Fortes", Student.Category.PRIMARIA, cal3,
 					new HashSet<Activity>(), new HashSet<Booking>()));
-			cal3.setTime(sdf.parse("12/03/1989"));
-			students.add(new Student(3, house4, "Alejandro", "Apellido", cal3,
+			cal3.setTime(sdf.parse("12/03/2010"));
+			students.add(new Student(4, house4, "Alejandro", "Fernandez", Student.Category.INFANTIL, cal3,
 					new HashSet<Activity>(), new HashSet<Booking>()));
 			
 			Set<Activity> sa = new HashSet<Activity>();

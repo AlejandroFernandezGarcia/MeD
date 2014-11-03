@@ -10,21 +10,25 @@ import ampa.sa.booking.Booking;
 @SuppressWarnings("serial")
 public class Student implements Serializable{
 
+	public enum Category {INFANTIL, PRIMARIA} //INFANTIL de 3 a 5 anhos, PRIMARIA de 6 a 12
+	
 	private long id;
 	private Household houseHold;
 	private String name;
 	private String lastname;
+	private Category category;
 	private Calendar dateBorn;
 	private Set<Activity> activities;
 	private Set<Booking> bookings;
 
-	public Student(long id, Household houseHold, String name, String lastname,
+	public Student(long id, Household houseHold, String name, String lastname, Category cat,
 			Calendar dateBorn, Set<Activity> activities, Set<Booking> bookings) {
 		super();
 		this.id = id;
 		this.houseHold = houseHold;
 		this.name = name;
 		this.lastname = lastname;
+		this.category = cat;
 		this.dateBorn = dateBorn;
 		this.activities = activities;
 		this.bookings = bookings;
@@ -60,6 +64,14 @@ public class Student implements Serializable{
 
 	public void setLastname(String lastname) {
 		this.lastname = lastname;
+	}
+	
+	public Category getCategory() {
+		return category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
 	}
 
 	public Calendar getDateBorn() {
