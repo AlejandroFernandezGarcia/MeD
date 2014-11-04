@@ -8,17 +8,15 @@ import ampa.sa.util.Schedule;
 
 @SuppressWarnings("serial")
 public class DiningHall implements Serializable{
-
-	public static final int CAPACITY = 70;
 	private int id;
 	private Schedule schedule;
-	private int places;
+	private int monitors;
 	private BigDecimal price;
 
 	public DiningHall(int id, Schedule schedule, int places, BigDecimal price) {
 		this.id = id;
 		this.schedule = schedule;
-		this.places = places;
+		this.monitors = places;
 		this.price = price.setScale(2,RoundingMode.HALF_UP);
 	}
 
@@ -38,12 +36,12 @@ public class DiningHall implements Serializable{
 		this.schedule = schedule;
 	}
 
-	public int getPlaces() {
-		return places;
+	public int getMonitors() {
+		return monitors;
 	}
 
-	public void setPlaces(int places) {
-		this.places = places;
+	public void setMonitors(int places) {
+		this.monitors = places;
 	}
 
 	public BigDecimal getPrice() {
@@ -59,7 +57,7 @@ public class DiningHall implements Serializable{
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + id;
-		result = prime * result + places;
+		result = prime * result + monitors;
 		result = prime * result + ((price == null) ? 0 : price.hashCode());
 		result = prime * result
 				+ ((schedule == null) ? 0 : schedule.hashCode());
@@ -77,7 +75,7 @@ public class DiningHall implements Serializable{
 		DiningHall other = (DiningHall) obj;
 		if (id != other.id)
 			return false;
-		if (places != other.places)
+		if (monitors != other.monitors)
 			return false;
 		if (price == null) {
 			if (other.price != null)

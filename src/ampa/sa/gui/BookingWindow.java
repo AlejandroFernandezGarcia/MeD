@@ -13,6 +13,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.ButtonGroup;
@@ -42,6 +43,7 @@ import ampa.sa.booking.BookingService;
 import ampa.sa.diningHall.DiningHall;
 import ampa.sa.student.FamilyService;
 import ampa.sa.student.Student;
+import ampa.sa.student.Student.Category;
 import ampa.sa.test.DatosMock;
 import ampa.sa.util.exceptions.DuplicateInstanceException;
 import ampa.sa.util.exceptions.InstanceNotFoundException;
@@ -59,7 +61,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 
 public class BookingWindow extends JFrame {
-
+	
 	private JPanel contentPane;
 	private JTextField fldAlumno;
 	private JTextField fldCurso;
@@ -78,6 +80,7 @@ public class BookingWindow extends JFrame {
 	private static BookingService bookingService = BookingService.getInstance();
 	private static FamilyService familyService = FamilyService.getInstance();
 
+	
 	public static final String DATE_FORMAT = "dd/MM/yyyy";
 
 	SimpleDateFormat sdf;
@@ -521,4 +524,6 @@ public class BookingWindow extends JFrame {
 		}
 		fillBookings();
 	}
+	
+
 }

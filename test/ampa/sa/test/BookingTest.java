@@ -15,8 +15,10 @@ import org.junit.Test;
 
 import ampa.sa.booking.Booking;
 import ampa.sa.booking.BookingService;
+import ampa.sa.diningHall.DiningHall;
 import ampa.sa.student.FamilyService;
 import ampa.sa.student.Student;
+import ampa.sa.util.Schedule;
 import ampa.sa.util.exceptions.DuplicateInstanceException;
 import ampa.sa.util.exceptions.InstanceNotFoundException;
 import ampa.sa.util.exceptions.MaxCapacityException;
@@ -275,6 +277,34 @@ public class BookingTest {
 		lb = bookingService.getStudentBookingsByDate(s, b.getDate());
 		assertEquals(bookingService.getBookingsPrize(lb),
 				new BigDecimal("9.00"));
+	}
+	
+	@Test(expected = MaxCapacityException.class)
+	public void maxCapacityTest() throws MaxCapacityException{
+		try {
+			Student testSt1 = familyService.findStudent(1);
+			Student testSt2 = familyService.findStudent(2);
+			
+			Schedule sch = new Schedule();
+			sch.setStartTime("12:30pm");
+			sch.setEndTime("14:00pm");
+			DiningHall d1 = new DiningHall(1,sch,1,BigDecimal.valueOf(4.00));
+			
+			SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+			Calendar testDate = Calendar.getInstance();
+			//testDate.setTime(sdf.parse("22/11/2014"));
+			Booking b1 =  new Booking(1, testDate, testSt1,d1);
+			Booking b2 =  new Booking(1, testDate, testSt2,d1);
+			bookingService.create(b1);
+			bookingService.create(b2);
+		} catch (InstanceNotFoundException | DuplicateInstanceException
+				| NotValidDateException e) {
+			assertTrue("Error in maxCapacityTest",false);
+		}
+		
+		
+
+		
 	}
 
 }

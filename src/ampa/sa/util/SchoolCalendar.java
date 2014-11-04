@@ -82,9 +82,11 @@ public class SchoolCalendar {
 	public static boolean isNotHoliday(Calendar date) throws ParseException{
 		create();
 		for(Calendar cal : holidays){
-			if(cal.get(Calendar.DAY_OF_MONTH) == date.get(Calendar.DAY_OF_MONTH)
+			if((cal.get(Calendar.DAY_OF_MONTH) == date.get(Calendar.DAY_OF_MONTH)
 					&& cal.get(Calendar.MONTH) == date.get(Calendar.MONTH)
 					&& cal.get(Calendar.YEAR) == date.get(Calendar.YEAR))
+					|| date.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY
+					|| date.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY)
 				return false;
 		}
 		return true;
