@@ -104,14 +104,16 @@ public class MainWindow extends JFrame {
 		for (DiningHall dh : dhs) {
 			count = 0;
 			for (Booking b : bookings) {
-				if(b.getDiningHall().equals(dh)){
+				if (b.getDiningHall().equals(dh)) {
 					count++;
 				}
 			}
-			if(count != 0){
-				Object[] data = { count + "x Comedor " + dh.getSchedule(),
-						dh.getPrice().multiply(new BigDecimal(count))+" ("+dh.getPrice()+" ud )"};
-				dtm.addRow(data);			
+			if (count != 0) {
+				Object[] data = {
+						count + "x Comedor " + dh.getSchedule(),
+						dh.getPrice().multiply(new BigDecimal(count)) + " ("
+								+ dh.getPrice() + " ud )" };
+				dtm.addRow(data);
 			}
 		}
 
@@ -241,6 +243,35 @@ public class MainWindow extends JFrame {
 								}
 							});
 
+				} else if (component.getName().compareTo("btnShowBills") == 0) {
+					ActionListener[] al = ((JButton) component)
+							.getListeners(ActionListener.class);
+					if (al.length != 0) {
+						((JButton) component).removeActionListener(al[0]);
+					}
+					((JButton) component)
+							.addActionListener(new ActionListener() {
+								public void actionPerformed(ActionEvent e) {
+									BillHistoryWindow bhw = new BillHistoryWindow(
+											studentSelected.getHouseHold());
+									bhw.setVisible(true);
+								}
+							});
+				} else if (component.getName().compareTo("btnSignUpActivity") == 0) {
+					ActionListener[] al = ((JButton) component)
+							.getListeners(ActionListener.class);
+					if (al.length != 0) {
+						((JButton) component).removeActionListener(al[0]);
+					}
+					((JButton) component)
+							.addActionListener(new ActionListener() {
+								public void actionPerformed(ActionEvent e) {
+									ActivityManagementWindow amw = new ActivityManagementWindow(
+											studentSelected);
+									amw.setVisible(true);
+								}
+							});
+
 				}// TODO Añadir funcionalidad demás botones
 			}
 		}
@@ -349,20 +380,15 @@ public class MainWindow extends JFrame {
 		lblTotalHouseHold.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblTotalHouseHold.setHorizontalAlignment(SwingConstants.CENTER);
 
-		JButton btnMatricularEnActividad = new JButton(
-				"Matricular en actividad");
+		JButton btnSignUpActivity = new JButton("Apuntarse a actividades");
+		btnSignUpActivity.setName("btnSignUpActivity");
 
 		JButton btnReservasComedor = new JButton("Reservas comedor");
-		/*
-		 * btnReservasComedor.addActionListener(new ActionListener() { public
-		 * void actionPerformed(ActionEvent e) { try { List<Student> students =
-		 * familyService.getStudents(); final Student studentSelected =
-		 * students.get(studentsTable.getSelectedRow()); BookingWindow bW = new
-		 * BookingWindow(studentSelected); bW.setVisible(true); } catch
-		 * (InstanceNotFoundException | ParseException e1) {
-		 * e1.printStackTrace(); } } });
-		 */
+
 		btnReservasComedor.setName("btnCreateBooking");
+
+		JButton btnShowBills = new JButton("Mostrar recibos");
+		btnShowBills.setName("btnShowBills");
 
 		GroupLayout gl_rigthPanel = new GroupLayout(rigthPanel);
 		gl_rigthPanel
@@ -382,7 +408,7 @@ public class MainWindow extends JFrame {
 																		.addComponent(
 																				tabAlumno,
 																				GroupLayout.DEFAULT_SIZE,
-																				299,
+																				298,
 																				Short.MAX_VALUE)
 																		.addContainerGap())
 														.addGroup(
@@ -396,21 +422,21 @@ public class MainWindow extends JFrame {
 																								lblTotalHouseHold,
 																								Alignment.LEADING,
 																								GroupLayout.DEFAULT_SIZE,
-																								286,
+																								285,
 																								Short.MAX_VALUE)
 																						.addComponent(
 																								lblHouseHold,
 																								GroupLayout.DEFAULT_SIZE,
-																								286,
+																								285,
 																								Short.MAX_VALUE))
 																		.addGap(25))
 														.addGroup(
 																gl_rigthPanel
 																		.createSequentialGroup()
 																		.addComponent(
-																				btnMatricularEnActividad)
+																				btnSignUpActivity)
 																		.addContainerGap(
-																				115,
+																				114,
 																				Short.MAX_VALUE))
 														.addGroup(
 																gl_rigthPanel
@@ -418,11 +444,18 @@ public class MainWindow extends JFrame {
 																		.addComponent(
 																				btnReservasComedor)
 																		.addContainerGap(
-																				147,
+																				146,
+																				Short.MAX_VALUE))
+														.addGroup(
+																gl_rigthPanel
+																		.createSequentialGroup()
+																		.addComponent(
+																				btnShowBills)
+																		.addContainerGap(
+																				193,
 																				Short.MAX_VALUE)))));
 		gl_rigthPanel.setVerticalGroup(gl_rigthPanel.createParallelGroup(
-				Alignment.TRAILING).addGroup(
-				Alignment.LEADING,
+				Alignment.LEADING).addGroup(
 				gl_rigthPanel
 						.createSequentialGroup()
 						.addGap(18)
@@ -431,11 +464,13 @@ public class MainWindow extends JFrame {
 						.addGap(10)
 						.addComponent(lblTotalHouseHold)
 						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(tabAlumno, GroupLayout.DEFAULT_SIZE, 239,
+						.addComponent(tabAlumno, GroupLayout.DEFAULT_SIZE, 210,
 								Short.MAX_VALUE).addGap(18)
-						.addComponent(btnMatricularEnActividad)
+						.addComponent(btnSignUpActivity)
 						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(btnReservasComedor).addGap(46)));
+						.addComponent(btnReservasComedor)
+						.addPreferredGap(ComponentPlacement.RELATED)
+						.addComponent(btnShowBills).addGap(15)));
 
 		JPanel explainPanel = new JPanel();
 		tabAlumno.addTab("New tab", null, explainPanel, null);
