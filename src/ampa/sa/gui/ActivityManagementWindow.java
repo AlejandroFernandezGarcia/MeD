@@ -1,6 +1,8 @@
 package ampa.sa.gui;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -14,6 +16,7 @@ import ampa.sa.activity.ActivityService;
 import ampa.sa.student.FamilyService;
 import ampa.sa.student.Student;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.BoxLayout;
@@ -22,12 +25,14 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
-public class ActivityManagementWindow extends JFrame {
+public class ActivityManagementWindow extends JFrame implements  ActionListener {
 
 	private JPanel contentPane;
-	private javax.swing.JList listAnhadidos;
+	private javax.swing.JList listAnhadidos, listNoAnhadidos;
 	private ActivityService activityService;
-	
+	private JButton btnNewButton, btnNewButton_1;
+	private DefaultListModel anhadidos, noAnhadidos;
+	private JList list_1, list_2;
 	
 	public ActivityManagementWindow(Student student) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -36,17 +41,35 @@ public class ActivityManagementWindow extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		
-		JButton btnNewButton = new JButton("A\u00F1adir ->");
+		btnNewButton = new JButton("A\u00F1adir ->");
+		btnNewButton.addActionListener(this);
 		
-		JButton btnNewButton_1 = new JButton("<- Quitar");
+		btnNewButton_1 = new JButton("<- Quitar");
+		btnNewButton_1.addActionListener(this);
 		
-		JScrollPane scrollPane_2 = new JScrollPane();
+        noAnhadidos = new DefaultListModel();
+        anhadidos = new DefaultListModel();
 		
-		JScrollPane scrollPane_1 = new JScrollPane();
+		activityService = ActivityService.getInstance();
+		List<String> activitiesStr = new ArrayList<String>();
+		
+		for (int i = 0; i <activityService.getActivities().size(); i++ )
+			anhadidos.addElement(activityService.getActivities().get(i).getName());
+		
+		//anhadidos.addElement(activitiesStr);
+		
+		list_1 = new JList(anhadidos);
+		
+		list_2 = new JList(noAnhadidos);
+	    
+		JScrollPane scrollPane_2 = new JScrollPane(list_1);
+		
+		JScrollPane scrollPane_1 = new JScrollPane(list_2);
 		
 		JButton btnNewButton_2 = new JButton("Aceptar");
 		
 		JButton btnNewButton_3 = new JButton("Cancelar");
+		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -86,22 +109,65 @@ public class ActivityManagementWindow extends JFrame {
 							.addComponent(btnNewButton_3)))
 					.addContainerGap())
 		);
-		
-		activityService = ActivityService.getInstance();
-		List<String> activitiesStr = new ArrayList<String>();
-		
-		for (int i = 0; i <activityService.getActivities().size(); i++ )
-			activitiesStr.add(activityService.getActivities().get(i).getName());
-		
-		JList list_1 = new JList();
-		scrollPane_1.setViewportView(list_1);
-		
-		JList list_2 = new JList(activitiesStr.toArray());
-		scrollPane_2.setViewportView(list_2);
+	
 		contentPane.setLayout(gl_contentPane);
-		
-		
+	    
 	}
+	
+	public void actionPerformed(ActionEvent e) 
+    {
+        int i = 0;
+        
+        // When the 'in' button is pressed,
+        // we take the indices and values of the selected items
+        // and output them to an array.
+
+        if(e.getSource() == btnNewButton)
+        {
+            int[] fromindex = list_1.getSelectedIndices();
+			Object[] from = list_1.getSelectedValues();
+
+            // Then, for each item in the array, we add them to
+            // the other list.
+            for(i = 0; i < from.length; i++)
+            {
+                noAnhadidos.addElement(from[i]);
+            }
+            
+            // Finally, we remove the items from the first list.
+            // We must remove from the bottom, otherwise we try to 
+            // remove the wrong objects.
+            for(i = (fromindex.length-1); i >=0; i--)
+            {
+                anhadidos.remove(fromindex[i]);
+            }
+        }
+        
+        // If the out button is pressed, we take the indices and values of
+        // the selected items and output them to an array.
+        else if(e.getSource() == btnNewButton_1)
+        {
+            @SuppressWarnings("deprecation")
+			Object[] to = list_2.getSelectedValues();
+            int[] toindex = list_2.getSelectedIndices();
+            
+            // Then, for each item in the array, we add them to
+            // the other list.
+            for(i = 0; i < to.length; i++)
+            {
+                anhadidos.addElement(to[i]);
+            }
+            
+            // Finally, we remove the items from the first list.
+            // We must remove from the bottom, otherwise we try to
+            // remove the wrong objects.
+            for(i = (toindex.length-1); i >=0; i--)
+            {
+                noAnhadidos.remove(toindex[i]);
+            }
+        }
+    }
+
 	
 	
 }
