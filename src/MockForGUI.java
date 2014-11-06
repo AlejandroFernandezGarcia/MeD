@@ -28,6 +28,7 @@ public class MockForGUI {
 	private List<Activity> activities = new ArrayList<Activity>();
 	private List<Booking> bookings = new ArrayList<Booking>();
 	private List<DiningHall> diningHall = new ArrayList<DiningHall>();
+	private Set<Receipt> receiptList = new HashSet<Receipt>();
 	ActivityService activityService = ActivityService.getInstance();
 	BookingService bookingService = BookingService.getInstance();
 	FamilyService familyService = FamilyService.getInstance();
@@ -152,24 +153,29 @@ public class MockForGUI {
 			rllist.add(rl2);
 
 			Calendar calReceipt1 = Calendar.getInstance();
-			calReceipt1.setTime(sdf.parse("05/2009"));
+			calReceipt1.setTime(sdf.parse("01/05/2009"));
 			
 			Calendar calReceipt2 = Calendar.getInstance();
-			calReceipt2.setTime(sdf.parse("06/2009"));
+			calReceipt2.setTime(sdf.parse("01/06/2009"));
 			
 			Receipt r1 = new Receipt(house1, new BigDecimal(100), rllist, calReceipt1 );
 			Receipt r2 = new Receipt(house1, new BigDecimal(120), rllist, calReceipt2 );
 			
-			List<Receipt> receiptList = new ArrayList<Receipt>();
 			receiptList.add(r1);
 			receiptList.add(r2);
+			
+			house1.setReceipts(receiptList);
+			
+			List<Receipt> r = new ArrayList<Receipt>();
+			r.add(r1);
+			r.add(r2);
 			
 			activityService.setActivities(activities);
 			bookingService.setBookings(bookings);
 			familyService.setHousehold(households);
 			familyService.setStudents(students);
 			bookingService.setDiningHall(diningHall);
-			receiptService.setReceipts(receiptList);
+			receiptService.setReceipts(r);
 			
 		}
 	public static void main(String[] args) throws ParseException {

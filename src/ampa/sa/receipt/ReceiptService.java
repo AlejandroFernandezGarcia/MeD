@@ -1,5 +1,6 @@
 package ampa.sa.receipt;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -16,7 +17,8 @@ import ampa.sa.student.Household;
 import ampa.sa.student.Student;
 import ampa.sa.util.exceptions.ReceiptsNotFoundException;
 
-public class ReceiptService {
+@SuppressWarnings("serial")
+public class ReceiptService  implements Serializable{
 
 	private static List<Receipt> receipts = new ArrayList<Receipt>();
 
@@ -94,11 +96,11 @@ public class ReceiptService {
 
 	}
 
-	public static List<Receipt> getReceipts() {
+	public List<Receipt> getReceipts() {
 		return receipts;
 	}
 
-	public static void setReceipts(List<Receipt> receipts) {
-		ReceiptService.receipts = receipts;
+	public void setReceipts(List<Receipt> receipts) {
+		this.receipts = receipts;
 	}
 }

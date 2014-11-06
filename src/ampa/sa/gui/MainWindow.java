@@ -40,6 +40,7 @@ import ampa.sa.persistence.Persistence;
 import ampa.sa.student.FamilyService;
 import ampa.sa.student.Student;
 import ampa.sa.util.exceptions.InstanceNotFoundException;
+import ampa.sa.util.exceptions.ReceiptsNotFoundException;
 
 public class MainWindow extends JFrame {
 
@@ -252,9 +253,14 @@ public class MainWindow extends JFrame {
 					((JButton) component)
 							.addActionListener(new ActionListener() {
 								public void actionPerformed(ActionEvent e) {
-									BillHistoryWindow bhw = new BillHistoryWindow(
-											studentSelected.getHouseHold());
-									bhw.setVisible(true);
+									BillHistoryWindow bhw;
+									try {
+										bhw = new BillHistoryWindow(
+												studentSelected.getHouseHold());
+												bhw.setVisible(true);
+									} catch (ReceiptsNotFoundException e1) {
+										e1.printStackTrace();
+									}
 								}
 							});
 				} else if (component.getName().compareTo("btnSignUpActivity") == 0) {
