@@ -13,6 +13,9 @@ import ampa.sa.booking.Booking;
 import ampa.sa.booking.BookingService;
 import ampa.sa.diningHall.DiningHall;
 import ampa.sa.persistence.Persistence;
+import ampa.sa.receipt.Receipt;
+import ampa.sa.receipt.ReceiptLine;
+import ampa.sa.receipt.ReceiptService;
 import ampa.sa.student.FamilyService;
 import ampa.sa.student.Household;
 import ampa.sa.student.Student;
@@ -28,6 +31,7 @@ public class MockForGUI {
 	ActivityService activityService = ActivityService.getInstance();
 	BookingService bookingService = BookingService.getInstance();
 	FamilyService familyService = FamilyService.getInstance();
+	ReceiptService receiptService = ReceiptService.getInstance();
 	
 	public static final String DATE_FORMAT = "dd/MM/yyyy";
 
@@ -138,12 +142,34 @@ public class MockForGUI {
 			students.get(2).getBookings().add(b5);
 			students.get(2).getBookings().add(b6);
 			
+			//Bills 
+			
+			ReceiptLine rl1 = new ReceiptLine("Prueba para primer recibo, primera linea", new BigDecimal(7), 1, new BigDecimal(7), students.get(0));
+			ReceiptLine rl2 = new ReceiptLine("Prueba para primer recibo, segunda linea", new BigDecimal(8), 1, new BigDecimal(8), students.get(0));
+			
+			Set<ReceiptLine> rllist = new HashSet<ReceiptLine>();
+			rllist.add(rl1);
+			rllist.add(rl2);
+
+			Calendar calReceipt1 = Calendar.getInstance();
+			calReceipt1.setTime(sdf.parse("05/2009"));
+			
+			Calendar calReceipt2 = Calendar.getInstance();
+			calReceipt2.setTime(sdf.parse("06/2009"));
+			
+			Receipt r1 = new Receipt(house1, new BigDecimal(100), rllist, calReceipt1 );
+			Receipt r2 = new Receipt(house1, new BigDecimal(120), rllist, calReceipt2 );
+			
+			List<Receipt> receiptList = new ArrayList<Receipt>();
+			receiptList.add(r1);
+			receiptList.add(r2);
 			
 			activityService.setActivities(activities);
 			bookingService.setBookings(bookings);
 			familyService.setHousehold(households);
 			familyService.setStudents(students);
 			bookingService.setDiningHall(diningHall);
+			receiptService.setReceipts(receiptList);
 			
 		}
 	public static void main(String[] args) throws ParseException {

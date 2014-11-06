@@ -18,6 +18,9 @@ import ampa.sa.util.exceptions.ReceiptsNotFoundException;
 
 public class ReceiptService {
 
+	private static List<Receipt> receipts = new ArrayList<Receipt>();
+
+	
 	private static ReceiptService instance = null;
 
 	private ReceiptService() {
@@ -89,5 +92,13 @@ public class ReceiptService {
 
 		return result;
 
+	}
+
+	public static List<Receipt> getReceipts() {
+		return receipts;
+	}
+
+	public static void setReceipts(List<Receipt> receipts) {
+		ReceiptService.receipts = receipts;
 	}
 }
