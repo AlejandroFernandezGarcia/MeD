@@ -105,4 +105,13 @@ public class ActivityService implements Serializable {
 		}
 		throw new InstanceNotFoundException(id, "Activity");
 	}
+	
+	public Activity findByName(String name) throws InstanceNotFoundException {
+		for (Activity a : activities) {
+			if (a.getName().equals(name)) {
+				return a;
+			}
+		}
+		throw new InstanceNotFoundException(name, "Activity");
+	}
 }
