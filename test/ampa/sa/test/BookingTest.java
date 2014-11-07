@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 
 import org.junit.Before;
@@ -292,19 +293,155 @@ public class BookingTest {
 			
 			SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
 			Calendar testDate = Calendar.getInstance();
-			//testDate.setTime(sdf.parse("22/11/2014"));
+			testDate.setTime(sdf.parse("21/11/2014"));
 			Booking b1 =  new Booking(1, testDate, testSt1,d1);
 			Booking b2 =  new Booking(1, testDate, testSt2,d1);
 			bookingService.create(b1);
 			bookingService.create(b2);
 		} catch (InstanceNotFoundException | DuplicateInstanceException
-				| NotValidDateException e) {
+				| NotValidDateException | ParseException e) {
 			assertTrue("Error in maxCapacityTest",false);
 		}
-		
-		
-
-		
 	}
+		
+		
+	@Test(expected = NotValidDateException.class)	
+	public void forbiddenBookingTest() throws NotValidDateException{
+		try {
+			Student testSt1 = familyService.findStudent(1);
+			Schedule sch = new Schedule();
+			sch.setStartTime("12:30pm");
+			sch.setEndTime("14:00pm");
+			DiningHall d1 = new DiningHall(1,sch,2,BigDecimal.valueOf(4.00));
+			
+			SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+			Calendar testDate = Calendar.getInstance();
+			testDate.setTime(sdf.parse("25/12/2014"));
+			Booking b1 =  new Booking(1, testDate, testSt1,d1);
+			bookingService.create(b1);
+		} catch (MaxCapacityException | InstanceNotFoundException | ParseException | DuplicateInstanceException e) {
+			assertTrue("Fallo en inicialización de test",false);
+		}
+	}
+	
+	@Test
+	public void findStudentBookingsByMonthAndYearTest() {
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+			
+			Schedule sc1 = new Schedule();
+			sc1.setStartTime("8:00am");
+			sc1.setEndTime("9:30am");
+			
+			DiningHall d1 = new DiningHall(1,sc1,24,BigDecimal.valueOf(4.00));
+			
+			Schedule sc2 = new Schedule();
+			sc2.setStartTime("12:30pm");
+			sc2.setEndTime("14:00pm");
+			
+			DiningHall d2 = new DiningHall(2,sc2,20,BigDecimal.valueOf(5.00));
+			
+			Calendar cal1 = Calendar.getInstance();
+			cal1.setTime(sdf.parse("27/10/2014"));
+			Booking b1 = new Booking(3, cal1, familyService.findStudent(3),
+					d1);
+			
+			Calendar cal2 = Calendar.getInstance();
+			cal2.setTime(sdf.parse("22/10/2014"));
+			Booking b2 = new Booking(4, cal2, familyService.findStudent(3),
+					d1);
+			
+			Calendar cal3 = Calendar.getInstance();
+			cal3.setTime(sdf.parse("01/08/2014"));
+			Booking b3 = new Booking(5, cal3, familyService.findStudent(3),
+					d1);
+			
+			Calendar cal4 = Calendar.getInstance();
+			cal4.setTime(sdf.parse("03/10/2014"));
+			Booking b4 = new Booking(6, cal4, familyService.findStudent(3),
+					d2);
+			
+			Calendar cal5 = Calendar.getInstance();
+			cal5.setTime(sdf.parse("03/02/2015"));
+			Booking b5 = new Booking(7, cal5, familyService.findStudent(3),
+					d2);
+			
+			bookingService.create(b1);
+			bookingService.create(b2);
+			bookingService.create(b3);
+			bookingService.create(b4);
+			bookingService.create(b5);
+			
+			assertEquals(3,bookingService.findStudentBookingsByMonthAndYear(familyService.findStudent(3),cal1).size());
+			assertEquals(1,bookingService.findStudentBookingsByMonthAndYear(familyService.findStudent(3),cal3).size());
+			assertEquals(1,bookingService.findStudentBookingsByMonthAndYear(familyService.findStudent(3),cal5).size());
+			
+			bookingService.remove(b1);
+			bookingService.remove(b2);
+			bookingService.remove(b3);
+			bookingService.remove(b4);
+			bookingService.remove(b5);
+		} catch (InstanceNotFoundException | ParseException | DuplicateInstanceException | MaxCapacityException | NotValidDateException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void getPlacesBookedTest() {
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+			
+			Schedule sc1 = new Schedule();
+			sc1.setStartTime("8:00am");
+			sc1.setEndTime("9:30am");
+			
+			DiningHall d1 = new DiningHall(1,sc1,24,BigDecimal.valueOf(4.00));
+			
+			Schedule sc2 = new Schedule();
+			sc1.setStartTime("8:00am");
+			sc1.setEndTime("9:30am");
+			
+			DiningHall d2 = new DiningHall(2,sc2,24,BigDecimal.valueOf(4.00));
+			
+			Calendar cal1 = Calendar.getInstance();
+			cal1.setTime(sdf.parse("27/10/2016"));
+			Booking b1 = new Booking(8, cal1, familyService.findStudent(1),
+					d1);
+			Calendar cal2 = Calendar.getInstance();
+			cal2.setTime(sdf.parse("27/10/2016"));
+			Booking b2 = new Booking(9, cal2, familyService.findStudent(2),
+					d1);
+			Calendar cal3 = Calendar.getInstance();
+			cal3.setTime(sdf.parse("27/10/2016"));
+			Booking b3 = new Booking(10, cal1, familyService.findStudent(3),
+					d1);
+			Calendar cal4 = Calendar.getInstance();
+			cal4.setTime(sdf.parse("27/10/2016"));
+			Booking b4 = new Booking(11, cal4, familyService.findStudent(4),
+					d1);
+			
+			bookingService.create(b1);
+			bookingService.create(b2);
+			bookingService.create(b3);
+			assertEquals(3,bookingService.getPlacesBooked(b4));
+			
+			bookingService.remove(b2);
+			assertEquals(2,bookingService.getPlacesBooked(b4));
+			
+			bookingService.create(b4);
+			assertEquals(3,bookingService.getPlacesBooked(b2));
+			
+			Calendar cal5 = Calendar.getInstance();
+			cal5.setTime(sdf.parse("27/10/2016"));
+			Booking b5 = new Booking(8, cal4, familyService.findStudent(4),
+					d2);
+			
+			assertEquals(0,bookingService.getPlacesBooked(b5));
+			
+		} catch (ParseException | InstanceNotFoundException | DuplicateInstanceException | MaxCapacityException | NotValidDateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
+	}
 }

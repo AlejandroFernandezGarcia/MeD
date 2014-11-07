@@ -42,7 +42,7 @@ public class BookingService implements Serializable {
 		createInstance();
 		return instance;
 	}
-
+	
 	public List<DiningHall> getDiningHall() {
 		return diningHall;
 	}
@@ -196,41 +196,6 @@ public class BookingService implements Serializable {
 		}
 		return amount;
 	}
-
-	// TODO tests y que no reserve ninguna si alg�n d�a falla
-	public void createByDayOfWeek(List<Integer> days, Student st, DiningHall dh)
-			throws DuplicateInstanceException, MaxCapacityException, NotValidDateException {
-		int actualMonth = Calendar.getInstance().get(Calendar.MONTH);
-		Calendar cal1 = Calendar.getInstance();
-		while (cal1.get(Calendar.MONTH) == actualMonth) {
-			if (days.contains(cal1.get(Calendar.DAY_OF_WEEK))) {
-				Calendar c = Calendar.getInstance();
-				c.setTime(cal1.getTime());
-				Booking b = new Booking(1, c, st, dh);
-				this.create(b);
-			}
-			cal1.add(Calendar.DATE, 1);
-		}
-
-	}
-
-	// FIXME no distingue cursos todav�a
-	/*public void checkCapacity(Booking b) throws MaxCapacityException {
-		DiningHall dh = b.getDiningHall();
-		int countBookings = 0;
-		Iterator<Booking> iter;
-		iter = bookings.iterator();
-		while (iter.hasNext()) {
-			Booking booking = iter.next();
-			if (booking.getDiningHall().equals(dh)
-					&& (booking.getDate().compareTo(b.getDate()) == 0)) {
-				countBookings++;
-			}
-		}
-		if ((countBookings + 1) > dh.getPlaces())
-			throw new MaxCapacityException(b, "Booking");
-
-	}*/
 	
 	//TODO Tests
 	public void checkCapacity (Booking b) throws MaxCapacityException{
@@ -281,6 +246,7 @@ public class BookingService implements Serializable {
 			if (booking.getDiningHall().equals(dh)
 					&& (booking.getDate().compareTo(b.getDate()) == 0)) {
 				countBookings++;
+				System.out.println(booking.toString());
 			}
 		}
 		return countBookings;

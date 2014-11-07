@@ -248,7 +248,7 @@ public class BookingWindow extends JFrame {
 										calendar.getCalendar(),
 										(DiningHall) comboBox.getSelectedItem())));
 							} else {
-								createBookingsPerMonth();
+								createBookingsPerMonth(calendar.getCalendar().get(Calendar.MONTH));
 							}
 						} catch (DuplicateInstanceException e) {
 							JOptionPane
@@ -475,7 +475,7 @@ public class BookingWindow extends JFrame {
 					.isSelected());
 	}
 
-	public void createBookingsPerMonth() {
+	public void createBookingsPerMonth(Integer month) {
 		List<Integer> days = new ArrayList<Integer>();
 		List<Booking> transaction = new ArrayList<Booking>();
 		if (chckbxLun.isSelected())
@@ -489,9 +489,9 @@ public class BookingWindow extends JFrame {
 		if (chckbxVie.isSelected())
 			days.add(Calendar.FRIDAY);
 
-		int actualMonth = Calendar.getInstance().get(Calendar.MONTH);
+		
 		Calendar cal1 = Calendar.getInstance();
-		while (cal1.get(Calendar.MONTH) == actualMonth) {
+		while (cal1.get(Calendar.MONTH) == month) {
 			if (days.contains(cal1.get(Calendar.DAY_OF_WEEK))) {
 				Calendar c = Calendar.getInstance();
 				c.setTime(cal1.getTime());
