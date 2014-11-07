@@ -24,6 +24,7 @@ import ampa.sa.activity.ActivityService;
 import ampa.sa.student.FamilyService;
 import ampa.sa.student.Student;
 import ampa.sa.util.exceptions.InstanceNotFoundException;
+import java.awt.Frame;
 
 public class ActivityManagementWindow extends JFrame implements ActionListener {
 
@@ -222,18 +223,31 @@ public class ActivityManagementWindow extends JFrame implements ActionListener {
 			for (i = (toindex.length - 1); i >= 0; i--) {
 				matriculated.remove(toindex[i]);
 			}
-		} else if (e.getSource() == acceptButton) {
-			Set<Activity> activities = new HashSet<Activity>();
-			for (i = 0; i < matriculated.size(); i++) {
+		} else if (e.getSource() == acceptButton) {			
+			
+			for (i = 0; i < notMatriculated.size(); i++) {
+				Activity activity = null;
 				try {
-					activities.add(activityService.findByName(matriculated.get(
-							i).toString()));
+					activity = activityService.findByName(notMatriculated.get(i).toString());
 				} catch (InstanceNotFoundException e1) {
 					e1.printStackTrace();
 				}
+				activityService.unEnrollsStudentToActivity(student, activity);
+				familyService.updateStudent(student);
+				activityService.update(activity);
 			}
-			student.setActivities(activities);
-			familyService.updateStudent(student);
+
+			for (i = 0; i < matriculated.size(); i++) {
+				Activity activity = null;
+				try {
+					activity = activityService.findByName(matriculated.get(i).toString());
+				} catch (InstanceNotFoundException e1) {
+					e1.printStackTrace();
+				}
+				activityService.enrollmentStudentInActivity(student, activity);
+				familyService.updateStudent(student);
+				activityService.update(activity);
+			}
 			ActivityManagementWindow thisWindow = (ActivityManagementWindow) ((JButton) e
 					.getSource()).getTopLevelAncestor();
 			thisWindow.setVisible(false);
