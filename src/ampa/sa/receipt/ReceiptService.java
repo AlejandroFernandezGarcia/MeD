@@ -15,6 +15,7 @@ import ampa.sa.booking.BookingService;
 import ampa.sa.diningHall.DiningHall;
 import ampa.sa.student.Household;
 import ampa.sa.student.Student;
+import ampa.sa.util.exceptions.InstanceNotFoundException;
 import ampa.sa.util.exceptions.ReceiptsNotFoundException;
 
 @SuppressWarnings("serial")
@@ -102,5 +103,17 @@ public class ReceiptService  implements Serializable{
 
 	public void setReceipts(List<Receipt> receipts) {
 		this.receipts = receipts;
+	}
+	
+	public Receipt findReceiptByDate(Household household, Calendar calendar) throws InstanceNotFoundException{
+		Set<Receipt> receipts = household.getReceipts();
+		for (Receipt receipt : receipts) {
+			if(((receipt.getDate().get(Calendar.MONTH)) == (calendar.get(Calendar.MONTH)))
+					&& ((receipt.getDate().get(Calendar.YEAR)) == (calendar.get(Calendar.YEAR)))){
+				return receipt;
+			}
+		}
+		throw new InstanceNotFoundException(null,"Bill");
+		
 	}
 }

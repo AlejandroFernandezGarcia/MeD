@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import ampa.sa.booking.Booking;
 import ampa.sa.persistence.Persistence;
 import ampa.sa.student.Student;
 import ampa.sa.util.exceptions.DuplicateInstanceException;
@@ -105,7 +104,7 @@ public class ActivityService implements Serializable {
 		}
 		throw new InstanceNotFoundException(id, "Activity");
 	}
-	
+
 	public Activity findByName(String name) throws InstanceNotFoundException {
 		for (Activity a : activities) {
 			if (a.getName().equals(name)) {
@@ -114,4 +113,15 @@ public class ActivityService implements Serializable {
 		}
 		throw new InstanceNotFoundException(name, "Activity");
 	}
+
+	public void enrollmentStudentInActivity(Student student, Activity activity) {
+		student.getActivities().add(activity);
+		activity.getStudents().add(student);
+	}
+
+	public void unEnrollsStudentToActivity(Student student, Activity activity) {
+		student.getActivities().remove(activity);
+		activity.getStudents().remove(student);
+	}
+
 }

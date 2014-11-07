@@ -1,6 +1,6 @@
 package ampa.sa.test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -12,6 +12,7 @@ import org.junit.Test;
 import ampa.sa.activity.Activity;
 import ampa.sa.activity.ActivityService;
 import ampa.sa.persistence.Persistence;
+import ampa.sa.student.FamilyService;
 import ampa.sa.student.Student;
 import ampa.sa.test.DatosMock;
 import ampa.sa.util.exceptions.DuplicateInstanceException;
@@ -20,7 +21,8 @@ import ampa.sa.util.exceptions.InstanceNotFoundException;
 public class ActivityTest {
 
 	private ActivityService activityService = ActivityService.getInstance();
-
+	private FamilyService familyService = FamilyService.getInstance();
+	
 	@Before
 	public void before() throws ParseException {
 		new DatosMock();
@@ -126,5 +128,39 @@ public class ActivityTest {
 		activityService.find(8);
 
 	}
-
+	
+	@Test
+	public void enrollementStudentInActivity() {
+		Student s = null;
+		Activity a = null;
+		try {
+			s = familyService.findStudent(1);
+			a =  activityService.find(1);
+		} catch (InstanceNotFoundException e) {
+			fail("Activity not exists");
+		}
+		activityService.enrollmentStudentInActivity(s,a);
+		assertTrue("Student isn't enrolled in the activity",s.getActivities().contains(a));
+		assertTrue("Activity hasn't the student enrolled",a.getStudents().contains(s));
+		
+	}
+	
+	@Test
+	public void unEnrollsStudentToActivity() {
+		Student s = null;
+		Activity a = null;
+		try {
+			s = familyService.findStudent(1);
+			a =  activityService.find(1);
+		} catch (InstanceNotFoundException e) {
+			fail("Activity not exists");
+		}
+		activityService.enrollmentStudentInActivity(s,a);
+		
+		activityService.unEnrollsStudentToActivity(s, a);
+		
+		assertFalse("Student is enrolled in the activity yet",s.getActivities().contains(a));
+		assertFalse("Activity has the student enrolled yet",a.getStudents().contains(s));
+		
+	}
 }
