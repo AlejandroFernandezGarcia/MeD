@@ -257,7 +257,7 @@ public class MainWindow extends JFrame {
 									try {
 										bhw = new BillHistoryWindow(
 												studentSelected.getHouseHold());
-												bhw.setVisible(true);
+										bhw.setVisible(true);
 									} catch (ReceiptsNotFoundException e1) {
 										e1.printStackTrace();
 									}

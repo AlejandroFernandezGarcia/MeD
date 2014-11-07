@@ -3,25 +3,25 @@ package ampa.sa.util.exceptions;
 @SuppressWarnings("serial")
 public abstract class InstanceException extends Exception {
 
-    private Object key;
-    private String className;
-    
-    protected InstanceException(String specificMessage, Object key, 
-        String className) {
-        
-        super(specificMessage + " (key = '" + key + "' - className = '" + 
-            className + "')");
-        this.key = key;
-        this.className = className;
-        
-    }
-    
-    public Object getKey() {
-        return key;
-    }
-    
-    public String getClassName() {
-        return className;
-    }
+	private Object key;
+	private String className;
+
+	protected InstanceException(String specificMessage, Object key,
+			String className) {
+
+		super(specificMessage + " (key = '" + key + "' - className = '"
+				+ className + "')");
+		this.key = key;
+		this.className = className;
+
+	}
+
+	public Object getKey() {
+		return key;
+	}
+
+	public String getClassName() {
+		return className;
+	}
 
 }

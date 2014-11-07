@@ -72,46 +72,40 @@ public class FamilyService implements Serializable {
 	}
 
 	public void removeStudent(long id) throws InstanceNotFoundException {
-		boolean found = false;
-		Iterator<Student> iter;
-		iter = students.iterator();
-		while (iter.hasNext() && !found) {
-			if (iter.next().getId() == id) {
-				found = true;
-				students.remove(iter.next());
-				Persistence.getInstance().save();
-			}
-		}
-		if (!found) {
+		Student s = null;
+		try{
+			s = students.get((int)id);
+		}catch(IndexOutOfBoundsException e){	
 			throw new InstanceNotFoundException(id, "Student");
 		}
+		s.getHouseHold().getMentored().remove(s);
+		students.remove(s);
+		Persistence.getInstance().save();
+		
 	}
 
 	public void removeHousehold(String bankAccount)
 			throws InstanceNotFoundException {
-		boolean found = false;
-		Iterator<Household> iter;
-		Household aux;
-		iter = households.iterator();
-		while (iter.hasNext() && !found) {
-			if ((aux = iter.next()).getBanckAccount() == bankAccount) {
-				found = true;
-				households.remove(aux);
-				Persistence.getInstance().save();
-			}
-		}
-		if (!found) {
+		Household hh = findHousehold(bankAccount);
+		if (hh == null) {
 			throw new InstanceNotFoundException(bankAccount, "Household");
 		}
+		for(Student s : hh.getMentored()){
+			students.remove(s);
+		}
+		households.remove(hh);
+		Persistence.getInstance().save();
+
 	}
 
+	//FIXME Arreglar update
 	public void updateStudent(Student student) {
 		boolean found = false;
 		Iterator<Student> iter;
 		iter = students.iterator();
 		while (iter.hasNext() && !found) {
 			Student s = iter.next();
-			if (s.getId() == student.getId()) {
+			if (s.equals(student)) {
 				found = true;
 				s.setHouseHold(student.getHouseHold());
 				s.setName(student.getName());
@@ -175,12 +169,11 @@ public class FamilyService implements Serializable {
 	}
 
 	public Student findStudent(long id) throws InstanceNotFoundException {
-		for (Student s : students) {
-			if (s.getId() == id) {
-				return s;
-			}
+		try{
+			return students.get((int) id);
+		}catch(IndexOutOfBoundsException e){
+			throw new InstanceNotFoundException(id, "Student");			
 		}
-		throw new InstanceNotFoundException(id, "Student");
 	}
 
 	public Household findHousehold(String bankAccount)
@@ -210,9 +203,9 @@ public class FamilyService implements Serializable {
 	}
 
 	public String getStudentType(Student student) {
-			if(student.getCategory() == Student.Category.PRIMARIA)
-				return "PRIMARIA";
-			else
-				return "INFANTIL";
+		if (student.getCategory() == Student.Category.PRIMARIA)
+			return "PRIMARIA";
+		else
+			return "INFANTIL";
 	}
 }

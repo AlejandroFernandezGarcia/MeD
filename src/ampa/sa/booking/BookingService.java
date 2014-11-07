@@ -3,7 +3,6 @@ package ampa.sa.booking;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -25,7 +24,7 @@ public class BookingService implements Serializable {
 	private static List<Booking> bookings = new ArrayList<Booking>();
 	private static List<DiningHall> diningHall = new ArrayList<DiningHall>();
 	private static int MONITOR_CHLD_RATIO = 15;
-	private static int MONITOR_PRMY_RATIO = 30; 
+	private static int MONITOR_PRMY_RATIO = 30;
 
 	private static BookingService instance = null;
 
@@ -42,7 +41,7 @@ public class BookingService implements Serializable {
 		createInstance();
 		return instance;
 	}
-	
+
 	public List<DiningHall> getDiningHall() {
 		return diningHall;
 	}
@@ -64,12 +63,9 @@ public class BookingService implements Serializable {
 		if (!bookings.contains(booking)) {
 			checkCapacity(booking);
 			try {
-				if(SchoolCalendar.isNotHoliday(booking.getDate()))
-				{
+				if (SchoolCalendar.isNotHoliday(booking.getDate())) {
 					bookings.add(booking);
-				}
-				else
-				{
+				} else {
 					throw new NotValidDateException(booking, "Booking");
 				}
 			} catch (ParseException e) {
@@ -103,7 +99,7 @@ public class BookingService implements Serializable {
 		Booking aux;
 		iter = bookings.iterator();
 		while (iter.hasNext() && !found) {
-			if ((aux = iter.next()).getId() == booking.getId()) {
+			if ((aux = iter.next()).equals(booking)) {
 				found = true;
 				bookings.remove(aux);
 				aux.getStudent().getBookings().remove(aux);
@@ -111,35 +107,34 @@ public class BookingService implements Serializable {
 			}
 		}
 		if (!found) {
-			throw new InstanceNotFoundException(booking.getId(), "Booking");
+			throw new InstanceNotFoundException(booking, "Booking");
 		}
 	}
 
 	public Booking find(long id) throws InstanceNotFoundException {
-		for (Booking b : bookings) {
-			if (b.getId() == id) {
-				return b;
-			}
+		Booking b = bookings.get((int) id);
+		if (b != null) {
+			return b;
 		}
 		throw new InstanceNotFoundException(id, "Booking");
 	}
 
 	public DiningHall findDiningHall(long id) throws InstanceNotFoundException {
-		for (DiningHall d : diningHall) {
-			if (d.getId() == id) {
-				return d;
-			}
+		DiningHall dh = diningHall.get((int) id);
+		if (dh != null) {
+			return dh;
 		}
 		throw new InstanceNotFoundException(id, "DiningHall");
 	}
 
+	//FIXME Arreglar update
 	public void update(Booking booking) throws InstanceNotFoundException {
 		boolean found = false;
 		Iterator<Booking> iter;
 		iter = bookings.iterator();
 		while (iter.hasNext() && !found) {
 			Booking b = iter.next();
-			if (b.getId() == booking.getId()) {
+			if (b.equals(booking)) {
 				found = true;
 				b.setDate(booking.getDate());
 				b.setStudent(booking.getStudent());
@@ -170,17 +165,19 @@ public class BookingService implements Serializable {
 		}
 		return b;
 	}
-	
-	//TODO Nuevo método
+
 	public List<Booking> getBookingsByDate(Calendar date) {
 		List<Booking> b = new ArrayList<Booking>();
 		Iterator<Booking> iter;
 		iter = bookings.iterator();
 		while (iter.hasNext()) {
 			Booking booking = iter.next();
-			if ((booking.getDate().get(Calendar.DAY_OF_MONTH) == date.get(Calendar.DAY_OF_MONTH))
-					&& booking.getDate().get(Calendar.MONTH) == date.get(Calendar.MONTH)
-					&& booking.getDate().get(Calendar.YEAR) == date.get(Calendar.YEAR)){
+			if ((booking.getDate().get(Calendar.DAY_OF_MONTH) == date
+					.get(Calendar.DAY_OF_MONTH))
+					&& booking.getDate().get(Calendar.MONTH) == date
+							.get(Calendar.MONTH)
+					&& booking.getDate().get(Calendar.YEAR) == date
+							.get(Calendar.YEAR)) {
 				b.add(booking);
 			}
 		}
@@ -196,44 +193,36 @@ public class BookingService implements Serializable {
 		}
 		return amount;
 	}
-	
-	//TODO Tests
-	public void checkCapacity (Booking b) throws MaxCapacityException{
+
+	public void checkCapacity(Booking b) throws MaxCapacityException {
 		Calendar bookingDate = b.getDate();
 		Category studentCat = b.getStudent().getCategory();
 		int dHallMonitors = b.getDiningHall().getMonitors();
-		double cntChld = 0; double cntPrmy = 0;
-		
+		double cntChld = 0;
+		double cntPrmy = 0;
+
 		if (studentCat == Category.INFANTIL)
 			cntChld++;
 		else
 			cntPrmy++;
-		
+
 		List<Booking> bookingsThatDay = getBookingsByDate(bookingDate);
 		Iterator<Booking> iter;
 		iter = bookingsThatDay.iterator();
 		while (iter.hasNext()) {
 			Booking booking = iter.next();
-			if(booking.getStudent().getCategory() == Category.INFANTIL)
+			if (booking.getStudent().getCategory() == Category.INFANTIL)
 				cntChld++;
 			else
-				cntPrmy++;	
+				cntPrmy++;
 		}
-		double chldM = Math.ceil(cntChld/MONITOR_CHLD_RATIO);
-		double prmyM = Math.ceil(cntPrmy/MONITOR_PRMY_RATIO);
-		
+		double chldM = Math.ceil(cntChld / MONITOR_CHLD_RATIO);
+		double prmyM = Math.ceil(cntPrmy / MONITOR_PRMY_RATIO);
+
 		double result = chldM + prmyM;
-		
-		//FIXME borrar, solo prueba
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		System.out.println("****" + sdf.format(bookingDate.getTime()) + "****");
-		System.out.println("Reservas infantil -> " + cntChld + "\nReservas primaria -> "+ cntPrmy);
-		System.out.println("Monitores infantil -> " + chldM + "\nMonitores primaria -> "+ prmyM);
-		System.out.println("Monitores disponibles -> " + dHallMonitors + "\nMonitores necesarios -> " + result);
-		//FIXME hasta aqui
-		
+
 		if (result > dHallMonitors)
-			throw new MaxCapacityException(b,"Booking");
+			throw new MaxCapacityException(b, "Booking");
 	}
 
 	public int getPlacesBooked(Booking b) {

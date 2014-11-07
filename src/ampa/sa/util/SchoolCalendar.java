@@ -7,11 +7,10 @@ import java.util.Calendar;
 import java.util.List;
 
 public class SchoolCalendar {
-    private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-	private static List<Calendar> holidays; 
-	
-	
-	public static void create() throws ParseException{
+	private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+	private static List<Calendar> holidays;
+
+	public static void create() throws ParseException {
 		holidays = new ArrayList<Calendar>();
 		Calendar c1 = Calendar.getInstance();
 		c1.setTime(sdf.parse("31/10/2014"));
@@ -19,11 +18,11 @@ public class SchoolCalendar {
 		Calendar c2 = Calendar.getInstance();
 		c2.setTime(sdf.parse("08/12/2014"));
 		holidays.add(c2);
-		
+
 		Calendar c = Calendar.getInstance();
 		c.setTime(sdf.parse("08/11/2014"));
 		holidays.add(c);
-		
+
 		Calendar c3 = Calendar.getInstance();
 		c3.setTime(sdf.parse("22/12/2014"));
 		holidays.add(c3);
@@ -54,7 +53,7 @@ public class SchoolCalendar {
 		Calendar c12 = Calendar.getInstance();
 		c12.setTime(sdf.parse("31/12/2014"));
 		holidays.add(c12);
-		
+
 		Calendar c13 = Calendar.getInstance();
 		c13.setTime(sdf.parse("01/01/2015"));
 		holidays.add(c13);
@@ -77,19 +76,19 @@ public class SchoolCalendar {
 		c19.setTime(sdf.parse("07/01/2015"));
 		holidays.add(c19);
 	}
-	
-	
-	public static boolean isNotHoliday(Calendar date) throws ParseException{
+
+	public static boolean isNotHoliday(Calendar date) throws ParseException {
 		create();
-		for(Calendar cal : holidays){
-			if((cal.get(Calendar.DAY_OF_MONTH) == date.get(Calendar.DAY_OF_MONTH)
-					&& cal.get(Calendar.MONTH) == date.get(Calendar.MONTH)
-					&& cal.get(Calendar.YEAR) == date.get(Calendar.YEAR))
+		for (Calendar cal : holidays) {
+			if ((cal.get(Calendar.DAY_OF_MONTH) == date
+					.get(Calendar.DAY_OF_MONTH)
+					&& cal.get(Calendar.MONTH) == date.get(Calendar.MONTH) && cal
+					.get(Calendar.YEAR) == date.get(Calendar.YEAR))
 					|| date.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY
 					|| date.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY)
 				return false;
 		}
 		return true;
 	}
-	
+
 }

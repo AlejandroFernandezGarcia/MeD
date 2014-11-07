@@ -233,8 +233,6 @@ public class ActivityManagementWindow extends JFrame implements ActionListener {
 					e1.printStackTrace();
 				}
 				activityService.unEnrollsStudentToActivity(student, activity);
-				familyService.updateStudent(student);
-				activityService.update(activity);
 			}
 
 			for (i = 0; i < matriculated.size(); i++) {
@@ -245,8 +243,6 @@ public class ActivityManagementWindow extends JFrame implements ActionListener {
 					e1.printStackTrace();
 				}
 				activityService.enrollmentStudentInActivity(student, activity);
-				familyService.updateStudent(student);
-				activityService.update(activity);
 			}
 			ActivityManagementWindow thisWindow = (ActivityManagementWindow) ((JButton) e
 					.getSource()).getTopLevelAncestor();

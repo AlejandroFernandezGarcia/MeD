@@ -7,8 +7,10 @@ import java.util.List;
 import ampa.sa.activity.Activity;
 import ampa.sa.booking.Booking;
 import ampa.sa.diningHall.DiningHall;
+import ampa.sa.student.Household;
 import ampa.sa.student.Student;
-import ampa.sa.student.Household;;
+
+;
 
 @SuppressWarnings("serial")
 public class Database implements Serializable {

@@ -8,30 +8,21 @@ import java.util.Set;
 import ampa.sa.student.Student;
 
 @SuppressWarnings("serial")
-public class Activity implements Serializable{
+public class Activity implements Serializable {
 
-	private long id;
 	private String name;
 	private int places;
 	private BigDecimal prize;
 	private Set<Student> students;
 
-	public Activity(long id, String name, int places, BigDecimal price,
+	public Activity(String name, int places, BigDecimal price,
 			Set<Student> students) {
 		super();
-		this.id = id;
 		this.name = name;
 		this.places = places;
-		this.prize = price.setScale(2,RoundingMode.HALF_UP);;
+		this.prize = price.setScale(2, RoundingMode.HALF_UP);
+		;
 		this.students = students;
-	}
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
 	}
 
 	public String getName() {
@@ -66,4 +57,12 @@ public class Activity implements Serializable{
 		this.students = students;
 	}
 
+	@Override
+	public boolean equals(Object activity){
+		if(this.getName().compareTo(((Activity)activity).getName())==0){
+			return true;
+		}
+		else return false;
+	}
+	
 }

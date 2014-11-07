@@ -1,9 +1,7 @@
 package ampa.sa.gui;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,7 +11,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.ButtonGroup;
@@ -24,11 +21,9 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTable;
@@ -43,8 +38,6 @@ import ampa.sa.booking.BookingService;
 import ampa.sa.diningHall.DiningHall;
 import ampa.sa.student.FamilyService;
 import ampa.sa.student.Student;
-import ampa.sa.student.Student.Category;
-import ampa.sa.test.DatosMock;
 import ampa.sa.util.exceptions.DuplicateInstanceException;
 import ampa.sa.util.exceptions.InstanceNotFoundException;
 import ampa.sa.util.exceptions.MaxCapacityException;
@@ -52,16 +45,8 @@ import ampa.sa.util.exceptions.NotValidDateException;
 
 import com.toedter.calendar.JCalendar;
 
-import javax.swing.JRadioButton;
-
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
-
 public class BookingWindow extends JFrame {
-	
+
 	private JPanel contentPane;
 	private JTextField fldAlumno;
 	private JTextField fldCurso;
@@ -80,7 +65,6 @@ public class BookingWindow extends JFrame {
 	private static BookingService bookingService = BookingService.getInstance();
 	private static FamilyService familyService = FamilyService.getInstance();
 
-	
 	public static final String DATE_FORMAT = "dd/MM/yyyy";
 
 	SimpleDateFormat sdf;
@@ -133,23 +117,25 @@ public class BookingWindow extends JFrame {
 				new PropertyChangeListener() {
 					public void propertyChange(PropertyChangeEvent evt) {
 						if (evt.getPropertyName().equals("day"))
-						fldPlaces.setText(String.valueOf(bookingService.getPlacesForDiningSchedule(
-								calendar.getCalendar(),
-								(DiningHall) comboBox.getSelectedItem())));
+							fldPlaces.setText(String.valueOf(bookingService
+									.getPlacesForDiningSchedule(calendar
+											.getCalendar(),
+											(DiningHall) comboBox
+													.getSelectedItem())));
 						fillBookings();
 					}
 				});
 		GroupLayout gl_panel = new GroupLayout(panel);
-		gl_panel.setHorizontalGroup(
-			gl_panel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel.createSequentialGroup()
-					.addComponent(calendar, GroupLayout.PREFERRED_SIZE, 315, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-		);
-		gl_panel.setVerticalGroup(
-			gl_panel.createParallelGroup(Alignment.LEADING)
-				.addComponent(calendar, GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE)
-		);
+		gl_panel.setHorizontalGroup(gl_panel.createParallelGroup(
+				Alignment.LEADING).addGroup(
+				gl_panel.createSequentialGroup()
+						.addComponent(calendar, GroupLayout.PREFERRED_SIZE,
+								315, GroupLayout.PREFERRED_SIZE)
+						.addContainerGap(GroupLayout.DEFAULT_SIZE,
+								Short.MAX_VALUE)));
+		gl_panel.setVerticalGroup(gl_panel.createParallelGroup(
+				Alignment.LEADING).addComponent(calendar,
+				GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE));
 		panel.setLayout(gl_panel);
 
 		JPanel panel_1 = new JPanel();
@@ -183,7 +169,7 @@ public class BookingWindow extends JFrame {
 
 		List<DiningHall> diningHall = bookingService.getDiningHall();
 
-		for (int i = 0; i < diningHall.size(); i++){
+		for (int i = 0; i < diningHall.size(); i++) {
 			comboBox.addItem(diningHall.get(i));
 		}
 
@@ -207,12 +193,14 @@ public class BookingWindow extends JFrame {
 		btnDeleteBooking = new JButton("Cancelar reserva");
 		btnDeleteBooking.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				int select = JOptionPane.showConfirmDialog(null, "¿Realmente desea cancelar la reserva?"
-						, "Cancelar reserva", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-				if(select == 0){
+				int select = JOptionPane.showConfirmDialog(null,
+						"ï¿½Realmente desea cancelar la reserva?",
+						"Cancelar reserva", JOptionPane.YES_NO_OPTION,
+						JOptionPane.QUESTION_MESSAGE);
+				if (select == 0) {
 					Booking selected = (Booking) bookingsTable.getModel()
-						.getValueAt(bookingsTable.getSelectedRow(), 2);
-				
+							.getValueAt(bookingsTable.getSelectedRow(), 2);
+
 					// FIX ME
 					System.out.println(selected);
 					try {
@@ -225,117 +213,228 @@ public class BookingWindow extends JFrame {
 				}
 			}
 		});
-		
-				JButton btnReservar = new JButton("Realizar reserva");
-				btnReservar.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-						// TODO ids unicas. De momento no hacen falta
 
+		JButton btnReservar = new JButton("Realizar reserva");
+		btnReservar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO ids unicas. De momento no hacen falta
+
+				try {
+					if (!daysAreChecked()) {
+						Calendar cal = Calendar.getInstance();
+						cal.setTime(calendar.getCalendar().getTime());
+						Booking b = new Booking(cal, student,
+								(DiningHall) comboBox.getSelectedItem());
 						try {
-							if (!daysAreChecked()) {
-								Calendar cal = Calendar.getInstance();
-								cal.setTime(calendar.getCalendar().getTime());
-								Booking b = new Booking(1, cal, student,
-										(DiningHall) comboBox.getSelectedItem());
-								try {
-									bookingService.create(b);
-								} catch (NotValidDateException e) {
-									JOptionPane
-									.showMessageDialog(null,
-											"El dia "+sdf.format(cal.getTime())+" es festivo");
-								}
-								fldPlaces.setText(String.valueOf(bookingService.getPlacesForDiningSchedule(
-										calendar.getCalendar(),
-										(DiningHall) comboBox.getSelectedItem())));
-							} else {
-								createBookingsPerMonth(calendar.getCalendar().get(Calendar.MONTH));
-							}
-						} catch (DuplicateInstanceException e) {
-							JOptionPane
-									.showMessageDialog(null,
-											"La reserva para el alumno y el horario establecido ya existe");
-						} catch (MaxCapacityException e) {
-							JOptionPane
-									.showMessageDialog(null,
-											"No quedan plazas disponibles para el horario seleccionado");
+							bookingService.create(b);
+						} catch (NotValidDateException e) {
+							JOptionPane.showMessageDialog(null,
+									"El dia " + sdf.format(cal.getTime())
+											+ " es festivo");
 						}
-						fillBookings();
+						fldPlaces.setText(String.valueOf(bookingService.getPlacesForDiningSchedule(
+								calendar.getCalendar(),
+								(DiningHall) comboBox.getSelectedItem())));
+					} else {
+						createBookingsPerMonth(calendar.getCalendar().get(
+								Calendar.MONTH));
 					}
-				});
-		
+				} catch (DuplicateInstanceException e) {
+					JOptionPane
+							.showMessageDialog(null,
+									"La reserva para el alumno y el horario establecido ya existe");
+				} catch (MaxCapacityException e) {
+					JOptionPane
+							.showMessageDialog(null,
+									"No quedan plazas disponibles para el horario seleccionado");
+				}
+				fillBookings();
+			}
+		});
+
 		JButton btnVolver = new JButton("Volver");
 		btnVolver.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				BookingWindow thisWindow = (BookingWindow) ((JButton) e.getSource()).getTopLevelAncestor();
+				BookingWindow thisWindow = (BookingWindow) ((JButton) e
+						.getSource()).getTopLevelAncestor();
 				thisWindow.setVisible(false);
 				thisWindow.dispose();
 			}
 		});
 		GroupLayout gl_panel_1 = new GroupLayout(panel_1);
-		gl_panel_1.setHorizontalGroup(
-			gl_panel_1.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_1.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(gl_panel_1.createParallelGroup(Alignment.TRAILING)
-						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 295, Short.MAX_VALUE)
-						.addComponent(separator, GroupLayout.DEFAULT_SIZE, 295, Short.MAX_VALUE)
-						.addGroup(gl_panel_1.createSequentialGroup()
-							.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblAlumno)
-								.addComponent(lblCurso))
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
-								.addComponent(fldCurso, GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
-								.addComponent(fldAlumno, GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)))
-						.addGroup(gl_panel_1.createSequentialGroup()
-							.addGroup(gl_panel_1.createParallelGroup(Alignment.TRAILING)
-								.addComponent(lblMonitors)
-								.addComponent(lblHorario))
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
-								.addComponent(comboBox, 0, 234, Short.MAX_VALUE)
-								.addComponent(fldPlaces, GroupLayout.PREFERRED_SIZE, 58, GroupLayout.PREFERRED_SIZE)))
-						.addComponent(btnDeleteBooking)
-						.addComponent(panel_2, GroupLayout.DEFAULT_SIZE, 295, Short.MAX_VALUE)
-						.addGroup(gl_panel_1.createSequentialGroup()
-							.addComponent(btnReservar)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(btnVolver)))
-					.addContainerGap())
-		);
-		gl_panel_1.setVerticalGroup(
-			gl_panel_1.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_1.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(gl_panel_1.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblAlumno)
-						.addComponent(fldAlumno, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(gl_panel_1.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblCurso)
-						.addComponent(fldCurso, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(btnDeleteBooking)
-					.addGap(5)
-					.addComponent(separator, GroupLayout.PREFERRED_SIZE, 10, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(gl_panel_1.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblHorario)
-						.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(gl_panel_1.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblMonitors)
-						.addComponent(fldPlaces, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(panel_2, GroupLayout.PREFERRED_SIZE, 59, Short.MAX_VALUE)
-					.addGap(18)
-					.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
-						.addComponent(btnVolver)
-						.addComponent(btnReservar))
-					.addContainerGap())
-		);
+		gl_panel_1
+				.setHorizontalGroup(gl_panel_1
+						.createParallelGroup(Alignment.LEADING)
+						.addGroup(
+								gl_panel_1
+										.createSequentialGroup()
+										.addContainerGap()
+										.addGroup(
+												gl_panel_1
+														.createParallelGroup(
+																Alignment.TRAILING)
+														.addComponent(
+																scrollPane,
+																GroupLayout.DEFAULT_SIZE,
+																295,
+																Short.MAX_VALUE)
+														.addComponent(
+																separator,
+																GroupLayout.DEFAULT_SIZE,
+																295,
+																Short.MAX_VALUE)
+														.addGroup(
+																gl_panel_1
+																		.createSequentialGroup()
+																		.addGroup(
+																				gl_panel_1
+																						.createParallelGroup(
+																								Alignment.LEADING)
+																						.addComponent(
+																								lblAlumno)
+																						.addComponent(
+																								lblCurso))
+																		.addPreferredGap(
+																				ComponentPlacement.RELATED)
+																		.addGroup(
+																				gl_panel_1
+																						.createParallelGroup(
+																								Alignment.LEADING)
+																						.addComponent(
+																								fldCurso,
+																								GroupLayout.DEFAULT_SIZE,
+																								246,
+																								Short.MAX_VALUE)
+																						.addComponent(
+																								fldAlumno,
+																								GroupLayout.DEFAULT_SIZE,
+																								246,
+																								Short.MAX_VALUE)))
+														.addGroup(
+																gl_panel_1
+																		.createSequentialGroup()
+																		.addGroup(
+																				gl_panel_1
+																						.createParallelGroup(
+																								Alignment.TRAILING)
+																						.addComponent(
+																								lblMonitors)
+																						.addComponent(
+																								lblHorario))
+																		.addPreferredGap(
+																				ComponentPlacement.RELATED)
+																		.addGroup(
+																				gl_panel_1
+																						.createParallelGroup(
+																								Alignment.LEADING)
+																						.addComponent(
+																								comboBox,
+																								0,
+																								234,
+																								Short.MAX_VALUE)
+																						.addComponent(
+																								fldPlaces,
+																								GroupLayout.PREFERRED_SIZE,
+																								58,
+																								GroupLayout.PREFERRED_SIZE)))
+														.addComponent(
+																btnDeleteBooking)
+														.addComponent(
+																panel_2,
+																GroupLayout.DEFAULT_SIZE,
+																295,
+																Short.MAX_VALUE)
+														.addGroup(
+																gl_panel_1
+																		.createSequentialGroup()
+																		.addComponent(
+																				btnReservar)
+																		.addPreferredGap(
+																				ComponentPlacement.RELATED)
+																		.addComponent(
+																				btnVolver)))
+										.addContainerGap()));
+		gl_panel_1
+				.setVerticalGroup(gl_panel_1
+						.createParallelGroup(Alignment.LEADING)
+						.addGroup(
+								gl_panel_1
+										.createSequentialGroup()
+										.addContainerGap()
+										.addGroup(
+												gl_panel_1
+														.createParallelGroup(
+																Alignment.BASELINE)
+														.addComponent(lblAlumno)
+														.addComponent(
+																fldAlumno,
+																GroupLayout.PREFERRED_SIZE,
+																GroupLayout.DEFAULT_SIZE,
+																GroupLayout.PREFERRED_SIZE))
+										.addPreferredGap(
+												ComponentPlacement.RELATED)
+										.addGroup(
+												gl_panel_1
+														.createParallelGroup(
+																Alignment.BASELINE)
+														.addComponent(lblCurso)
+														.addComponent(
+																fldCurso,
+																GroupLayout.PREFERRED_SIZE,
+																GroupLayout.DEFAULT_SIZE,
+																GroupLayout.PREFERRED_SIZE))
+										.addPreferredGap(
+												ComponentPlacement.RELATED)
+										.addComponent(scrollPane,
+												GroupLayout.PREFERRED_SIZE,
+												107, GroupLayout.PREFERRED_SIZE)
+										.addPreferredGap(
+												ComponentPlacement.RELATED)
+										.addComponent(btnDeleteBooking)
+										.addGap(5)
+										.addComponent(separator,
+												GroupLayout.PREFERRED_SIZE, 10,
+												GroupLayout.PREFERRED_SIZE)
+										.addPreferredGap(
+												ComponentPlacement.RELATED)
+										.addGroup(
+												gl_panel_1
+														.createParallelGroup(
+																Alignment.BASELINE)
+														.addComponent(
+																lblHorario)
+														.addComponent(
+																comboBox,
+																GroupLayout.PREFERRED_SIZE,
+																GroupLayout.DEFAULT_SIZE,
+																GroupLayout.PREFERRED_SIZE))
+										.addPreferredGap(
+												ComponentPlacement.UNRELATED)
+										.addGroup(
+												gl_panel_1
+														.createParallelGroup(
+																Alignment.BASELINE)
+														.addComponent(
+																lblMonitors)
+														.addComponent(
+																fldPlaces,
+																GroupLayout.PREFERRED_SIZE,
+																GroupLayout.DEFAULT_SIZE,
+																GroupLayout.PREFERRED_SIZE))
+										.addPreferredGap(
+												ComponentPlacement.RELATED)
+										.addComponent(panel_2,
+												GroupLayout.PREFERRED_SIZE, 59,
+												Short.MAX_VALUE)
+										.addGap(18)
+										.addGroup(
+												gl_panel_1
+														.createParallelGroup(
+																Alignment.LEADING)
+														.addComponent(btnVolver)
+														.addComponent(
+																btnReservar))
+										.addContainerGap()));
 
 		bookingsTable = new JTable();
 		bookingsTable.setModel(new DefaultTableModel(new Object[][] {},
@@ -361,8 +460,7 @@ public class BookingWindow extends JFrame {
 
 		chckbxVie = new JCheckBox("vie");
 		chckbxVie.setEnabled(false);
-		
-		
+
 		JRadioButton rdbtnDay = new JRadioButton("diaria");
 		rdbtnDay.setSelected(true);
 		rdbtnDay.addActionListener(new ActionListener() {
@@ -371,10 +469,10 @@ public class BookingWindow extends JFrame {
 				chckbxMar.setEnabled(false);
 				chckbxMie.setEnabled(false);
 				chckbxJue.setEnabled(false);
-				chckbxVie.setEnabled(false);	
+				chckbxVie.setEnabled(false);
 			}
 		});
-		
+
 		JRadioButton rdbtnMonth = new JRadioButton("mensual");
 		rdbtnMonth.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -382,54 +480,88 @@ public class BookingWindow extends JFrame {
 				chckbxMar.setEnabled(true);
 				chckbxMie.setEnabled(true);
 				chckbxJue.setEnabled(true);
-				chckbxVie.setEnabled(true);	
+				chckbxVie.setEnabled(true);
 			}
 		});
 		ButtonGroup group = new ButtonGroup();
 		group.add(rdbtnDay);
 		group.add(rdbtnMonth);
-		
+
 		GroupLayout gl_panel_2 = new GroupLayout(panel_2);
-		gl_panel_2.setHorizontalGroup(
-			gl_panel_2.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_2.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_panel_2.createSequentialGroup()
-							.addComponent(chckbxLun)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(chckbxMar)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(chckbxMie)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(chckbxJue)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(chckbxVie))
-						.addGroup(gl_panel_2.createSequentialGroup()
-							.addComponent(lblReservaSemanal)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(rdbtnDay)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(rdbtnMonth)))
-					.addContainerGap(84, Short.MAX_VALUE))
-		);
-		gl_panel_2.setVerticalGroup(
-			gl_panel_2.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_2.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(gl_panel_2.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblReservaSemanal)
-						.addComponent(rdbtnDay)
-						.addComponent(rdbtnMonth))
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(gl_panel_2.createParallelGroup(Alignment.BASELINE)
-						.addComponent(chckbxLun)
-						.addComponent(chckbxMar)
-						.addComponent(chckbxMie)
-						.addComponent(chckbxJue)
-						.addComponent(chckbxVie))
-					.addContainerGap(23, Short.MAX_VALUE))
-		);
+		gl_panel_2
+				.setHorizontalGroup(gl_panel_2
+						.createParallelGroup(Alignment.LEADING)
+						.addGroup(
+								gl_panel_2
+										.createSequentialGroup()
+										.addContainerGap()
+										.addGroup(
+												gl_panel_2
+														.createParallelGroup(
+																Alignment.LEADING)
+														.addGroup(
+																gl_panel_2
+																		.createSequentialGroup()
+																		.addComponent(
+																				chckbxLun)
+																		.addPreferredGap(
+																				ComponentPlacement.RELATED)
+																		.addComponent(
+																				chckbxMar)
+																		.addPreferredGap(
+																				ComponentPlacement.RELATED)
+																		.addComponent(
+																				chckbxMie)
+																		.addPreferredGap(
+																				ComponentPlacement.RELATED)
+																		.addComponent(
+																				chckbxJue)
+																		.addPreferredGap(
+																				ComponentPlacement.RELATED)
+																		.addComponent(
+																				chckbxVie))
+														.addGroup(
+																gl_panel_2
+																		.createSequentialGroup()
+																		.addComponent(
+																				lblReservaSemanal)
+																		.addPreferredGap(
+																				ComponentPlacement.RELATED)
+																		.addComponent(
+																				rdbtnDay)
+																		.addPreferredGap(
+																				ComponentPlacement.RELATED)
+																		.addComponent(
+																				rdbtnMonth)))
+										.addContainerGap(84, Short.MAX_VALUE)));
+		gl_panel_2
+				.setVerticalGroup(gl_panel_2
+						.createParallelGroup(Alignment.LEADING)
+						.addGroup(
+								gl_panel_2
+										.createSequentialGroup()
+										.addContainerGap()
+										.addGroup(
+												gl_panel_2
+														.createParallelGroup(
+																Alignment.BASELINE)
+														.addComponent(
+																lblReservaSemanal)
+														.addComponent(rdbtnDay)
+														.addComponent(
+																rdbtnMonth))
+										.addPreferredGap(
+												ComponentPlacement.UNRELATED)
+										.addGroup(
+												gl_panel_2
+														.createParallelGroup(
+																Alignment.BASELINE)
+														.addComponent(chckbxLun)
+														.addComponent(chckbxMar)
+														.addComponent(chckbxMie)
+														.addComponent(chckbxJue)
+														.addComponent(chckbxVie))
+										.addContainerGap(23, Short.MAX_VALUE)));
 		panel_2.setLayout(gl_panel_2);
 		panel_1.setLayout(gl_panel_1);
 
@@ -489,14 +621,13 @@ public class BookingWindow extends JFrame {
 		if (chckbxVie.isSelected())
 			days.add(Calendar.FRIDAY);
 
-		
 		Calendar cal1 = Calendar.getInstance();
 		while (cal1.get(Calendar.MONTH) == month) {
 			if (days.contains(cal1.get(Calendar.DAY_OF_WEEK))) {
 				Calendar c = Calendar.getInstance();
 				c.setTime(cal1.getTime());
 				DiningHall dh = (DiningHall) comboBox.getSelectedItem();
-				Booking b = new Booking(1, c, student, dh);
+				Booking b = new Booking(c, student, dh);
 				try {
 					bookingService.create(b);
 					transaction.add(b);
@@ -515,15 +646,13 @@ public class BookingWindow extends JFrame {
 						}
 					}
 				} catch (NotValidDateException e) {
-					JOptionPane
-					.showMessageDialog(null,
-							"AVISO: Alguno de los días es festivo");
+					JOptionPane.showMessageDialog(null,
+							"AVISO: Alguno de los dï¿½as es festivo");
 				}
 			}
 			cal1.add(Calendar.DATE, 1);
 		}
 		fillBookings();
 	}
-	
 
 }

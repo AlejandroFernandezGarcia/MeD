@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import ampa.sa.student.Student;
 
 @SuppressWarnings("serial")
-public class ReceiptLine implements Serializable{
+public class ReceiptLine implements Serializable {
 	private String concept;
 	private BigDecimal price;
 	private int units;

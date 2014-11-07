@@ -19,11 +19,10 @@ import ampa.sa.util.exceptions.InstanceNotFoundException;
 import ampa.sa.util.exceptions.ReceiptsNotFoundException;
 
 @SuppressWarnings("serial")
-public class ReceiptService  implements Serializable{
+public class ReceiptService implements Serializable {
 
 	private static List<Receipt> receipts = new ArrayList<Receipt>();
 
-	
 	private static ReceiptService instance = null;
 
 	private ReceiptService() {
@@ -41,7 +40,7 @@ public class ReceiptService  implements Serializable{
 	}
 
 	public void createReceipt(Household household) {
-		//TODO Falta el tema de licencias.
+		// TODO Falta el tema de licencias.
 		BookingService bookingService = BookingService.getInstance();
 		Set<Student> students = household.getMentored();
 		Set<ReceiptLine> receiptLines = new HashSet<ReceiptLine>();
@@ -53,8 +52,8 @@ public class ReceiptService  implements Serializable{
 			List<Booking> bookings = bookingService
 					.findStudentBookingsByMonthAndYear(student, now);
 			for (Activity activity : activities) {
-				rl = new ReceiptLine(activity.getName(),
-						activity.getPrize(), 1, activity.getPrize(), student);
+				rl = new ReceiptLine(activity.getName(), activity.getPrize(),
+						1, activity.getPrize(), student);
 				receiptLines.add(rl);
 			}
 			int count = 0;
@@ -67,10 +66,9 @@ public class ReceiptService  implements Serializable{
 					}
 				}
 				if (count != 0) {
-					rl = new ReceiptLine(dh.getSchedule()
-							.toString(), dh.getPrice().multiply(
-							new BigDecimal(count)), count, dh.getPrice(),
-							student);
+					rl = new ReceiptLine(dh.getSchedule().toString(), dh
+							.getPrice().multiply(new BigDecimal(count)), count,
+							dh.getPrice(), student);
 					receiptLines.add(rl);
 				}
 			}
@@ -104,29 +102,33 @@ public class ReceiptService  implements Serializable{
 	public void setReceipts(List<Receipt> receipts) {
 		this.receipts = receipts;
 	}
-	
-	public Receipt findReceiptByDate(Household household, Calendar calendar) throws InstanceNotFoundException{
+
+	public Receipt findReceiptByDate(Household household, Calendar calendar)
+			throws InstanceNotFoundException {
 		Set<Receipt> receipts = household.getReceipts();
 		for (Receipt receipt : receipts) {
-			if(((receipt.getDate().get(Calendar.MONTH)) == (calendar.get(Calendar.MONTH)))
-					&& ((receipt.getDate().get(Calendar.YEAR)) == (calendar.get(Calendar.YEAR)))){
+			if (((receipt.getDate().get(Calendar.MONTH)) == (calendar
+					.get(Calendar.MONTH)))
+					&& ((receipt.getDate().get(Calendar.YEAR)) == (calendar
+							.get(Calendar.YEAR)))) {
 				return receipt;
 			}
 		}
-		throw new InstanceNotFoundException(null,"Bill");
-		
+		throw new InstanceNotFoundException(null, "Bill");
+
 	}
-	
-	public Set<ReceiptLine> getReceiptLinesByStudent(Receipt receipt, Student student) {
-		
-		Set<ReceiptLine> receiptLines = receipt.getReceiptLines(); 
+
+	public Set<ReceiptLine> getReceiptLinesByStudent(Receipt receipt,
+			Student student) {
+
+		Set<ReceiptLine> receiptLines = receipt.getReceiptLines();
 		Set<ReceiptLine> receiptLinesByStudent = new HashSet<ReceiptLine>();
 		for (ReceiptLine receiptLine : receiptLines) {
-			if( receiptLine.getStudent().getId() == student.getId()){
+			if (receiptLine.getStudent().equals(student)) {
 				receiptLinesByStudent.add(receiptLine);
 			}
 		}
 		return receiptLinesByStudent;
-		
+
 	}
 }

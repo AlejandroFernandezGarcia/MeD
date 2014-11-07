@@ -55,31 +55,33 @@ public class ActivityService implements Serializable {
 		Activity aux;
 		iter = activities.iterator();
 		while (iter.hasNext() && !found) {
-			if ((aux = iter.next()).getId() == activity.getId()) {
+			if ((aux = iter.next()).equals(activity)) {
 				found = true;
 				activities.remove(aux);
 				Persistence.getInstance().save();
 			}
 		}
 		if (!found) {
-			throw new InstanceNotFoundException(activity.getId(), "Activity");
+			throw new InstanceNotFoundException(activity, "Activity");
 		}
 	}
 
-	public void update(Activity activity) {
+	public void update(Activity activity) throws InstanceNotFoundException {
 		boolean found = false;
 		Iterator<Activity> iter;
 		iter = activities.iterator();
 		while (iter.hasNext() && !found) {
 			Activity a = iter.next();
-			if (a.getId() == activity.getId()) {
+			if (a.equals(activity)) {
 				found = true;
-				a.setName(activity.getName());
 				a.setPlaces(activity.getPlaces());
 				a.setPrize(activity.getPrize());
 				a.setStudents(activity.getStudents());
 				Persistence.getInstance().save();
 			}
+		}
+		if(!found){
+			throw new InstanceNotFoundException(activity, "Activity");
 		}
 	}
 
@@ -92,17 +94,14 @@ public class ActivityService implements Serializable {
 		return students;
 	}
 
-	public List<Activity> findActivities() {
-		return activities;
-	}
-
 	public Activity find(long id) throws InstanceNotFoundException {
-		for (Activity a : activities) {
-			if (a.getId() == id) {
-				return a;
-			}
+		Activity a = null;
+		try{
+			a = activities.get((int) id);
+		}catch(ArrayIndexOutOfBoundsException e){
+			throw new InstanceNotFoundException(id, "Activity");			
 		}
-		throw new InstanceNotFoundException(id, "Activity");
+			return a;
 	}
 
 	public Activity findByName(String name) throws InstanceNotFoundException {
@@ -117,11 +116,13 @@ public class ActivityService implements Serializable {
 	public void enrollmentStudentInActivity(Student student, Activity activity) {
 		student.getActivities().add(activity);
 		activity.getStudents().add(student);
+		Persistence.getInstance().save();
 	}
 
 	public void unEnrollsStudentToActivity(Student student, Activity activity) {
 		student.getActivities().remove(activity);
 		activity.getStudents().remove(student);
+		Persistence.getInstance().save();
 	}
 
 }
