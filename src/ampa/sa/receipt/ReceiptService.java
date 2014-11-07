@@ -116,4 +116,17 @@ public class ReceiptService  implements Serializable{
 		throw new InstanceNotFoundException(null,"Bill");
 		
 	}
+	
+	public Set<ReceiptLine> getReceiptLinesByStudent(Receipt receipt, Student student) {
+		
+		Set<ReceiptLine> receiptLines = receipt.getReceiptLines(); 
+		Set<ReceiptLine> receiptLinesByStudent = new HashSet<ReceiptLine>();
+		for (ReceiptLine receiptLine : receiptLines) {
+			if( receiptLine.getStudent().getId() == student.getId()){
+				receiptLinesByStudent.add(receiptLine);
+			}
+		}
+		return receiptLinesByStudent;
+		
+	}
 }

@@ -147,10 +147,16 @@ public class MockForGUI {
 			
 			ReceiptLine rl1 = new ReceiptLine("Prueba para primer recibo, primera linea", new BigDecimal(7), 1, new BigDecimal(7), students.get(0));
 			ReceiptLine rl2 = new ReceiptLine("Prueba para primer recibo, segunda linea", new BigDecimal(8), 1, new BigDecimal(8), students.get(0));
+			ReceiptLine rl3 = new ReceiptLine("Prueba para primer recibo, tercera linea", new BigDecimal(8), 1, new BigDecimal(8), students.get(0));
+			
 			
 			Set<ReceiptLine> rllist = new HashSet<ReceiptLine>();
 			rllist.add(rl1);
 			rllist.add(rl2);
+
+			
+			Set<ReceiptLine> rllist2 = new HashSet<ReceiptLine>();
+			rllist2.add(rl3);
 
 			Calendar calReceipt1 = Calendar.getInstance();
 			calReceipt1.setTime(sdf.parse("01/05/2009"));
@@ -159,7 +165,7 @@ public class MockForGUI {
 			calReceipt2.setTime(sdf.parse("01/06/2009"));
 			
 			Receipt r1 = new Receipt(house1, new BigDecimal(100), rllist, calReceipt1 );
-			Receipt r2 = new Receipt(house1, new BigDecimal(120), rllist, calReceipt2 );
+			Receipt r2 = new Receipt(house1, new BigDecimal(120), rllist2, calReceipt2 );
 			
 			receiptList.add(r1);
 			receiptList.add(r2);
