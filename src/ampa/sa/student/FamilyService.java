@@ -55,6 +55,7 @@ public class FamilyService implements Serializable {
 			throws DuplicateInstanceException {
 		if (!students.contains(student)) {
 			students.add(student);
+			student.getHouseHold().getMentored().add(student);
 			Persistence.getInstance().save();
 		} else {
 			throw new DuplicateInstanceException(student, "Student");
@@ -87,9 +88,6 @@ public class FamilyService implements Serializable {
 	public void removeHousehold(String bankAccount)
 			throws InstanceNotFoundException {
 		Household hh = findHousehold(bankAccount);
-		if (hh == null) {
-			throw new InstanceNotFoundException(bankAccount, "Household");
-		}
 		for(Student s : hh.getMentored()){
 			students.remove(s);
 		}
@@ -98,8 +96,7 @@ public class FamilyService implements Serializable {
 
 	}
 
-	//FIXME Arreglar update
-	public void updateStudent(Student student) {
+	public void updateStudent(Student student) throws InstanceNotFoundException {
 		boolean found = false;
 		Iterator<Student> iter;
 		iter = students.iterator();
@@ -108,28 +105,14 @@ public class FamilyService implements Serializable {
 			if (s.equals(student)) {
 				found = true;
 				s.setHouseHold(student.getHouseHold());
-				s.setName(student.getName());
-				s.setLastname(student.getLastname());
-				s.setDateBorn(student.getDateBorn());
+				s.setCategory(student.getCategory());
 				s.setActivities(student.getActivities());
 				s.setBookings(student.getBookings());
 				Persistence.getInstance().save();
 			}
 		}
-	}
-
-	public void updateHousehold(Household household) {
-		boolean found = false;
-		Iterator<Household> iter;
-		iter = households.iterator();
-		while (iter.hasNext() && !found) {
-			Household h = iter.next();
-			if (h.getBanckAccount() == household.getBanckAccount()) {
-				found = true;
-				h.setBanckAccount(household.getBanckAccount());
-				h.setMentored(household.getMentored());
-				Persistence.getInstance().save();
-			}
+		if(!found){
+			throw new InstanceNotFoundException(student, "student");
 		}
 	}
 
@@ -207,5 +190,13 @@ public class FamilyService implements Serializable {
 			return "PRIMARIA";
 		else
 			return "INFANTIL";
+	}
+	
+	public Household findHousehold(long id) throws InstanceNotFoundException{
+		try{
+			return households.get((int) id);
+		}catch(IndexOutOfBoundsException e){
+			throw new InstanceNotFoundException(id, "Household");			
+		}
 	}
 }

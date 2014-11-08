@@ -14,6 +14,7 @@ import ampa.sa.booking.Booking;
 import ampa.sa.booking.BookingService;
 import ampa.sa.diningHall.DiningHall;
 import ampa.sa.persistence.Persistence;
+import ampa.sa.receipt.Receipt;
 import ampa.sa.student.FamilyService;
 import ampa.sa.student.Household;
 import ampa.sa.student.Student;
@@ -52,13 +53,13 @@ public class DatosMock {
 
 		// Familias
 		Household house1 = new Household("111-222-333-444",
-				new HashSet<Student>());
+				new HashSet<Student>(),new HashSet<Receipt>());
 		Household house2 = new Household("222-333-444-555",
-				new HashSet<Student>());
+				new HashSet<Student>(),new HashSet<Receipt>());
 		Household house3 = new Household("666-777-888-999",
-				new HashSet<Student>());
+				new HashSet<Student>(),new HashSet<Receipt>());
 		Household house4 = new Household("000-999-888-777",
-				new HashSet<Student>());
+				new HashSet<Student>(),new HashSet<Receipt>());
 		households.add(house1);
 		households.add(house2);
 		households.add(house3);

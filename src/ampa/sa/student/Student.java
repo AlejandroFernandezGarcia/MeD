@@ -47,16 +47,8 @@ public class Student implements Serializable {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public String getLastname() {
 		return lastname;
-	}
-
-	public void setLastname(String lastname) {
-		this.lastname = lastname;
 	}
 
 	public Category getCategory() {
@@ -69,10 +61,6 @@ public class Student implements Serializable {
 
 	public Calendar getDateBorn() {
 		return dateBorn;
-	}
-
-	public void setDateBorn(Calendar dateBorn) {
-		this.dateBorn = dateBorn;
 	}
 
 	public Set<Activity> getActivities() {
@@ -89,6 +77,14 @@ public class Student implements Serializable {
 
 	public void setBookings(Set<Booking> bookings) {
 		this.bookings = bookings;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return ((this.name.compareTo(((Student) obj).getName()) == 0))
+				&& ((this.lastname.compareTo(((Student) obj).getLastname()) == 0))
+				&& ((this.getDateBorn()
+						.compareTo(((Student) obj).getDateBorn()) == 0));
 	}
 
 }

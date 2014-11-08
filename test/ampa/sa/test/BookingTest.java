@@ -52,7 +52,7 @@ public class BookingTest {
 			assertTrue("Bad format to calendar", false);
 		}
 		try {
-			bookingService.create(new Booking(3, cb, s, bookingService
+			bookingService.create(new Booking(cb, s, bookingService
 					.getDiningHall().get(0)));
 		} catch (DuplicateInstanceException | MaxCapacityException e) {
 			assertTrue("Booking has already been created", false);
@@ -90,7 +90,7 @@ public class BookingTest {
 		} catch (ParseException e) {
 			assertTrue("Bad format to calendar", false);
 		}
-		b = new Booking(3, cb, s, bookingService.getDiningHall().get(0));
+		b = new Booking(cb, s, bookingService.getDiningHall().get(0));
 
 		try {
 			bookingService.create(b);
@@ -119,7 +119,7 @@ public class BookingTest {
 			assertTrue("Bad format to calendar", false);
 		}
 		try {
-			bookingService.create(new Booking(3, cb, s, bookingService
+			bookingService.create(new Booking(cb, s, bookingService
 					.getDiningHall().get(0)));
 		} catch (DuplicateInstanceException | MaxCapacityException e) {
 			assertTrue("Duplicate booking or full dining hall", false);
@@ -228,7 +228,7 @@ public class BookingTest {
 		}
 
 		try {
-			bookingService.create(new Booking(3, cb1, s, bookingService
+			bookingService.create(new Booking(cb1, s, bookingService
 					.findDiningHall(2)));
 		} catch (DuplicateInstanceException | MaxCapacityException
 				| NotValidDateException | InstanceNotFoundException e) {
@@ -267,7 +267,7 @@ public class BookingTest {
 		}
 
 		try {
-			bookingService.create(new Booking(3, cb1, s, bookingService
+			bookingService.create(new Booking(cb1, s, bookingService
 					.findDiningHall(2)));
 		} catch (DuplicateInstanceException | MaxCapacityException
 				| NotValidDateException | InstanceNotFoundException e) {
@@ -288,13 +288,13 @@ public class BookingTest {
 			Schedule sch = new Schedule();
 			sch.setStartTime("12:30pm");
 			sch.setEndTime("14:00pm");
-			DiningHall d1 = new DiningHall(1, sch, 1, BigDecimal.valueOf(4.00));
+			DiningHall d1 = new DiningHall(sch, 1, BigDecimal.valueOf(4.00));
 
 			SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
 			Calendar testDate = Calendar.getInstance();
 			testDate.setTime(sdf.parse("21/11/2014"));
-			Booking b1 = new Booking(1, testDate, testSt1, d1);
-			Booking b2 = new Booking(1, testDate, testSt2, d1);
+			Booking b1 = new Booking(testDate, testSt1, d1);
+			Booking b2 = new Booking(testDate, testSt2, d1);
 			bookingService.create(b1);
 			bookingService.create(b2);
 		} catch (InstanceNotFoundException | DuplicateInstanceException
@@ -310,12 +310,12 @@ public class BookingTest {
 			Schedule sch = new Schedule();
 			sch.setStartTime("12:30pm");
 			sch.setEndTime("14:00pm");
-			DiningHall d1 = new DiningHall(1, sch, 2, BigDecimal.valueOf(4.00));
+			DiningHall d1 = new DiningHall(sch, 2, BigDecimal.valueOf(4.00));
 
 			SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
 			Calendar testDate = Calendar.getInstance();
 			testDate.setTime(sdf.parse("25/12/2014"));
-			Booking b1 = new Booking(1, testDate, testSt1, d1);
+			Booking b1 = new Booking(testDate, testSt1, d1);
 			bookingService.create(b1);
 		} catch (MaxCapacityException | InstanceNotFoundException
 				| ParseException | DuplicateInstanceException e) {
@@ -332,33 +332,33 @@ public class BookingTest {
 			sc1.setStartTime("8:00am");
 			sc1.setEndTime("9:30am");
 
-			DiningHall d1 = new DiningHall(1, sc1, 24, BigDecimal.valueOf(4.00));
+			DiningHall d1 = new DiningHall(sc1, 24, BigDecimal.valueOf(4.00));
 
 			Schedule sc2 = new Schedule();
 			sc2.setStartTime("12:30pm");
 			sc2.setEndTime("14:00pm");
 
-			DiningHall d2 = new DiningHall(2, sc2, 20, BigDecimal.valueOf(5.00));
+			DiningHall d2 = new DiningHall(sc2, 20, BigDecimal.valueOf(5.00));
 
 			Calendar cal1 = Calendar.getInstance();
 			cal1.setTime(sdf.parse("27/10/2014"));
-			Booking b1 = new Booking(3, cal1, familyService.findStudent(3), d1);
+			Booking b1 = new Booking(cal1, familyService.findStudent(3), d1);
 
 			Calendar cal2 = Calendar.getInstance();
 			cal2.setTime(sdf.parse("22/10/2014"));
-			Booking b2 = new Booking(4, cal2, familyService.findStudent(3), d1);
+			Booking b2 = new Booking(cal2, familyService.findStudent(3), d1);
 
 			Calendar cal3 = Calendar.getInstance();
 			cal3.setTime(sdf.parse("01/08/2014"));
-			Booking b3 = new Booking(5, cal3, familyService.findStudent(3), d1);
+			Booking b3 = new Booking(cal3, familyService.findStudent(3), d1);
 
 			Calendar cal4 = Calendar.getInstance();
 			cal4.setTime(sdf.parse("03/10/2014"));
-			Booking b4 = new Booking(6, cal4, familyService.findStudent(3), d2);
+			Booking b4 = new Booking(cal4, familyService.findStudent(3), d2);
 
 			Calendar cal5 = Calendar.getInstance();
 			cal5.setTime(sdf.parse("03/02/2015"));
-			Booking b5 = new Booking(7, cal5, familyService.findStudent(3), d2);
+			Booking b5 = new Booking(cal5, familyService.findStudent(3), d2);
 
 			bookingService.create(b1);
 			bookingService.create(b2);
@@ -400,26 +400,26 @@ public class BookingTest {
 			sc1.setStartTime("8:00am");
 			sc1.setEndTime("9:30am");
 
-			DiningHall d1 = new DiningHall(1, sc1, 24, BigDecimal.valueOf(4.00));
+			DiningHall d1 = new DiningHall(sc1, 24, BigDecimal.valueOf(4.00));
 
 			Schedule sc2 = new Schedule();
 			sc1.setStartTime("8:00am");
 			sc1.setEndTime("9:30am");
 
-			DiningHall d2 = new DiningHall(2, sc2, 24, BigDecimal.valueOf(4.00));
+			DiningHall d2 = new DiningHall(sc2, 24, BigDecimal.valueOf(4.00));
 
 			Calendar cal1 = Calendar.getInstance();
 			cal1.setTime(sdf.parse("27/10/2016"));
-			Booking b1 = new Booking(8, cal1, familyService.findStudent(1), d1);
+			Booking b1 = new Booking(cal1, familyService.findStudent(1), d1);
 			Calendar cal2 = Calendar.getInstance();
 			cal2.setTime(sdf.parse("27/10/2016"));
-			Booking b2 = new Booking(9, cal2, familyService.findStudent(2), d1);
+			Booking b2 = new Booking(cal2, familyService.findStudent(2), d1);
 			Calendar cal3 = Calendar.getInstance();
 			cal3.setTime(sdf.parse("27/10/2016"));
-			Booking b3 = new Booking(10, cal1, familyService.findStudent(3), d1);
+			Booking b3 = new Booking(cal1, familyService.findStudent(3), d1);
 			Calendar cal4 = Calendar.getInstance();
 			cal4.setTime(sdf.parse("27/10/2016"));
-			Booking b4 = new Booking(11, cal4, familyService.findStudent(4), d1);
+			Booking b4 = new Booking(cal4, familyService.findStudent(4), d1);
 
 			bookingService.create(b1);
 			bookingService.create(b2);
@@ -434,7 +434,7 @@ public class BookingTest {
 
 			Calendar cal5 = Calendar.getInstance();
 			cal5.setTime(sdf.parse("27/10/2016"));
-			Booking b5 = new Booking(8, cal4, familyService.findStudent(4), d2);
+			Booking b5 = new Booking(cal4, familyService.findStudent(4), d2);
 
 			assertEquals(0, bookingService.getPlacesBooked(b5));
 

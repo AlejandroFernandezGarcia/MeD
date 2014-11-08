@@ -18,6 +18,7 @@ import ampa.sa.activity.Activity;
 import ampa.sa.activity.ActivityService;
 import ampa.sa.booking.Booking;
 import ampa.sa.booking.BookingService;
+import ampa.sa.receipt.Receipt;
 import ampa.sa.student.FamilyService;
 import ampa.sa.student.Household;
 import ampa.sa.student.Student;
@@ -35,6 +36,141 @@ public class StudentsTest {
 	@Before
 	public void before() throws ParseException {
 		new DatosMock();
+	}
+
+	
+	@Test
+	public void TestCreateStudent() throws InstanceNotFoundException,
+			ParseException, DuplicateInstanceException {
+
+		Household household = familyService.findHousehold("666-777-888-999");
+		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+		Calendar cal3 = Calendar.getInstance();
+		cal3.setTime(sdf.parse("12/03/2006"));
+		Student student = new Student(household, "Alejandro", "Fortes",
+				Student.Category.PRIMARIA, cal3, new HashSet<Activity>(),
+				new HashSet<Booking>());
+
+		familyService.createStudent(student);
+
+		assertTrue("Student not created",familyService.getStudents().contains(student));
+		
+		assertTrue(familyService.findStudents(household).contains(student));
+		
+
+	}
+
+	@Test(expected = DuplicateInstanceException.class)
+	public void TestCreateDuplicateStudent() throws DuplicateInstanceException {
+
+		Student student = null;
+		try {
+			student = familyService.findStudent(0);
+		} catch (InstanceNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		familyService.createStudent(student);
+
+	}
+
+	@Test
+	public void TestCreateHousehold() throws InstanceNotFoundException {
+
+		Household household = new Household("111-111-333-333",
+				new HashSet<Student>(),new HashSet<Receipt>());
+
+		try {
+			familyService.createHousehold(household);
+		} catch (DuplicateInstanceException e) {
+			e.printStackTrace();
+		}
+
+		assertEquals(familyService.findHousehold("111-111-333-333"), household);
+
+	}
+	
+	@Test(expected = DuplicateInstanceException.class)
+	public void TestCreateDuplicateHousehold()
+			throws InstanceNotFoundException, DuplicateInstanceException {
+		Household hh = null;
+		
+		hh = familyService.getHousehold().get(0);
+		
+		familyService.createHousehold(hh);
+
+
+	}
+
+	@Test(expected = InstanceNotFoundException.class)
+	public void TestNotFoundStudent() throws InstanceNotFoundException {
+
+		familyService.findStudent(-1);
+
+	}
+
+	@Test
+	public void TestRemoveStudent() throws InstanceNotFoundException {
+
+		try {
+			familyService.removeStudent(1);
+		} catch (InstanceNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		assertEquals(familyService.getStudents().size(), 3);
+
+	}
+
+	@Test(expected = InstanceNotFoundException.class)
+	public void TestRemoveInexistentStudent() throws InstanceNotFoundException {
+
+		familyService.removeStudent(-1);
+
+	}
+
+	@Test
+	public void TestUpdateStudent() throws InstanceNotFoundException {
+		Student s = familyService.findStudent(0);
+		s.setCategory(Student.Category.PRIMARIA);
+		Household hh = s.getHouseHold();
+		hh.setBanckAccount("xxx-yyy");
+		s.setHouseHold(hh);
+		familyService.updateStudent(s);
+	}
+
+	@Test(expected = InstanceNotFoundException.class)
+	public void TestUpdateStudentInexistent() throws InstanceNotFoundException {
+		Student s = familyService.findStudent(0);
+		s.setCategory(Student.Category.PRIMARIA);
+		Household hh = s.getHouseHold();
+		hh.setBanckAccount("xxx-yyy");
+		s.setHouseHold(hh);
+		
+		familyService.removeStudent(0);
+		familyService.updateStudent(s);
+	}
+	
+	@Test
+	public void TestFindStudents() throws InstanceNotFoundException {
+
+		List<Student> students = familyService.findStudents();
+		Student student = familyService.findStudent(0);
+
+		assertEquals(students.size(), 4);
+		assertTrue(students.contains(student));
+
+	}
+
+	@Test
+	public void TestFindHouseholds() throws InstanceNotFoundException {
+
+		List<Household> households = familyService.findHouseholds();
+		Household household = familyService.findHousehold("111-222-333-444");
+
+		assertEquals(households.size(), 4);
+		assertTrue(households.contains(household));
+
 	}
 
 	@Test
@@ -59,7 +195,7 @@ public class StudentsTest {
 		familyService.updateStudent(student);
 
 		assertEquals(familyService.getStudentExpenses(student), new BigDecimal(
-				"68.00"));
+				"72.50"));
 
 	}
 
@@ -88,17 +224,17 @@ public class StudentsTest {
 		Set<Student> students = new HashSet<Student>();
 		students.add(student);
 
-		Household household = new Household("111-222-111-222", students);
+		Household household = new Household("111-222-111-222", students,new HashSet<Receipt>());
 		familyService.createHousehold(household);
 
 		assertEquals(familyService.getHouseholdExpenses(familyService
-				.findHousehold("111-222-111-222")), new BigDecimal("68.00"));
+				.findHousehold("111-222-111-222")), new BigDecimal("72.50"));
 	}
 
 	@Test
 	public void TestGetStudentType() throws InstanceNotFoundException,
 			ParseException, DuplicateInstanceException {
-		Student student1 = familyService.findStudent(1);
+		Student student1 = familyService.findStudent(0);
 		String type = familyService.getStudentType(student1);
 		assertEquals(type, "INFANTIL");
 
@@ -111,144 +247,46 @@ public class StudentsTest {
 
 	}
 
-	/*
-	 * @Test public void TestGetStudentTypeNull() throws
-	 * InstanceNotFoundException, ParseException, DuplicateInstanceException {
-	 * Student student1 = familyService.findStudent(1); String type =
-	 * familyService.getStudentType(student1); assertEquals(type, "INFANTIL");
-	 * 
-	 * SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT); Calendar cal1 =
-	 * Calendar.getInstance(); cal1.setTime(sdf.parse("20/05/2999"));
-	 * student1.setDateBorn(cal1); familyService.updateStudent(student1);
-	 * 
-	 * type = familyService.getStudentType(student1); assertNull(type);
-	 * 
-	 * }
-	 */
-
 	@Test
-	public void TestCreateStudent() throws InstanceNotFoundException,
-			ParseException {
+	public void findStudentByHousehold() throws InstanceNotFoundException{
+		Household hh = familyService.findHousehold(0);
+		assertEquals(hh.getMentored().size(),familyService.findStudents(hh).size());
+	}
+	
+	@Test(expected = InstanceNotFoundException.class)
+	public void findInexistentHousehold() throws InstanceNotFoundException {
+		Household hh = familyService.findHousehold(-1);
+	}
 
-		Household household = familyService.findHousehold("666-777-888-999");
+	@Test(expected = InstanceNotFoundException.class)
+	public void findInexistentHouseholdByBankAccount() throws InstanceNotFoundException {
+		Household hh = familyService.findHousehold("");
+	}
+	
+	@Test
+	public void removeHousehold() throws InstanceNotFoundException, ParseException, DuplicateInstanceException{
+		Household hh = familyService.findHousehold(0);
 		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
 		Calendar cal3 = Calendar.getInstance();
 		cal3.setTime(sdf.parse("12/03/2006"));
-		Student student = new Student(5, household, "Alejandro", "Fortes",
+		Student student = new Student(hh, "Alejandro", "Fortes",
 				Student.Category.PRIMARIA, cal3, new HashSet<Activity>(),
 				new HashSet<Booking>());
 
-		try {
-			familyService.createStudent(student);
-		} catch (DuplicateInstanceException e) {
-			e.printStackTrace();
-		}
-
-		assertEquals(familyService.findStudent(5), student);
-
-	}
-
-	@Test(expected = DuplicateInstanceException.class)
-	public void TestCreateDuplicateStudent() throws DuplicateInstanceException {
-
-		Student student = null;
-		try {
-			student = familyService.findStudent(3);
-		} catch (InstanceNotFoundException e) {
-			e.printStackTrace();
-		}
-
 		familyService.createStudent(student);
-
-	}
-
-	@Test
-	public void TestCreateHousehold() throws InstanceNotFoundException {
-
-		Household household = new Household("111-111-333-333",
-				new HashSet<Student>());
-
-		try {
-			familyService.createHousehold(household);
-		} catch (DuplicateInstanceException e) {
-			e.printStackTrace();
+		
+		
+		familyService.removeHousehold(hh.getBanckAccount());
+		try{
+			familyService.findHousehold(hh.getBanckAccount());
+		}catch(InstanceNotFoundException e){
+			assertTrue(true);
 		}
-
-		assertEquals(familyService.findHousehold("111-111-333-333"), household);
-
 	}
-
+	
 	@Test(expected = InstanceNotFoundException.class)
-	public void TestNotFoundStudent() throws InstanceNotFoundException {
-
-		familyService.findStudent(6);
-
+	public void removeInexistenHousehold() throws InstanceNotFoundException{
+		familyService.removeHousehold("a");
 	}
-
-	@Test
-	public void TestRemoveStudent() throws InstanceNotFoundException {
-
-		try {
-			familyService.removeStudent(1);
-		} catch (InstanceNotFoundException e) {
-			e.printStackTrace();
-		}
-
-		assertEquals(familyService.getStudents().size(), 3);
-
-	}
-
-	@Test(expected = InstanceNotFoundException.class)
-	public void TestRemoveInexistentStudent() throws InstanceNotFoundException {
-
-		familyService.removeStudent(6);
-
-	}
-
-	@Test
-	public void TestUpdateStudent() throws InstanceNotFoundException {
-
-		Student student = familyService.findStudent(1);
-		student.setName("Berto");
-		familyService.updateStudent(student);
-		student = familyService.findStudent(1);
-		assertEquals(familyService.findStudent(1).getName(), "Berto");
-
-	}
-
-	@Test
-	public void TestFindStudents() throws InstanceNotFoundException {
-
-		List<Student> students = familyService.findStudents();
-		Student student = familyService.findStudent(1);
-
-		assertEquals(students.size(), 4);
-		assertTrue(students.contains(student));
-
-	}
-
-	@Test
-	public void TestFindHouseholds() throws InstanceNotFoundException {
-
-		List<Household> households = familyService.findHouseholds();
-		Household household = familyService.findHousehold("111-222-333-444");
-
-		assertEquals(households.size(), 4);
-		assertTrue(households.contains(household));
-
-	}
-
-	/*
-	 * @Test public void TestFindStudentsByHousehold() throws
-	 * InstanceNotFoundException {
-	 * 
-	 * Household household = familyService.findHousehold("111-222-333-444");
-	 * List<Student> students = familyService.findStudents(household); Student
-	 * student = familyService.findStudent(1);
-	 * 
-	 * assertEquals(students.size(), 1); assertTrue(students.contains(student));
-	 * 
-	 * }
-	 */
-
+	
 }

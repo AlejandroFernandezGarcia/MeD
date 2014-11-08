@@ -56,13 +56,13 @@ public class MockForGUI {
 
 		// Familias
 		Household house1 = new Household("111-222-333-444",
-				new HashSet<Student>());
+				new HashSet<Student>(),new HashSet<Receipt>());
 		Household house2 = new Household("222-333-444-555",
-				new HashSet<Student>());
+				new HashSet<Student>(),new HashSet<Receipt>());
 		Household house3 = new Household("666-777-888-999",
-				new HashSet<Student>());
+				new HashSet<Student>(),new HashSet<Receipt>());
 		Household house4 = new Household("000-999-888-777",
-				new HashSet<Student>());
+				new HashSet<Student>(),new HashSet<Receipt>());
 
 		// Estudiantes
 		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
