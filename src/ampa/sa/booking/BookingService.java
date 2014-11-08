@@ -94,7 +94,7 @@ public class BookingService implements Serializable {
 	}
 
 	public void remove(Booking booking) throws InstanceNotFoundException {
-		boolean found = false;
+		/*boolean found = false;
 		Iterator<Booking> iter;
 		Booking aux;
 		iter = bookings.iterator();
@@ -107,6 +107,14 @@ public class BookingService implements Serializable {
 			}
 		}
 		if (!found) {
+			throw new InstanceNotFoundException(booking, "Booking");
+		}*/
+		if(bookings.contains(booking))
+		{
+			bookings.remove(booking);
+		}
+		else
+		{
 			throw new InstanceNotFoundException(booking, "Booking");
 		}
 	}

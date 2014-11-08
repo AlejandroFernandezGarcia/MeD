@@ -62,10 +62,10 @@ public class BookingTest {
 		}
 		Student ss = null;
 		try {
-			ss = bookingService.find(3).getStudent();
+			ss = bookingService.find(2).getStudent();
 			assertEquals(ss, s);
-			assertEquals(bookingService.find(3).getDate(), cb);
-			assertEquals(bookingService.find(3).getDiningHall(), bookingService
+			assertEquals(bookingService.find(2).getDate(), cb);
+			assertEquals(bookingService.find(2).getDiningHall(), bookingService
 					.getDiningHall().get(0));
 		} catch (InstanceNotFoundException e) {
 			assertTrue("Booking not found", false);
@@ -107,7 +107,7 @@ public class BookingTest {
 
 		Student s = null;
 		try {
-			s = familyService.findStudent(4);
+			s = familyService.findStudent(3);
 		} catch (InstanceNotFoundException e) {
 			assertTrue("Student not found", false);
 		}
@@ -131,15 +131,15 @@ public class BookingTest {
 				bookingService.getDiningHall().get(0)), 22);
 	}
 
-	@Test(expected = InstanceNotFoundException.class)
-	public void removeBookingTest() throws InstanceNotFoundException {
+	@Test
+	public void removeBookingTest() throws InstanceNotFoundException{
 
 		Booking b = null;
 
-		b = bookingService.find(1);
+		b = bookingService.find(0);
 		bookingService.remove(b);
-
-		bookingService.find(1);
+		Booking b2 = bookingService.find(0);
+		assertTrue(!b.equals(b2));
 
 	}
 
@@ -148,7 +148,7 @@ public class BookingTest {
 
 		Booking b = null;
 
-		b = bookingService.find(1);
+		b = bookingService.find(0);
 		bookingService.remove(b);
 
 		bookingService.remove(b);
@@ -209,7 +209,7 @@ public class BookingTest {
 		Booking b = null;
 		Student s = null;
 		try {
-			b = bookingService.find(1);
+			b = bookingService.find(0);
 			s = b.getStudent();
 		} catch (InstanceNotFoundException e) {
 			assertTrue("Booking not found", false);
@@ -229,7 +229,7 @@ public class BookingTest {
 
 		try {
 			bookingService.create(new Booking(cb1, s, bookingService
-					.findDiningHall(2)));
+					.findDiningHall(1)));
 		} catch (DuplicateInstanceException | MaxCapacityException
 				| NotValidDateException | InstanceNotFoundException e) {
 			assertTrue("Error in getStudentBookingByDateTest", false);
@@ -247,7 +247,7 @@ public class BookingTest {
 		Booking b = null;
 		Student s = null;
 		try {
-			b = bookingService.find(1);
+			b = bookingService.find(0);
 			s = b.getStudent();
 		} catch (InstanceNotFoundException e) {
 			assertTrue("Booking not found", false);
@@ -268,7 +268,7 @@ public class BookingTest {
 
 		try {
 			bookingService.create(new Booking(cb1, s, bookingService
-					.findDiningHall(2)));
+					.findDiningHall(1)));
 		} catch (DuplicateInstanceException | MaxCapacityException
 				| NotValidDateException | InstanceNotFoundException e) {
 			assertTrue("Error in getStudentBookingByDateTest", false);
@@ -282,8 +282,8 @@ public class BookingTest {
 	@Test(expected = MaxCapacityException.class)
 	public void maxCapacityTest() throws MaxCapacityException {
 		try {
-			Student testSt1 = familyService.findStudent(1);
-			Student testSt2 = familyService.findStudent(2);
+			Student testSt1 = familyService.findStudent(0);
+			Student testSt2 = familyService.findStudent(1);
 
 			Schedule sch = new Schedule();
 			sch.setStartTime("12:30pm");
@@ -410,16 +410,16 @@ public class BookingTest {
 
 			Calendar cal1 = Calendar.getInstance();
 			cal1.setTime(sdf.parse("27/10/2016"));
-			Booking b1 = new Booking(cal1, familyService.findStudent(1), d1);
+			Booking b1 = new Booking(cal1, familyService.findStudent(0), d1);
 			Calendar cal2 = Calendar.getInstance();
 			cal2.setTime(sdf.parse("27/10/2016"));
-			Booking b2 = new Booking(cal2, familyService.findStudent(2), d1);
+			Booking b2 = new Booking(cal2, familyService.findStudent(1), d1);
 			Calendar cal3 = Calendar.getInstance();
 			cal3.setTime(sdf.parse("27/10/2016"));
-			Booking b3 = new Booking(cal1, familyService.findStudent(3), d1);
+			Booking b3 = new Booking(cal1, familyService.findStudent(2), d1);
 			Calendar cal4 = Calendar.getInstance();
 			cal4.setTime(sdf.parse("27/10/2016"));
-			Booking b4 = new Booking(cal4, familyService.findStudent(4), d1);
+			Booking b4 = new Booking(cal4, familyService.findStudent(3), d1);
 
 			bookingService.create(b1);
 			bookingService.create(b2);
@@ -434,7 +434,7 @@ public class BookingTest {
 
 			Calendar cal5 = Calendar.getInstance();
 			cal5.setTime(sdf.parse("27/10/2016"));
-			Booking b5 = new Booking(cal4, familyService.findStudent(4), d2);
+			Booking b5 = new Booking(cal4, familyService.findStudent(3), d2);
 
 			assertEquals(0, bookingService.getPlacesBooked(b5));
 
