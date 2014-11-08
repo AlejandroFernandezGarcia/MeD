@@ -97,7 +97,7 @@ public class BookingWindow extends JFrame {
 	 * @throws ParseException
 	 * @throws InstanceNotFoundException
 	 */
-	public BookingWindow(Student stu) throws ParseException,
+	public BookingWindow(MainWindow mainWindow,Student stu) throws ParseException,
 			InstanceNotFoundException {
 		sdf = new SimpleDateFormat(DATE_FORMAT);
 		this.student = stu;
@@ -257,6 +257,7 @@ public class BookingWindow extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				BookingWindow thisWindow = (BookingWindow) ((JButton) e
 						.getSource()).getTopLevelAncestor();
+				mainWindow.fillRightPanel(mainWindow.getRigthPanel());
 				thisWindow.setVisible(false);
 				thisWindow.dispose();
 			}

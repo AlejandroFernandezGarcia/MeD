@@ -3,7 +3,6 @@ package ampa.sa.gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -24,7 +23,6 @@ import ampa.sa.activity.ActivityService;
 import ampa.sa.student.FamilyService;
 import ampa.sa.student.Student;
 import ampa.sa.util.exceptions.InstanceNotFoundException;
-import java.awt.Frame;
 
 public class ActivityManagementWindow extends JFrame implements ActionListener {
 
@@ -37,9 +35,11 @@ public class ActivityManagementWindow extends JFrame implements ActionListener {
 			cancelButton;
 	private DefaultListModel notMatriculated, matriculated;
 	private JList list_1, list_2;
+	private MainWindow mainWindow;
 
-	public ActivityManagementWindow(Student stu) {
+	public ActivityManagementWindow(MainWindow mainWindow, Student stu) {
 
+		this.mainWindow = mainWindow;
 		this.student = stu;
 
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -246,6 +246,7 @@ public class ActivityManagementWindow extends JFrame implements ActionListener {
 			}
 			ActivityManagementWindow thisWindow = (ActivityManagementWindow) ((JButton) e
 					.getSource()).getTopLevelAncestor();
+			mainWindow.fillRightPanel(mainWindow.getRigthPanel());
 			thisWindow.setVisible(false);
 			thisWindow.dispose();
 		} else if (e.getSource() == cancelButton) {

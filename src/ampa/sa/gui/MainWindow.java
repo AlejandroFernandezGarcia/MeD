@@ -48,6 +48,8 @@ public class MainWindow extends JFrame {
 	private JTable studentsTable;
 	private FamilyService familyService;
 	private BookingService bookingService;
+	private JPanel rigthPanel;
+	private MainWindow now;
 
 	/**
 	 * Launch the application.
@@ -64,6 +66,10 @@ public class MainWindow extends JFrame {
 				}
 			}
 		});
+	}
+
+	public JPanel getRigthPanel() {
+		return rigthPanel;
 	}
 
 	public void fillStudentsTable() {
@@ -200,15 +206,15 @@ public class MainWindow extends JFrame {
 
 		return explainPanel;
 	}
-
-	private void fillRightPanel(JPanel panel) {
+	
+	public void fillRightPanel(JPanel panel) {
 		if (studentsTable.getRowCount() == 0) {
 			return;
 		}
 		// FIXME Ordenar students
 		JTabbedPane tabPanel = null;
 		List<Student> students = familyService.getStudents();
-		final Student studentSelected = students.get(studentsTable
+		Student studentSelected = students.get(studentsTable
 				.getSelectedRow());
 		Component[] componentsPanel = panel.getComponents();
 		for (Component component : componentsPanel) {
@@ -234,7 +240,7 @@ public class MainWindow extends JFrame {
 							.addActionListener(new ActionListener() {
 								public void actionPerformed(ActionEvent e) {
 									try {
-										BookingWindow bW = new BookingWindow(
+										BookingWindow bW = new BookingWindow(now,
 												studentSelected);
 										bW.setVisible(true);
 									} catch (InstanceNotFoundException
@@ -273,7 +279,7 @@ public class MainWindow extends JFrame {
 							.addActionListener(new ActionListener() {
 								public void actionPerformed(ActionEvent e) {
 									ActivityManagementWindow amw = new ActivityManagementWindow(
-											studentSelected);
+											now,studentSelected);
 									amw.setVisible(true);
 								}
 							});
@@ -299,6 +305,7 @@ public class MainWindow extends JFrame {
 	 * Create the frame.
 	 */
 	public MainWindow() {
+		this.now = this;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 657, 462);
 
@@ -370,7 +377,7 @@ public class MainWindow extends JFrame {
 		});
 		scrollStudents.setViewportView(studentsTable);
 
-		final JPanel rigthPanel = new JPanel();
+		rigthPanel = new JPanel();
 		contentPane.add(rigthPanel);
 
 		JLabel lblHouseHold = new JLabel("Núcleo familiar: ");
