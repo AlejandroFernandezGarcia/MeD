@@ -12,6 +12,7 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -38,12 +39,13 @@ public class ActivityManagementWindow extends JFrame implements ActionListener {
 	private MainWindow mainWindow;
 
 	public ActivityManagementWindow(MainWindow mainWindow, Student stu) {
+		setResizable(false);
 
 		this.mainWindow = mainWindow;
 		this.student = stu;
 
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 457, 326);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -89,91 +91,51 @@ public class ActivityManagementWindow extends JFrame implements ActionListener {
 
 		cancelButton = new JButton("Cancelar");
 		cancelButton.addActionListener(this);
+		
+		JLabel lblNewLabel = new JLabel("Estudiante:");
+		lblNewLabel.setName("lblNewLabel");
+		lblNewLabel.setText("Estudiante: " + student.getName() + " " + student.getLastname());
 
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane.setHorizontalGroup(gl_contentPane.createParallelGroup(
-				Alignment.LEADING).addGroup(
-				gl_contentPane
-						.createSequentialGroup()
-						.addGap(26)
-						.addGroup(
-								gl_contentPane
-										.createParallelGroup(Alignment.LEADING,
-												false)
-										.addComponent(matriculateButton,
-												GroupLayout.DEFAULT_SIZE,
-												GroupLayout.DEFAULT_SIZE,
-												Short.MAX_VALUE)
-										.addComponent(scrollPane_2,
-												GroupLayout.DEFAULT_SIZE, 123,
-												Short.MAX_VALUE))
-						.addGap(28)
-						.addGroup(
-								gl_contentPane
-										.createParallelGroup(Alignment.LEADING,
-												false)
-										.addComponent(unMatriculateButton,
-												GroupLayout.DEFAULT_SIZE,
-												GroupLayout.DEFAULT_SIZE,
-												Short.MAX_VALUE)
-										.addComponent(scrollPane_1,
-												GroupLayout.DEFAULT_SIZE, 130,
-												Short.MAX_VALUE))
-						.addGap(18)
-						.addGroup(
-								gl_contentPane
-										.createParallelGroup(Alignment.LEADING)
-										.addComponent(acceptButton,
-												GroupLayout.DEFAULT_SIZE, 85,
-												Short.MAX_VALUE)
-										.addComponent(cancelButton,
-												GroupLayout.DEFAULT_SIZE, 85,
-												Short.MAX_VALUE))
-						.addContainerGap()));
-		gl_contentPane
-				.setVerticalGroup(gl_contentPane
-						.createParallelGroup(Alignment.LEADING)
-						.addGroup(
-								gl_contentPane
-										.createSequentialGroup()
-										.addGap(7)
-										.addGroup(
-												gl_contentPane
-														.createParallelGroup(
-																Alignment.LEADING)
-														.addGroup(
-																gl_contentPane
-																		.createParallelGroup(
-																				Alignment.BASELINE)
-																		.addComponent(
-																				scrollPane_1,
-																				GroupLayout.DEFAULT_SIZE,
-																				205,
-																				Short.MAX_VALUE)
-																		.addGroup(
-																				gl_contentPane
-																						.createSequentialGroup()
-																						.addComponent(
-																								acceptButton)
-																						.addGap(8)
-																						.addComponent(
-																								cancelButton)))
-														.addComponent(
-																scrollPane_2,
-																GroupLayout.DEFAULT_SIZE,
-																205,
-																Short.MAX_VALUE))
-										.addPreferredGap(
-												ComponentPlacement.RELATED)
-										.addGroup(
-												gl_contentPane
-														.createParallelGroup(
-																Alignment.BASELINE)
-														.addComponent(
-																unMatriculateButton)
-														.addComponent(
-																matriculateButton))
-										.addContainerGap()));
+		gl_contentPane.setHorizontalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addGap(26)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblNewLabel)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
+								.addComponent(matriculateButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+								.addComponent(scrollPane_2, GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE))
+							.addGap(28)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
+								.addComponent(unMatriculateButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+								.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+								.addComponent(acceptButton, GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)
+								.addComponent(cancelButton, GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE))))
+					.addContainerGap())
+		);
+		gl_contentPane.setVerticalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+							.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
+							.addGroup(gl_contentPane.createSequentialGroup()
+								.addComponent(acceptButton)
+								.addGap(15)
+								.addComponent(cancelButton)))
+						.addComponent(scrollPane_2, GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(unMatriculateButton)
+						.addComponent(matriculateButton))
+					.addContainerGap())
+		);
 
 		contentPane.setLayout(gl_contentPane);
 
@@ -207,7 +169,6 @@ public class ActivityManagementWindow extends JFrame implements ActionListener {
 		// If the out button is pressed, we take the indices and values of
 		// the selected items and output them to an array.
 		else if (e.getSource() == unMatriculateButton) {
-			@SuppressWarnings("deprecation")
 			Object[] to = list_2.getSelectedValuesList().toArray();
 			int[] toindex = list_2.getSelectedIndices();
 
@@ -256,5 +217,4 @@ public class ActivityManagementWindow extends JFrame implements ActionListener {
 			thisWindow.dispose();
 		}
 	}
-
 }
