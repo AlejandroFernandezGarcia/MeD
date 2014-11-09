@@ -12,6 +12,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
 
+import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
@@ -41,6 +42,8 @@ import ampa.sa.student.FamilyService;
 import ampa.sa.student.Student;
 import ampa.sa.util.exceptions.InstanceNotFoundException;
 import ampa.sa.util.exceptions.ReceiptsNotFoundException;
+
+import javax.swing.JList;
 
 public class MainWindow extends JFrame {
 
@@ -90,41 +93,26 @@ public class MainWindow extends JFrame {
 			Object[] data = { student.getName(), student.getLastname(), dateS };
 			dtm.addRow(data);
 		}
-		studentsTable.updateUI();// DUDA Es necesario?
+		studentsTable.updateUI();
 	}
 
-	private void fillConceptTable(Student student, JTable table) {
+	private void fillConceptList(Student student, JList<String> list) {
 		bookingService = BookingService.getInstance();
-		DefaultTableModel dtm = (DefaultTableModel) table.getModel();
-		for (int i = 0; i < dtm.getRowCount(); i++) {
-			dtm.removeRow(i);
-		}
+		DefaultListModel<String> dlm = new DefaultListModel<String>();
+		list.setModel(dlm);
+		dlm.removeAllElements();
 
 		Set<Activity> activities = student.getActivities();
 		for (Activity a : activities) {
-			Object[] data = { a.getName(), a.getPrize() };
-			dtm.addRow(data);
+			dlm.addElement(a.getName());
 		}
-		Set<Booking> bookings = student.getBookings();
-		List<DiningHall> dhs = bookingService.getDiningHall();
-		int count;
-		for (DiningHall dh : dhs) {
-			count = 0;
-			for (Booking b : bookings) {
-				if (b.getDiningHall().equals(dh)) {
-					count++;
-				}
-			}
-			if (count != 0) {
-				Object[] data = {
-						count + "x Comedor " + dh.getSchedule(),
-						dh.getPrice().multiply(new BigDecimal(count)) + " ("
-								+ dh.getPrice() + " ud )" };
-				dtm.addRow(data);
-			}
-		}
-
-		table.updateUI();// DUDA Es necesario?
+		//FIXME Arreglar
+		/*String booking = bookingService.isBookingAllDayOfWeekInMonth(student);
+		if(booking.compareTo("")!=0){
+			dlm.addElement(booking);
+		}*/
+		
+		list.updateUI();
 	}
 
 	private JPanel createExplainPanel(Student student) {
@@ -133,76 +121,34 @@ public class MainWindow extends JFrame {
 		lblName.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblName.setHorizontalAlignment(SwingConstants.LEFT);
 
-		JLabel lblTotalStudent = new JLabel("Total alumno: "
-				+ familyService.getStudentExpenses(student) + "€");
-		lblTotalStudent.setHorizontalTextPosition(SwingConstants.CENTER);
-		lblTotalStudent.setHorizontalAlignment(SwingConstants.LEFT);
 		JPanel explainPanel = new JPanel();
-		JScrollPane scrollPane_1 = new JScrollPane();
+		
+		JScrollPane scrollPane = new JScrollPane();
 		GroupLayout gl_explainPanel = new GroupLayout(explainPanel);
-		gl_explainPanel
-				.setHorizontalGroup(gl_explainPanel
-						.createParallelGroup(Alignment.LEADING)
-						.addGroup(
-								Alignment.TRAILING,
-								gl_explainPanel
-										.createSequentialGroup()
-										.addContainerGap()
-										.addGroup(
-												gl_explainPanel
-														.createParallelGroup(
-																Alignment.TRAILING)
-														.addComponent(
-																scrollPane_1,
-																Alignment.LEADING,
-																GroupLayout.DEFAULT_SIZE,
-																270,
-																Short.MAX_VALUE)
-														.addComponent(
-																lblName,
-																Alignment.LEADING,
-																GroupLayout.DEFAULT_SIZE,
-																270,
-																Short.MAX_VALUE)
-														.addComponent(
-																lblTotalStudent,
-																GroupLayout.DEFAULT_SIZE,
-																270,
-																Short.MAX_VALUE))
-										.addContainerGap()));
-		gl_explainPanel.setVerticalGroup(gl_explainPanel.createParallelGroup(
-				Alignment.LEADING).addGroup(
-				gl_explainPanel
-						.createSequentialGroup()
-						.addContainerGap()
-						.addComponent(lblName)
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(lblTotalStudent,
-								GroupLayout.PREFERRED_SIZE, 23,
-								GroupLayout.PREFERRED_SIZE)
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE,
-								138, Short.MAX_VALUE).addContainerGap()));
-
-		JTable tablaConcepto = new JTable();
-		tablaConcepto.setModel(new DefaultTableModel(new Object[][] { { null,
-				null }, }, new String[] { "Concepto", "Precio" }) {
-			Class[] columnTypes = new Class[] { String.class, Object.class };
-
-			public Class getColumnClass(int columnIndex) {
-				return columnTypes[columnIndex];
-			}
-
-			boolean[] columnEditables = new boolean[] { false, false };
-
-			public boolean isCellEditable(int row, int column) {
-				return columnEditables[column];
-			}
-		});
-		scrollPane_1.setViewportView(tablaConcepto);
+		gl_explainPanel.setHorizontalGroup(
+			gl_explainPanel.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_explainPanel.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_explainPanel.createParallelGroup(Alignment.TRAILING)
+						.addComponent(scrollPane, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 269, Short.MAX_VALUE)
+						.addComponent(lblName, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 269, Short.MAX_VALUE))
+					.addContainerGap())
+		);
+		gl_explainPanel.setVerticalGroup(
+			gl_explainPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_explainPanel.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(lblName)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)
+					.addContainerGap())
+		);
+		
+		JList list = new JList();
+		scrollPane.setViewportView(list);
 		explainPanel.setLayout(gl_explainPanel);
-
-		fillConceptTable(student, tablaConcepto);
+		
+		fillConceptList(student, list);
 
 		return explainPanel;
 	}
@@ -224,12 +170,6 @@ public class MainWindow extends JFrame {
 				if (component.getName().compareTo("lblHouseHold") == 0) {
 					((JLabel) component).setText("Núcleo familiar: "
 							+ studentSelected.getHouseHold().getBanckAccount());
-				} else if (component.getName().compareTo("lblTotalHouseHold") == 0) {
-					BigDecimal amount = familyService
-							.getHouseholdExpenses(studentSelected
-									.getHouseHold());
-					((JLabel) component).setText("Total núcleo familiar: "
-							+ amount + " €");
 				} else if (component.getName().compareTo("btnCreateBooking") == 0) {
 					ActionListener[] al = ((JButton) component)
 							.getListeners(ActionListener.class);
@@ -284,7 +224,7 @@ public class MainWindow extends JFrame {
 								}
 							});
 
-				}// TODO Añadir funcionalidad demás botones
+				}
 			}
 		}
 		List<Student> studentsOfHouseHold = familyService
@@ -388,11 +328,6 @@ public class MainWindow extends JFrame {
 
 		JTabbedPane tabAlumno = new JTabbedPane(JTabbedPane.TOP);
 
-		JLabel lblTotalHouseHold = new JLabel("Total núcleo familiar:");
-		lblTotalHouseHold.setName("lblTotalHouseHold");
-		lblTotalHouseHold.setHorizontalTextPosition(SwingConstants.CENTER);
-		lblTotalHouseHold.setHorizontalAlignment(SwingConstants.CENTER);
-
 		JButton btnSignUpActivity = new JButton("Apuntarse a actividades");
 		btnSignUpActivity.setName("btnSignUpActivity");
 
@@ -404,86 +339,42 @@ public class MainWindow extends JFrame {
 		btnShowBills.setName("btnShowBills");
 
 		GroupLayout gl_rigthPanel = new GroupLayout(rigthPanel);
-		gl_rigthPanel
-				.setHorizontalGroup(gl_rigthPanel
-						.createParallelGroup(Alignment.LEADING)
-						.addGroup(
-								gl_rigthPanel
-										.createSequentialGroup()
-										.addContainerGap()
-										.addGroup(
-												gl_rigthPanel
-														.createParallelGroup(
-																Alignment.LEADING)
-														.addGroup(
-																gl_rigthPanel
-																		.createSequentialGroup()
-																		.addComponent(
-																				tabAlumno,
-																				GroupLayout.DEFAULT_SIZE,
-																				298,
-																				Short.MAX_VALUE)
-																		.addContainerGap())
-														.addGroup(
-																gl_rigthPanel
-																		.createSequentialGroup()
-																		.addGroup(
-																				gl_rigthPanel
-																						.createParallelGroup(
-																								Alignment.TRAILING)
-																						.addComponent(
-																								lblTotalHouseHold,
-																								Alignment.LEADING,
-																								GroupLayout.DEFAULT_SIZE,
-																								285,
-																								Short.MAX_VALUE)
-																						.addComponent(
-																								lblHouseHold,
-																								GroupLayout.DEFAULT_SIZE,
-																								285,
-																								Short.MAX_VALUE))
-																		.addGap(25))
-														.addGroup(
-																gl_rigthPanel
-																		.createSequentialGroup()
-																		.addComponent(
-																				btnSignUpActivity)
-																		.addContainerGap(
-																				114,
-																				Short.MAX_VALUE))
-														.addGroup(
-																gl_rigthPanel
-																		.createSequentialGroup()
-																		.addComponent(
-																				btnReservasComedor)
-																		.addContainerGap(
-																				146,
-																				Short.MAX_VALUE))
-														.addGroup(
-																gl_rigthPanel
-																		.createSequentialGroup()
-																		.addComponent(
-																				btnShowBills)
-																		.addContainerGap(
-																				193,
-																				Short.MAX_VALUE)))));
-		gl_rigthPanel.setVerticalGroup(gl_rigthPanel.createParallelGroup(
-				Alignment.LEADING).addGroup(
-				gl_rigthPanel
-						.createSequentialGroup()
-						.addGap(18)
-						.addComponent(lblHouseHold, GroupLayout.PREFERRED_SIZE,
-								23, GroupLayout.PREFERRED_SIZE)
-						.addGap(10)
-						.addComponent(lblTotalHouseHold)
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(tabAlumno, GroupLayout.DEFAULT_SIZE, 210,
-								Short.MAX_VALUE).addGap(18)
-						.addComponent(btnSignUpActivity)
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(btnReservasComedor)
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(btnShowBills).addGap(15)));
+		gl_rigthPanel.setHorizontalGroup(
+			gl_rigthPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_rigthPanel.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_rigthPanel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_rigthPanel.createSequentialGroup()
+							.addComponent(tabAlumno, GroupLayout.DEFAULT_SIZE, 298, Short.MAX_VALUE)
+							.addContainerGap())
+						.addGroup(gl_rigthPanel.createSequentialGroup()
+							.addComponent(lblHouseHold, GroupLayout.DEFAULT_SIZE, 285, Short.MAX_VALUE)
+							.addGap(25))
+						.addGroup(gl_rigthPanel.createSequentialGroup()
+							.addComponent(btnSignUpActivity)
+							.addContainerGap(104, Short.MAX_VALUE))
+						.addGroup(gl_rigthPanel.createSequentialGroup()
+							.addComponent(btnReservasComedor)
+							.addContainerGap(146, Short.MAX_VALUE))
+						.addGroup(gl_rigthPanel.createSequentialGroup()
+							.addComponent(btnShowBills)
+							.addContainerGap(164, Short.MAX_VALUE))))
+		);
+		gl_rigthPanel.setVerticalGroup(
+			gl_rigthPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_rigthPanel.createSequentialGroup()
+					.addGap(18)
+					.addComponent(lblHouseHold, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
+					.addGap(31)
+					.addComponent(tabAlumno, GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
+					.addGap(18)
+					.addComponent(btnSignUpActivity)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(btnReservasComedor)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(btnShowBills)
+					.addGap(15))
+		);
 
 		JPanel explainPanel = new JPanel();
 		tabAlumno.addTab("New tab", null, explainPanel, null);
@@ -493,73 +384,6 @@ public class MainWindow extends JFrame {
 		lblName.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblName.setHorizontalAlignment(SwingConstants.LEFT);
 
-		JLabel lblTotalStudent = new JLabel("Total alumno:");
-		lblTotalStudent.setHorizontalTextPosition(SwingConstants.CENTER);
-		lblTotalStudent.setHorizontalAlignment(SwingConstants.LEFT);
-
-		JScrollPane scrollPane_1 = new JScrollPane();
-		GroupLayout gl_explainPanel = new GroupLayout(explainPanel);
-		gl_explainPanel
-				.setHorizontalGroup(gl_explainPanel
-						.createParallelGroup(Alignment.LEADING)
-						.addGroup(
-								Alignment.TRAILING,
-								gl_explainPanel
-										.createSequentialGroup()
-										.addContainerGap()
-										.addGroup(
-												gl_explainPanel
-														.createParallelGroup(
-																Alignment.TRAILING)
-														.addComponent(
-																scrollPane_1,
-																Alignment.LEADING,
-																GroupLayout.DEFAULT_SIZE,
-																270,
-																Short.MAX_VALUE)
-														.addComponent(
-																lblName,
-																Alignment.LEADING,
-																GroupLayout.DEFAULT_SIZE,
-																270,
-																Short.MAX_VALUE)
-														.addComponent(
-																lblTotalStudent,
-																GroupLayout.DEFAULT_SIZE,
-																270,
-																Short.MAX_VALUE))
-										.addContainerGap()));
-		gl_explainPanel.setVerticalGroup(gl_explainPanel.createParallelGroup(
-				Alignment.LEADING).addGroup(
-				gl_explainPanel
-						.createSequentialGroup()
-						.addContainerGap()
-						.addComponent(lblName)
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(lblTotalStudent,
-								GroupLayout.PREFERRED_SIZE, 23,
-								GroupLayout.PREFERRED_SIZE)
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE,
-								138, Short.MAX_VALUE).addContainerGap()));
-
-		JTable tablaConcepto = new JTable();
-		tablaConcepto.setModel(new DefaultTableModel(new Object[][] { { null,
-				null }, }, new String[] { "Concepto", "Precio" }) {
-			Class[] columnTypes = new Class[] { String.class, Object.class };
-
-			public Class getColumnClass(int columnIndex) {
-				return columnTypes[columnIndex];
-			}
-
-			boolean[] columnEditables = new boolean[] { false, false };
-
-			public boolean isCellEditable(int row, int column) {
-				return columnEditables[column];
-			}
-		});
-		scrollPane_1.setViewportView(tablaConcepto);
-		explainPanel.setLayout(gl_explainPanel);
 		rigthPanel.setLayout(gl_rigthPanel);
 
 		// Editado
