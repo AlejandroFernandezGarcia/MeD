@@ -60,12 +60,9 @@ public class DatosMock {
 				new HashSet<Student>(),new HashSet<Receipt>());
 		Household house4 = new Household("000-999-888-777",
 				new HashSet<Student>(),new HashSet<Receipt>());
-		households.add(house1);
-		households.add(house2);
-		households.add(house3);
-		households.add(house4);
+		
 
-		// Estudiantes
+		// Estudiantes		
 		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
 		Calendar cal1 = Calendar.getInstance();
 		cal1.setTime(sdf.parse("20/05/2009"));
@@ -86,7 +83,13 @@ public class DatosMock {
 		students.add(new Student(house4, "Alejandro", "Fernandez",
 				Student.Category.INFANTIL, cal3, new HashSet<Activity>(),
 				new HashSet<Booking>()));
-
+		house1.getMentored().add(students.get(0));
+		house1.getMentored().add(students.get(1));
+		households.add(house1);
+		households.add(house2);
+		households.add(house3);
+		households.add(house4);
+		
 		Schedule sc1 = new Schedule();
 		sc1.setStartTime("8:00am");
 		sc1.setEndTime("9:30am");
@@ -108,10 +111,10 @@ public class DatosMock {
 		Calendar cb2 = Calendar.getInstance();
 		cb2.setTime(sdf.parse("31/10/2014"));
 		Booking b2 = new Booking(cb2, students.get(1), d1);
-
+		
 		bookings.add(b1);
 		bookings.add(b2);
-
+		
 		activityService.setActivities(activities);
 		bookingService.setBookings(bookings);
 		bookingService.setDiningHall(diningHall);

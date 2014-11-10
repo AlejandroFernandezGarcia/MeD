@@ -6,7 +6,6 @@ import java.awt.EventQueue;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.List;
@@ -18,6 +17,7 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -34,16 +34,12 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 import ampa.sa.activity.Activity;
-import ampa.sa.booking.Booking;
 import ampa.sa.booking.BookingService;
-import ampa.sa.diningHall.DiningHall;
 import ampa.sa.persistence.Persistence;
+import ampa.sa.receipt.ReceiptService;
 import ampa.sa.student.FamilyService;
 import ampa.sa.student.Student;
 import ampa.sa.util.exceptions.InstanceNotFoundException;
-import ampa.sa.util.exceptions.ReceiptsNotFoundException;
-
-import javax.swing.JList;
 
 public class MainWindow extends JFrame {
 
@@ -51,6 +47,7 @@ public class MainWindow extends JFrame {
 	private JTable studentsTable;
 	private FamilyService familyService;
 	private BookingService bookingService;
+	private ReceiptService receiptService;
 	private JPanel rigthPanel;
 	private MainWindow now;
 
@@ -106,12 +103,12 @@ public class MainWindow extends JFrame {
 		for (Activity a : activities) {
 			dlm.addElement(a.getName());
 		}
-		
+
 		String booking = bookingService.isBookingAllDayOfWeekInMonth(student);
-		if(booking.compareTo("")!=0){
+		if (booking.compareTo("") != 0) {
 			dlm.addElement(booking);
 		}
-		
+
 		list.updateUI();
 	}
 
@@ -122,46 +119,61 @@ public class MainWindow extends JFrame {
 		lblName.setHorizontalAlignment(SwingConstants.LEFT);
 
 		JPanel explainPanel = new JPanel();
-		
+
 		JScrollPane scrollPane = new JScrollPane();
 		GroupLayout gl_explainPanel = new GroupLayout(explainPanel);
-		gl_explainPanel.setHorizontalGroup(
-			gl_explainPanel.createParallelGroup(Alignment.TRAILING)
-				.addGroup(gl_explainPanel.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(gl_explainPanel.createParallelGroup(Alignment.TRAILING)
-						.addComponent(scrollPane, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 269, Short.MAX_VALUE)
-						.addComponent(lblName, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 269, Short.MAX_VALUE))
-					.addContainerGap())
-		);
-		gl_explainPanel.setVerticalGroup(
-			gl_explainPanel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_explainPanel.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(lblName)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)
-					.addContainerGap())
-		);
-		
+		gl_explainPanel
+				.setHorizontalGroup(gl_explainPanel
+						.createParallelGroup(Alignment.TRAILING)
+						.addGroup(
+								gl_explainPanel
+										.createSequentialGroup()
+										.addContainerGap()
+										.addGroup(
+												gl_explainPanel
+														.createParallelGroup(
+																Alignment.TRAILING)
+														.addComponent(
+																scrollPane,
+																Alignment.LEADING,
+																GroupLayout.DEFAULT_SIZE,
+																269,
+																Short.MAX_VALUE)
+														.addComponent(
+																lblName,
+																Alignment.LEADING,
+																GroupLayout.DEFAULT_SIZE,
+																269,
+																Short.MAX_VALUE))
+										.addContainerGap()));
+		gl_explainPanel.setVerticalGroup(gl_explainPanel.createParallelGroup(
+				Alignment.LEADING).addGroup(
+				gl_explainPanel
+						.createSequentialGroup()
+						.addContainerGap()
+						.addComponent(lblName)
+						.addPreferredGap(ComponentPlacement.RELATED)
+						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE,
+								138, Short.MAX_VALUE).addContainerGap()));
+
 		JList list = new JList();
 		scrollPane.setViewportView(list);
 		explainPanel.setLayout(gl_explainPanel);
-		
+
 		fillConceptList(student, list);
 
 		return explainPanel;
 	}
-	
+
 	public void fillRightPanel(JPanel panel) {
+		receiptService = ReceiptService.getInstance();
 		if (studentsTable.getRowCount() == 0) {
 			return;
 		}
 		// FIXME Ordenar students
 		JTabbedPane tabPanel = null;
 		List<Student> students = familyService.getStudents();
-		Student studentSelected = students.get(studentsTable
-				.getSelectedRow());
+		Student studentSelected = students.get(studentsTable.getSelectedRow());
 		Component[] componentsPanel = panel.getComponents();
 		for (Component component : componentsPanel) {
 			if (component.getClass() == JTabbedPane.class) {
@@ -180,8 +192,8 @@ public class MainWindow extends JFrame {
 							.addActionListener(new ActionListener() {
 								public void actionPerformed(ActionEvent e) {
 									try {
-										BookingWindow bW = new BookingWindow(now,
-												studentSelected);
+										BookingWindow bW = new BookingWindow(
+												now, studentSelected);
 										bW.setVisible(true);
 									} catch (InstanceNotFoundException
 											| ParseException e1) {
@@ -200,13 +212,12 @@ public class MainWindow extends JFrame {
 							.addActionListener(new ActionListener() {
 								public void actionPerformed(ActionEvent e) {
 									BillHistoryWindow bhw;
-									try {
-										bhw = new BillHistoryWindow(
-												studentSelected.getHouseHold());
-										bhw.setVisible(true);
-									} catch (ReceiptsNotFoundException e1) {
-										e1.printStackTrace();
-									}
+									receiptService
+											.createReceipt(studentSelected
+													.getHouseHold());
+									bhw = new BillHistoryWindow(studentSelected
+											.getHouseHold());
+									bhw.setVisible(true);
 								}
 							});
 				} else if (component.getName().compareTo("btnSignUpActivity") == 0) {
@@ -219,7 +230,7 @@ public class MainWindow extends JFrame {
 							.addActionListener(new ActionListener() {
 								public void actionPerformed(ActionEvent e) {
 									ActivityManagementWindow amw = new ActivityManagementWindow(
-											now,studentSelected);
+											now, studentSelected);
 									amw.setVisible(true);
 								}
 							});
@@ -339,42 +350,74 @@ public class MainWindow extends JFrame {
 		btnShowBills.setName("btnShowBills");
 
 		GroupLayout gl_rigthPanel = new GroupLayout(rigthPanel);
-		gl_rigthPanel.setHorizontalGroup(
-			gl_rigthPanel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_rigthPanel.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(gl_rigthPanel.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_rigthPanel.createSequentialGroup()
-							.addComponent(tabAlumno, GroupLayout.DEFAULT_SIZE, 298, Short.MAX_VALUE)
-							.addContainerGap())
-						.addGroup(gl_rigthPanel.createSequentialGroup()
-							.addComponent(lblHouseHold, GroupLayout.DEFAULT_SIZE, 285, Short.MAX_VALUE)
-							.addGap(25))
-						.addGroup(gl_rigthPanel.createSequentialGroup()
-							.addComponent(btnSignUpActivity)
-							.addContainerGap(104, Short.MAX_VALUE))
-						.addGroup(gl_rigthPanel.createSequentialGroup()
-							.addComponent(btnReservasComedor)
-							.addContainerGap(146, Short.MAX_VALUE))
-						.addGroup(gl_rigthPanel.createSequentialGroup()
-							.addComponent(btnShowBills)
-							.addContainerGap(164, Short.MAX_VALUE))))
-		);
-		gl_rigthPanel.setVerticalGroup(
-			gl_rigthPanel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_rigthPanel.createSequentialGroup()
-					.addGap(18)
-					.addComponent(lblHouseHold, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
-					.addGap(31)
-					.addComponent(tabAlumno, GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
-					.addGap(18)
-					.addComponent(btnSignUpActivity)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(btnReservasComedor)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(btnShowBills)
-					.addGap(15))
-		);
+		gl_rigthPanel
+				.setHorizontalGroup(gl_rigthPanel
+						.createParallelGroup(Alignment.LEADING)
+						.addGroup(
+								gl_rigthPanel
+										.createSequentialGroup()
+										.addContainerGap()
+										.addGroup(
+												gl_rigthPanel
+														.createParallelGroup(
+																Alignment.LEADING)
+														.addGroup(
+																gl_rigthPanel
+																		.createSequentialGroup()
+																		.addComponent(
+																				tabAlumno,
+																				GroupLayout.DEFAULT_SIZE,
+																				298,
+																				Short.MAX_VALUE)
+																		.addContainerGap())
+														.addGroup(
+																gl_rigthPanel
+																		.createSequentialGroup()
+																		.addComponent(
+																				lblHouseHold,
+																				GroupLayout.DEFAULT_SIZE,
+																				285,
+																				Short.MAX_VALUE)
+																		.addGap(25))
+														.addGroup(
+																gl_rigthPanel
+																		.createSequentialGroup()
+																		.addComponent(
+																				btnSignUpActivity)
+																		.addContainerGap(
+																				104,
+																				Short.MAX_VALUE))
+														.addGroup(
+																gl_rigthPanel
+																		.createSequentialGroup()
+																		.addComponent(
+																				btnReservasComedor)
+																		.addContainerGap(
+																				146,
+																				Short.MAX_VALUE))
+														.addGroup(
+																gl_rigthPanel
+																		.createSequentialGroup()
+																		.addComponent(
+																				btnShowBills)
+																		.addContainerGap(
+																				164,
+																				Short.MAX_VALUE)))));
+		gl_rigthPanel.setVerticalGroup(gl_rigthPanel.createParallelGroup(
+				Alignment.LEADING).addGroup(
+				gl_rigthPanel
+						.createSequentialGroup()
+						.addGap(18)
+						.addComponent(lblHouseHold, GroupLayout.PREFERRED_SIZE,
+								23, GroupLayout.PREFERRED_SIZE)
+						.addGap(31)
+						.addComponent(tabAlumno, GroupLayout.DEFAULT_SIZE, 210,
+								Short.MAX_VALUE).addGap(18)
+						.addComponent(btnSignUpActivity)
+						.addPreferredGap(ComponentPlacement.RELATED)
+						.addComponent(btnReservasComedor)
+						.addPreferredGap(ComponentPlacement.RELATED)
+						.addComponent(btnShowBills).addGap(15)));
 
 		JPanel explainPanel = new JPanel();
 		tabAlumno.addTab("New tab", null, explainPanel, null);

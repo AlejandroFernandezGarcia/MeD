@@ -21,8 +21,6 @@ import ampa.sa.util.exceptions.ReceiptsNotFoundException;
 @SuppressWarnings("serial")
 public class ReceiptService implements Serializable {
 
-	private static List<Receipt> receipts = new ArrayList<Receipt>();
-
 	private static ReceiptService instance = null;
 
 	private ReceiptService() {
@@ -78,7 +76,10 @@ public class ReceiptService implements Serializable {
 			total.add(receiptLine.getPrice());
 		}
 		Receipt receipt = new Receipt(household, total, receiptLines, now);
-		household.getReceipts().add(receipt);
+		if(household.getReceipts().contains(receipt)){
+			household.getReceipts().remove(receipt);
+		}
+		household.getReceipts().add(receipt);	
 	}
 
 	public List<Receipt> findReceiptsByHousehold(Household household)
@@ -93,14 +94,6 @@ public class ReceiptService implements Serializable {
 
 		return result;
 
-	}
-
-	public List<Receipt> getReceipts() {
-		return receipts;
-	}
-
-	public void setReceipts(List<Receipt> receipts) {
-		this.receipts = receipts;
 	}
 
 	public Receipt findReceiptByDate(Household household, Calendar calendar)
