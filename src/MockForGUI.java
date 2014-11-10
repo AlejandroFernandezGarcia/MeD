@@ -165,9 +165,9 @@ public class MockForGUI {
 		Calendar calReceipt2 = Calendar.getInstance();
 		calReceipt2.setTime(sdf.parse("01/06/2009"));
 
-		Receipt r1 = new Receipt(house1, new BigDecimal(100), rllist,
+		Receipt r1 = new Receipt(house1, new BigDecimal(15), rllist,
 				calReceipt1);
-		Receipt r2 = new Receipt(house1, new BigDecimal(120), rllist2,
+		Receipt r2 = new Receipt(house1, new BigDecimal(8), rllist2,
 				calReceipt2);
 
 		receiptList.add(r1);

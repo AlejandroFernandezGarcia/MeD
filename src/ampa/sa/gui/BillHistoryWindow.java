@@ -63,7 +63,8 @@ public class BillHistoryWindow extends JFrame {
 	 * 
 	 * @throws ReceiptsNotFoundException
 	 */
-	public BillHistoryWindow(Household h) throws ReceiptsNotFoundException {
+	public BillHistoryWindow(Household h) throws ReceiptsNotFoundException{
+		setResizable(false);
 
 		this.household = h;
 
@@ -105,79 +106,63 @@ public class BillHistoryWindow extends JFrame {
 		JButton btnNewButton = new JButton("Buscar");
 
 		JPanel panel = new JPanel();
+
+		JLabel lblNewLabel = new JLabel("N\u00FAcleo Familiar: "
+				+ household.getBanckAccount());
+
+		JLabel lblNewLabel_1 = new JLabel("Coste Total: ");
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane.setHorizontalGroup(gl_contentPane
-				.createParallelGroup(Alignment.LEADING)
-				.addGroup(
-						gl_contentPane
-								.createSequentialGroup()
-								.addContainerGap()
-								.addComponent(comboBox,
-										GroupLayout.PREFERRED_SIZE,
-										GroupLayout.DEFAULT_SIZE,
-										GroupLayout.PREFERRED_SIZE)
-								.addGap(58)
-								.addComponent(comboBox_1,
-										GroupLayout.PREFERRED_SIZE,
-										GroupLayout.DEFAULT_SIZE,
-										GroupLayout.PREFERRED_SIZE).addGap(59)
-								.addComponent(btnNewButton)
-								.addContainerGap(152, Short.MAX_VALUE))
-				.addComponent(panel, Alignment.TRAILING,
-						GroupLayout.DEFAULT_SIZE, 424, Short.MAX_VALUE));
-		gl_contentPane
-				.setVerticalGroup(gl_contentPane
-						.createParallelGroup(Alignment.LEADING)
-						.addGroup(
-								gl_contentPane
-										.createSequentialGroup()
-										.addContainerGap()
-										.addGroup(
-												gl_contentPane
-														.createParallelGroup(
-																Alignment.BASELINE)
-														.addComponent(
-																comboBox,
-																GroupLayout.PREFERRED_SIZE,
-																GroupLayout.DEFAULT_SIZE,
-																GroupLayout.PREFERRED_SIZE)
-														.addComponent(
-																comboBox_1,
-																GroupLayout.PREFERRED_SIZE,
-																GroupLayout.DEFAULT_SIZE,
-																GroupLayout.PREFERRED_SIZE)
-														.addComponent(
-																btnNewButton))
-										.addPreferredGap(
-												ComponentPlacement.UNRELATED)
-										.addComponent(panel,
-												GroupLayout.DEFAULT_SIZE, 207,
-												Short.MAX_VALUE)));
+		gl_contentPane.setHorizontalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGap(58)
+					.addComponent(comboBox_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGap(59)
+					.addComponent(btnNewButton)
+					.addContainerGap(186, Short.MAX_VALUE))
+				.addComponent(panel, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(lblNewLabel)
+					.addPreferredGap(ComponentPlacement.RELATED, 118, Short.MAX_VALUE)
+					.addComponent(lblNewLabel_1)
+					.addGap(111))
+		);
+		gl_contentPane.setVerticalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(comboBox_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(btnNewButton))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblNewLabel)
+						.addComponent(lblNewLabel_1))
+					.addPreferredGap(ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+					.addComponent(panel, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE))
+		);
 
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		GroupLayout gl_panel = new GroupLayout(panel);
-		gl_panel.setHorizontalGroup(gl_panel.createParallelGroup(
-				Alignment.LEADING).addComponent(tabbedPane,
-				GroupLayout.PREFERRED_SIZE, 424, GroupLayout.PREFERRED_SIZE));
-		gl_panel.setVerticalGroup(gl_panel.createParallelGroup(
-				Alignment.LEADING).addGroup(
-				gl_panel.createSequentialGroup()
-						.addGap(48)
-						.addComponent(tabbedPane, GroupLayout.PREFERRED_SIZE,
-								159, GroupLayout.PREFERRED_SIZE)));
+		gl_panel.setHorizontalGroup(
+			gl_panel.createParallelGroup(Alignment.LEADING)
+				.addComponent(tabbedPane, GroupLayout.DEFAULT_SIZE, 434, Short.MAX_VALUE)
+		);
+		gl_panel.setVerticalGroup(
+			gl_panel.createParallelGroup(Alignment.LEADING)
+				.addGroup(Alignment.TRAILING, gl_panel.createSequentialGroup()
+					.addComponent(tabbedPane, GroupLayout.PREFERRED_SIZE, 176, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+		);
 
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// tabbedPane.addTab(title, component);
 
-				// hacer un for para cada estudiante
-
-				// Set<Receipt> billsOfHousehold = h.getReceipts();
 				tabbedPane.removeAll();
-
-				// Calendar c = Calendar.getInstance();
-				// c.set(comboBox.getSelectedIndex() + 2000,
-				// comboBox_1.getSelectedIndex(), 1);
 
 				SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
 				Calendar cb = Calendar.getInstance();
@@ -201,18 +186,22 @@ public class BillHistoryWindow extends JFrame {
 				Receipt r = null;
 				try {
 					r = receiptService.findReceiptByDate(h, cb);
+					lblNewLabel_1.setText("Coste Total: " + r.getTotal());
+
+					int i = 0;
+
+					List<Student> students = familyService
+							.findStudents(household);
+					for (Student student : students) {
+						tabbedPane.addTab(student.getName(),
+								createPanelBills(r, student));
+						tabbedPane.setSelectedIndex(i);
+						i++;
+					}
+
 				} catch (InstanceNotFoundException e1) {
-					e1.printStackTrace();
-				}
-
-				int i = 0;
-
-				List<Student> students = familyService.findStudents(household);
-				for (Student student : students) {
-					tabbedPane.addTab(student.getName(),
-							createPanelBills(r, student));
-					tabbedPane.setSelectedIndex(i);
-					i++;
+				//	e1.printStackTrace();
+					lblNewLabel_1.setText("Coste Total: NaN");
 				}
 
 			}
@@ -246,8 +235,9 @@ public class BillHistoryWindow extends JFrame {
 
 		table.setModel(new DefaultTableModel(
 				new Object[][] { { null, null }, }, new String[] { "Concepto",
-						"Precio" }) {
-			Class[] columnTypes = new Class[] { String.class, Object.class };
+						"Precio Unidad", "Cantidad" }) {
+			Class[] columnTypes = new Class[] { String.class, Object.class,
+					Object.class };
 
 		});
 		scrollPane.setViewportView(table);
@@ -268,11 +258,10 @@ public class BillHistoryWindow extends JFrame {
 		Set<ReceiptLine> billLines = receiptService.getReceiptLinesByStudent(r,
 				s);
 		for (ReceiptLine rl : billLines) {
-			Object[] data = { rl.getConcept(), rl.getPrice() };
+			Object[] data = { rl.getConcept(), rl.getUnitPrice(), rl.getUnits() };
 			dtm.addRow(data);
 		}
 
 		table.updateUI();// DUDA Es necesario?
 	}
-
 }
