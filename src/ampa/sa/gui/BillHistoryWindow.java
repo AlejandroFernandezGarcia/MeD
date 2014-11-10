@@ -63,7 +63,7 @@ public class BillHistoryWindow extends JFrame {
 	 * 
 	 * @throws ReceiptsNotFoundException
 	 */
-	public BillHistoryWindow(Household h) throws ReceiptsNotFoundException{
+	public BillHistoryWindow(Household h) {
 		setResizable(false);
 
 		this.household = h;
