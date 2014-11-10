@@ -65,4 +65,15 @@ public class Receipt implements Serializable, Comparable<Receipt> {
 			return 0;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (((((Receipt) obj).getDate().get(Calendar.MONTH)) == (date
+				.get(Calendar.MONTH)))
+				&& (((Receipt) obj).getDate().get(Calendar.YEAR)) == (date
+						.get(Calendar.YEAR))) {
+			return true;
+		}
+		return false;
+	}
+
 }

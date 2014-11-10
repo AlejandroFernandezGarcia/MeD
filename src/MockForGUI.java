@@ -31,7 +31,6 @@ public class MockForGUI {
 	ActivityService activityService = ActivityService.getInstance();
 	BookingService bookingService = BookingService.getInstance();
 	FamilyService familyService = FamilyService.getInstance();
-	ReceiptService receiptService = ReceiptService.getInstance();
 
 	public static final String DATE_FORMAT = "dd/MM/yyyy";
 
@@ -175,16 +174,11 @@ public class MockForGUI {
 
 		house1.setReceipts(receiptList);
 
-		List<Receipt> r = new ArrayList<Receipt>();
-		r.add(r1);
-		r.add(r2);
-
 		activityService.setActivities(activities);
 		bookingService.setBookings(bookings);
 		familyService.setHousehold(households);
 		familyService.setStudents(students);
 		bookingService.setDiningHall(diningHall);
-		receiptService.setReceipts(r);
 
 	}
 
