@@ -43,6 +43,7 @@ public class ReceiptService implements Serializable {
 		Set<Student> students = household.getMentored();
 		Set<ReceiptLine> receiptLines = new HashSet<ReceiptLine>();
 		Calendar now = Calendar.getInstance();
+		
 		BigDecimal total = new BigDecimal(0);
 		ReceiptLine rl;
 		for (Student student : students) {
@@ -73,8 +74,9 @@ public class ReceiptService implements Serializable {
 
 		}
 		for (ReceiptLine receiptLine : receiptLines) {
-			total.add(receiptLine.getPrice());
+			total = total.add(receiptLine.getPrice());
 		}
+		now.add(Calendar.MONTH, -1);
 		Receipt receipt = new Receipt(household, total, receiptLines, now);
 		if(household.getReceipts().contains(receipt)){
 			household.getReceipts().remove(receipt);

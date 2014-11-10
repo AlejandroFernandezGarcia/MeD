@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
+import java.util.Iterator;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -49,7 +50,7 @@ public class ReceiptTest {
 		assertEquals(1, hh.getReceipts().size());
 		ArrayList<Receipt> ar = new ArrayList<Receipt>();
 		ar.addAll(hh.getReceipts());
-		assertEquals(Calendar.getInstance().get(Calendar.MONTH), ar.get(0)
+		assertEquals(Calendar.getInstance().get(Calendar.MONTH) - 1, ar.get(0)
 				.getDate().get(Calendar.MONTH));
 		assertEquals(Calendar.getInstance().get(Calendar.YEAR), ar.get(0)
 				.getDate().get(Calendar.YEAR));
@@ -89,9 +90,7 @@ public class ReceiptTest {
 
 	@Test
 	public void getReceiptLinesByStudentTest() throws InstanceNotFoundException {
-
-		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-
+		
 		Calendar cb3 = Calendar.getInstance();
 		Booking b3 = new Booking(cb3, familyService.findStudent(0),
 				bookingService.findDiningHall(0));
@@ -103,9 +102,9 @@ public class ReceiptTest {
 		bookingForS.add(b3);
 		familyService.findStudent(0).setActivities(activityForS);
 		familyService.findStudent(0).setBookings(bookingForS);
-		
+
 		familyService.findStudent(1).setActivities(activityForS);
-		
+
 		Household hh = null;
 		try {
 			hh = familyService.findHousehold(0);
@@ -119,18 +118,33 @@ public class ReceiptTest {
 		ar.addAll(hh.getReceipts());
 
 		HashSet<ReceiptLine> hs = null;
+		HashSet<ReceiptLine> hs2 = null;
 		try {
 			hs = (HashSet<ReceiptLine>) receiptService
 					.getReceiptLinesByStudent(ar.get(0),
 							familyService.findStudent(0));
+			hs2 = (HashSet<ReceiptLine>) receiptService
+					.getReceiptLinesByStudent(ar.get(0),
+							familyService.findStudent(1));
 		} catch (InstanceNotFoundException e1) {
 			fail("Student not found");
 		}
 
+		Iterator<ReceiptLine> irl = hs.iterator();
+		Iterator<ReceiptLine> irl2 = hs2.iterator();
+		int count = 0;
+		while (irl.hasNext()) {
+			count += irl.next().getUnits();
+		}
+		while (irl2.hasNext()) {
+			count += irl2.next().getUnits();
+		}
+
 		try {
 			assertEquals(familyService.findStudent(0).getActivities().size()
-					+ familyService.findStudent(0).getBookings().size(),
-					hs.size());
+					+ familyService.findStudent(0).getBookings().size()
+					+ familyService.findStudent(1).getActivities().size()
+					+ familyService.findStudent(1).getBookings().size(), count);
 		} catch (InstanceNotFoundException e) {
 			fail("Student not found");
 		}
