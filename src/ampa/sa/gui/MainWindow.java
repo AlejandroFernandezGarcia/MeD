@@ -106,11 +106,11 @@ public class MainWindow extends JFrame {
 		for (Activity a : activities) {
 			dlm.addElement(a.getName());
 		}
-		//FIXME Arreglar
-		/*String booking = bookingService.isBookingAllDayOfWeekInMonth(student);
+		
+		String booking = bookingService.isBookingAllDayOfWeekInMonth(student);
 		if(booking.compareTo("")!=0){
 			dlm.addElement(booking);
-		}*/
+		}
 		
 		list.updateUI();
 	}

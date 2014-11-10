@@ -94,64 +94,26 @@ public class BookingService implements Serializable {
 	}
 
 	public void remove(Booking booking) throws InstanceNotFoundException {
-		/*boolean found = false;
-		Iterator<Booking> iter;
-		Booking aux;
-		iter = bookings.iterator();
-		while (iter.hasNext() && !found) {
-			if ((aux = iter.next()).equals(booking)) {
-				found = true;
-				bookings.remove(aux);
-				aux.getStudent().getBookings().remove(aux);
-				Persistence.getInstance().save();
-			}
-		}
-		if (!found) {
-			throw new InstanceNotFoundException(booking, "Booking");
-		}*/
-		if(bookings.contains(booking))
-		{
+		if (bookings.contains(booking)) {
 			bookings.remove(booking);
-		}
-		else
-		{
+		} else {
 			throw new InstanceNotFoundException(booking, "Booking");
 		}
 	}
 
 	public Booking find(long id) throws InstanceNotFoundException {
-		Booking b = bookings.get((int) id);
-		if (b != null) {
-			return b;
+		try {
+			return bookings.get((int) id);
+		} catch (IndexOutOfBoundsException e) {
+			throw new InstanceNotFoundException(id, "Booking");
 		}
-		throw new InstanceNotFoundException(id, "Booking");
 	}
 
 	public DiningHall findDiningHall(long id) throws InstanceNotFoundException {
-		DiningHall dh = diningHall.get((int) id);
-		if (dh != null) {
-			return dh;
-		}
-		throw new InstanceNotFoundException(id, "DiningHall");
-	}
-
-	//FIXME Arreglar update
-	public void update(Booking booking) throws InstanceNotFoundException {
-		boolean found = false;
-		Iterator<Booking> iter;
-		iter = bookings.iterator();
-		while (iter.hasNext() && !found) {
-			Booking b = iter.next();
-			if (b.equals(booking)) {
-				found = true;
-				b.setDate(booking.getDate());
-				b.setStudent(booking.getStudent());
-				b.setDiningHall(booking.getDiningHall());
-				Persistence.getInstance().save();
-			}
-		}
-		if (!found) {
-			throw new InstanceNotFoundException(booking, "Booking");
+		try {
+			return diningHall.get((int) id);
+		} catch (IndexOutOfBoundsException e) {
+			throw new InstanceNotFoundException(id, "DiningHall");
 		}
 	}
 
@@ -243,7 +205,6 @@ public class BookingService implements Serializable {
 			if (booking.getDiningHall().equals(dh)
 					&& (booking.getDate().compareTo(b.getDate()) == 0)) {
 				countBookings++;
-				System.out.println(booking.toString());
 			}
 		}
 		return countBookings;
@@ -264,6 +225,50 @@ public class BookingService implements Serializable {
 			}
 		}
 		return b;
+	}
+
+	public String isBookingAllDayOfWeekInMonth(Student student) {
+		String result = "";
+		Calendar calendar = Calendar.getInstance();
+		int days[] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+		int month = calendar.get(Calendar.MONTH);
+		while (calendar.get(Calendar.MONTH) == month) {
+			try {
+				if (SchoolCalendar.isNotHoliday(calendar)) {
+					days[calendar.get(Calendar.DAY_OF_WEEK)]++;
+				}
+			} catch (ParseException e) {
+			}
+			calendar.add(Calendar.DAY_OF_MONTH, 1);
+		}
+		List<Booking> bookingsForStudent = findStudentBookingsByMonthAndYear(
+				student, Calendar.getInstance());
+		for (Booking booking : bookingsForStudent) {
+			days[booking.getDate().get(Calendar.DAY_OF_WEEK)]--;
+		}
+
+		result += "Comedor mensual: ";
+		if (days[Calendar.MONDAY] <= 0) {
+			result += "L";
+		}
+		if (days[Calendar.TUESDAY] <= 0) {
+			result += "M";
+		}
+		if (days[Calendar.WEDNESDAY] <= 0) {
+			result += "X";
+		}
+		if (days[Calendar.THURSDAY] <= 0) {
+			result += "J";
+		}
+		if (days[Calendar.FRIDAY] <= 0) {
+			result += "V";
+		}
+		if (result.compareTo("Comedor mensual: ") == 0) {
+			return "";
+		}
+
+		return result;
+
 	}
 
 }

@@ -57,7 +57,6 @@ public class BookingTest {
 		} catch (DuplicateInstanceException | MaxCapacityException e) {
 			assertTrue("Booking has already been created", false);
 		} catch (NotValidDateException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		Student ss = null;
@@ -132,7 +131,7 @@ public class BookingTest {
 	}
 
 	@Test
-	public void removeBookingTest() throws InstanceNotFoundException{
+	public void removeBookingTest() throws InstanceNotFoundException {
 
 		Booking b = null;
 
@@ -153,54 +152,6 @@ public class BookingTest {
 
 		bookingService.remove(b);
 
-	}
-
-	@Test
-	public void updateBookingTest() {
-
-		Booking b = null;
-		Calendar d = null;
-		try {
-			b = bookingService.find(1);
-			d = b.getDate();
-		} catch (InstanceNotFoundException e) {
-			assertTrue("Booking not found", false);
-		}
-
-		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-		Calendar cb = Calendar.getInstance();
-		try {
-			cb.setTime(sdf.parse("28/10/2014"));
-		} catch (ParseException e) {
-			assertTrue("Bad format to calendar", false);
-		}
-
-		b.setDate(cb);
-
-		try {
-			bookingService.update(b);
-		} catch (InstanceNotFoundException e1) {
-			assertTrue("Booking not exists", false);
-		}
-
-		try {
-			bookingService.find(1);
-		} catch (InstanceNotFoundException e) {
-			assertTrue("Booking not exsists", false);
-		}
-
-		assertNotEquals(b.getDate(), d);
-	}
-
-	@Test(expected = InstanceNotFoundException.class)
-	public void updateInexistentBookingTest() throws InstanceNotFoundException {
-
-		Booking b = null;
-
-		b = bookingService.find(1);
-		bookingService.remove(b);
-
-		bookingService.update(b);
 	}
 
 	@Test
@@ -441,9 +392,53 @@ public class BookingTest {
 		} catch (ParseException | InstanceNotFoundException
 				| DuplicateInstanceException | MaxCapacityException
 				| NotValidDateException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
+	}
+
+	@Test
+	public void isBookingAllDayOfWeekInMonthTest()
+			throws InstanceNotFoundException, ParseException {
+		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+		Student student = familyService.findStudent(0);
+		DiningHall dh = bookingService.getDiningHall().get(0);
+		Calendar calendar = Calendar.getInstance();
+		Calendar cal = Calendar.getInstance();
+		int month = calendar.get(Calendar.MONTH);
+		while (calendar.get(Calendar.MONTH) == month) {
+			Calendar cal2 = (Calendar) calendar.clone();
+			cal.setTime(sdf.parse(calendar.get(Calendar.DAY_OF_MONTH) + "/"
+					+ (calendar.get(Calendar.MONTH) + 1) + "/"
+					+ calendar.get(Calendar.YEAR)));
+			try {
+				bookingService.create(new Booking(cal2, student, dh));
+			} catch (DuplicateInstanceException | MaxCapacityException
+					| NotValidDateException e) {
+			}
+			calendar.add(Calendar.DAY_OF_MONTH, 1);
+		}
+		student = familyService.findStudent(0);
+		String string = bookingService.isBookingAllDayOfWeekInMonth(student);
+		assertEquals("", "Comedor mensual: LMXJV", string);
+	}
+	
+	@Test
+	public void isBookingAllDayOfWeekInMonthTest2()
+			throws InstanceNotFoundException, ParseException {
+		Student student = familyService.findStudent(0);
+		student = familyService.findStudent(0);
+		String string = bookingService.isBookingAllDayOfWeekInMonth(student);
+		assertEquals("", string);
+	}
+	
+	@Test(expected = InstanceNotFoundException.class)
+	public void findInexistentStudent() throws InstanceNotFoundException{
+		bookingService.find(-1);
+	}
+	
+	@Test(expected = InstanceNotFoundException.class)
+	public void findInexistentDiningHall() throws InstanceNotFoundException{
+		bookingService.findDiningHall(-1);
 	}
 }
