@@ -91,51 +91,125 @@ public class ActivityManagementWindow extends JFrame implements ActionListener {
 
 		cancelButton = new JButton("Cancelar");
 		cancelButton.addActionListener(this);
-		
+
 		JLabel lblNewLabel = new JLabel("Estudiante:");
 		lblNewLabel.setName("lblNewLabel");
-		lblNewLabel.setText("Estudiante: " + student.getName() + " " + student.getLastname());
+		lblNewLabel.setText("Estudiante: " + student.getName() + " "
+				+ student.getLastname());
 
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane.setHorizontalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(26)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblNewLabel)
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
-								.addComponent(matriculateButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-								.addComponent(scrollPane_2, GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE))
-							.addGap(28)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
-								.addComponent(unMatriculateButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-								.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE))
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-								.addComponent(acceptButton, GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)
-								.addComponent(cancelButton, GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE))))
-					.addContainerGap())
-		);
-		gl_contentPane.setVerticalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-							.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
-							.addGroup(gl_contentPane.createSequentialGroup()
-								.addComponent(acceptButton)
-								.addGap(15)
-								.addComponent(cancelButton)))
-						.addComponent(scrollPane_2, GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE))
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(unMatriculateButton)
-						.addComponent(matriculateButton))
-					.addContainerGap())
-		);
+		gl_contentPane
+				.setHorizontalGroup(gl_contentPane
+						.createParallelGroup(Alignment.LEADING)
+						.addGroup(
+								gl_contentPane
+										.createSequentialGroup()
+										.addGap(26)
+										.addGroup(
+												gl_contentPane
+														.createParallelGroup(
+																Alignment.LEADING)
+														.addComponent(
+																lblNewLabel)
+														.addGroup(
+																gl_contentPane
+																		.createSequentialGroup()
+																		.addGroup(
+																				gl_contentPane
+																						.createParallelGroup(
+																								Alignment.LEADING,
+																								false)
+																						.addComponent(
+																								matriculateButton,
+																								GroupLayout.DEFAULT_SIZE,
+																								GroupLayout.DEFAULT_SIZE,
+																								Short.MAX_VALUE)
+																						.addComponent(
+																								scrollPane_2,
+																								GroupLayout.DEFAULT_SIZE,
+																								123,
+																								Short.MAX_VALUE))
+																		.addGap(28)
+																		.addGroup(
+																				gl_contentPane
+																						.createParallelGroup(
+																								Alignment.LEADING,
+																								false)
+																						.addComponent(
+																								unMatriculateButton,
+																								GroupLayout.DEFAULT_SIZE,
+																								GroupLayout.DEFAULT_SIZE,
+																								Short.MAX_VALUE)
+																						.addComponent(
+																								scrollPane_1,
+																								GroupLayout.DEFAULT_SIZE,
+																								130,
+																								Short.MAX_VALUE))
+																		.addPreferredGap(
+																				ComponentPlacement.RELATED)
+																		.addGroup(
+																				gl_contentPane
+																						.createParallelGroup(
+																								Alignment.TRAILING)
+																						.addComponent(
+																								acceptButton,
+																								GroupLayout.DEFAULT_SIZE,
+																								106,
+																								Short.MAX_VALUE)
+																						.addComponent(
+																								cancelButton,
+																								GroupLayout.DEFAULT_SIZE,
+																								118,
+																								Short.MAX_VALUE))))
+										.addContainerGap()));
+		gl_contentPane
+				.setVerticalGroup(gl_contentPane
+						.createParallelGroup(Alignment.LEADING)
+						.addGroup(
+								gl_contentPane
+										.createSequentialGroup()
+										.addComponent(lblNewLabel,
+												GroupLayout.PREFERRED_SIZE, 32,
+												GroupLayout.PREFERRED_SIZE)
+										.addPreferredGap(
+												ComponentPlacement.RELATED)
+										.addGroup(
+												gl_contentPane
+														.createParallelGroup(
+																Alignment.LEADING)
+														.addGroup(
+																gl_contentPane
+																		.createParallelGroup(
+																				Alignment.BASELINE)
+																		.addComponent(
+																				scrollPane_1,
+																				GroupLayout.DEFAULT_SIZE,
+																				210,
+																				Short.MAX_VALUE)
+																		.addGroup(
+																				gl_contentPane
+																						.createSequentialGroup()
+																						.addComponent(
+																								acceptButton)
+																						.addGap(15)
+																						.addComponent(
+																								cancelButton)))
+														.addComponent(
+																scrollPane_2,
+																GroupLayout.DEFAULT_SIZE,
+																210,
+																Short.MAX_VALUE))
+										.addPreferredGap(
+												ComponentPlacement.RELATED)
+										.addGroup(
+												gl_contentPane
+														.createParallelGroup(
+																Alignment.BASELINE)
+														.addComponent(
+																unMatriculateButton)
+														.addComponent(
+																matriculateButton))
+										.addContainerGap()));
 
 		contentPane.setLayout(gl_contentPane);
 
@@ -184,12 +258,13 @@ public class ActivityManagementWindow extends JFrame implements ActionListener {
 			for (i = (toindex.length - 1); i >= 0; i--) {
 				matriculated.remove(toindex[i]);
 			}
-		} else if (e.getSource() == acceptButton) {			
-			
+		} else if (e.getSource() == acceptButton) {
+
 			for (i = 0; i < notMatriculated.size(); i++) {
 				Activity activity = null;
 				try {
-					activity = activityService.findByName(notMatriculated.get(i).toString());
+					activity = activityService.findByName(notMatriculated
+							.get(i).toString());
 				} catch (InstanceNotFoundException e1) {
 					e1.printStackTrace();
 				}
@@ -199,7 +274,8 @@ public class ActivityManagementWindow extends JFrame implements ActionListener {
 			for (i = 0; i < matriculated.size(); i++) {
 				Activity activity = null;
 				try {
-					activity = activityService.findByName(matriculated.get(i).toString());
+					activity = activityService.findByName(matriculated.get(i)
+							.toString());
 				} catch (InstanceNotFoundException e1) {
 					e1.printStackTrace();
 				}

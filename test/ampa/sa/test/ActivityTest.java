@@ -14,7 +14,6 @@ import org.junit.Test;
 
 import ampa.sa.activity.Activity;
 import ampa.sa.activity.ActivityService;
-import ampa.sa.persistence.Persistence;
 import ampa.sa.student.FamilyService;
 import ampa.sa.student.Student;
 import ampa.sa.util.exceptions.DuplicateInstanceException;
@@ -41,7 +40,7 @@ public class ActivityTest {
 		} catch (DuplicateInstanceException e) {
 			fail("Duplicated activity");
 		}
-		
+
 		assertTrue(activityService.getActivities().contains(activity));
 
 	}
@@ -70,14 +69,15 @@ public class ActivityTest {
 			fail("Activity not exist");
 		}
 		activityService.remove(activity);
-		
-		assertFalse("Activity not delete",activityService.getActivities().contains(activity));
+
+		assertFalse("Activity not delete", activityService.getActivities()
+				.contains(activity));
 
 	}
 
 	@Test(expected = InstanceNotFoundException.class)
 	public void removeInexistentActivityTest() throws InstanceNotFoundException {
-		
+
 		Activity activity = null;
 		try {
 			activity = activityService.find(0);
@@ -92,64 +92,66 @@ public class ActivityTest {
 	@Test
 	public void updateActivityTest() throws InstanceNotFoundException {
 		Activity a = activityService.find(0);
-		
+
 		a.setPlaces(80);
 		a.setPrize(new BigDecimal(100.2));
-		
+
 		activityService.update(a);
-		
-		assertTrue("Activity not modified",activityService.getActivities().contains(a));
-		
-		
+
+		assertTrue("Activity not modified", activityService.getActivities()
+				.contains(a));
+
 	}
-	
+
 	@Test(expected = InstanceNotFoundException.class)
-	public void updateInexistentActivityTest() throws InstanceNotFoundException{
+	public void updateInexistentActivityTest() throws InstanceNotFoundException {
 		Activity a = activityService.find(0);
 		activityService.remove(a);
-		
+
 		a.setPlaces(80);
 		a.setPrize(new BigDecimal(100.2));
-		
+
 		activityService.update(a);
 	}
 
 	@Test(expected = InstanceNotFoundException.class)
 	public void findInexistentActivityTest() throws InstanceNotFoundException {
 		activityService.find(-1);
-		
+
 	}
-	
+
 	@Test(expected = InstanceNotFoundException.class)
-	public void findByNameInexistentActivityTest() throws InstanceNotFoundException {
+	public void findByNameInexistentActivityTest()
+			throws InstanceNotFoundException {
 		Activity a = activityService.find(0);
 		activityService.remove(a);
-		
+
 		activityService.findByName(a.getName());
-		
+
 	}
 
 	@Test
 	public void findByNameTest() throws InstanceNotFoundException {
 		Activity a = activityService.find(0);
-		
+
 		Activity b = activityService.findByName(a.getName());
-		
-		assertEquals("Find by name not work",a,b);
+
+		assertEquals("Find by name not work", a, b);
 	}
-	
+
 	@Test
-	public void findEstudentInActiviteTest() throws InstanceNotFoundException{
+	public void findEstudentInActiviteTest() throws InstanceNotFoundException {
 		Activity a = activityService.find(0);
-		for (Student s: a.getStudents()) {
+		for (Student s : a.getStudents()) {
 			activityService.unEnrollsStudentToActivity(s, a);
 		}
 		Student s = familyService.findStudent(0);
 		activityService.enrollmentStudentInActivity(s, a);
-		
-		assertTrue("Too many students in this activity",activityService.findStudents(a).size()==1);
+
+		assertTrue("Too many students in this activity", activityService
+				.findStudents(a).size() == 1);
 	}
-	
+
 	@Test
 	public void enrollementStudentInActivityTest() {
 		Student s = null;

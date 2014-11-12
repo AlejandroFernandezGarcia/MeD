@@ -13,13 +13,11 @@ import ampa.sa.booking.Booking;
 import ampa.sa.booking.BookingService;
 import ampa.sa.diningHall.DiningHall;
 import ampa.sa.persistence.Persistence;
-import ampa.sa.receipt.Receipt;
-import ampa.sa.receipt.ReceiptLine;
-import ampa.sa.receipt.ReceiptService;
+import ampa.sa.receipt.Bill;
+import ampa.sa.receipt.BillLine;
 import ampa.sa.student.FamilyService;
 import ampa.sa.student.Household;
 import ampa.sa.student.Student;
-import ampa.sa.util.Schedule;
 
 public class MockForGUI {
 	private List<Household> households = new ArrayList<Household>();
@@ -27,7 +25,7 @@ public class MockForGUI {
 	private List<Activity> activities = new ArrayList<Activity>();
 	private List<Booking> bookings = new ArrayList<Booking>();
 	private List<DiningHall> diningHall = new ArrayList<DiningHall>();
-	private Set<Receipt> receiptList = new HashSet<Receipt>();
+	private Set<Bill> receiptList = new HashSet<Bill>();
 	ActivityService activityService = ActivityService.getInstance();
 	BookingService bookingService = BookingService.getInstance();
 	FamilyService familyService = FamilyService.getInstance();
@@ -55,13 +53,13 @@ public class MockForGUI {
 
 		// Familias
 		Household house1 = new Household("111-222-333-444",
-				new HashSet<Student>(),new HashSet<Receipt>());
+				new HashSet<Student>(), new HashSet<Bill>());
 		Household house2 = new Household("222-333-444-555",
-				new HashSet<Student>(),new HashSet<Receipt>());
+				new HashSet<Student>(), new HashSet<Bill>());
 		Household house3 = new Household("666-777-888-999",
-				new HashSet<Student>(),new HashSet<Receipt>());
+				new HashSet<Student>(), new HashSet<Bill>());
 		Household house4 = new Household("000-999-888-777",
-				new HashSet<Student>(),new HashSet<Receipt>());
+				new HashSet<Student>(), new HashSet<Bill>());
 
 		// Estudiantes
 		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
@@ -103,10 +101,10 @@ public class MockForGUI {
 		households.add(house1);
 		households.add(house2);
 
-		diningHall.add(new DiningHall(new Schedule("07:00", "08:00"), 10,
-				new BigDecimal(6.2)));
-		diningHall.add(new DiningHall(new Schedule("14:00", "15:00"), 10,
-				new BigDecimal(5.2)));
+		diningHall.add(new DiningHall(10, new BigDecimal(6.2),
+				DiningHall.Type.MADRUGADORES));
+		diningHall.add(new DiningHall(10, new BigDecimal(5.2),
+				DiningHall.Type.COMEDOR));
 
 		Calendar cb1 = Calendar.getInstance();
 		cb1.setTime(sdf.parse("27/10/2014"));
@@ -141,21 +139,18 @@ public class MockForGUI {
 
 		// Bills
 
-		ReceiptLine rl1 = new ReceiptLine(
-				"Prueba para primer recibo, primera linea", new BigDecimal(7),
-				1, new BigDecimal(7), students.get(0));
-		ReceiptLine rl2 = new ReceiptLine(
-				"Prueba para primer recibo, segunda linea", new BigDecimal(8),
-				1, new BigDecimal(8), students.get(0));
-		ReceiptLine rl3 = new ReceiptLine(
-				"Prueba para primer recibo, tercera linea", new BigDecimal(8),
-				1, new BigDecimal(8), students.get(0));
+		BillLine rl1 = new BillLine("Prueba para primer recibo, primera linea",
+				new BigDecimal(7), 1, new BigDecimal(7), students.get(0));
+		BillLine rl2 = new BillLine("Prueba para primer recibo, segunda linea",
+				new BigDecimal(8), 1, new BigDecimal(8), students.get(0));
+		BillLine rl3 = new BillLine("Prueba para primer recibo, tercera linea",
+				new BigDecimal(8), 1, new BigDecimal(8), students.get(0));
 
-		Set<ReceiptLine> rllist = new HashSet<ReceiptLine>();
+		Set<BillLine> rllist = new HashSet<BillLine>();
 		rllist.add(rl1);
 		rllist.add(rl2);
 
-		Set<ReceiptLine> rllist2 = new HashSet<ReceiptLine>();
+		Set<BillLine> rllist2 = new HashSet<BillLine>();
 		rllist2.add(rl3);
 
 		Calendar calReceipt1 = Calendar.getInstance();
@@ -164,10 +159,8 @@ public class MockForGUI {
 		Calendar calReceipt2 = Calendar.getInstance();
 		calReceipt2.setTime(sdf.parse("01/06/2009"));
 
-		Receipt r1 = new Receipt(house1, new BigDecimal(15), rllist,
-				calReceipt1);
-		Receipt r2 = new Receipt(house1, new BigDecimal(8), rllist2,
-				calReceipt2);
+		Bill r1 = new Bill(house1, new BigDecimal(15), rllist, calReceipt1);
+		Bill r2 = new Bill(house1, new BigDecimal(8), rllist2, calReceipt2);
 
 		receiptList.add(r1);
 		receiptList.add(r2);

@@ -4,35 +4,37 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import ampa.sa.util.Schedule;
-
 @SuppressWarnings("serial")
 public class DiningHall implements Serializable {
 
-	private Schedule schedule;
+	public enum Type {
+		MADRUGADORES, COMEDOR
+	}
+
 	private int monitors;
 	private BigDecimal price;
+	private Type type;
 
-	public DiningHall(Schedule schedule, int places, BigDecimal price) {
-		this.schedule = schedule;
+	public DiningHall(int places, BigDecimal price, Type type) {
 		this.monitors = places;
 		this.price = price.setScale(2, RoundingMode.HALF_UP);
+		this.type = type;
 	}
 
-	public Schedule getSchedule() {
-		return schedule;
+	public Type getType() {
+		return type;
 	}
 
-	public void setSchedule(Schedule schedule) {
-		this.schedule = schedule;
+	public void setType(Type type) {
+		this.type = type;
 	}
 
 	public int getMonitors() {
 		return monitors;
 	}
 
-	public void setMonitors(int places) {
-		this.monitors = places;
+	public void setMonitors(int monitors) {
+		this.monitors = monitors;
 	}
 
 	public BigDecimal getPrice() {
@@ -45,7 +47,13 @@ public class DiningHall implements Serializable {
 
 	@Override
 	public String toString() {
-		return schedule.getStartTime() + " | " + schedule.getEndTime();
+		switch (type) {
+		case MADRUGADORES:
+			return "Madrugadores";
+		case COMEDOR:
+			return "Comedor";
+		}
+		return "";
 	}
 
 }

@@ -6,14 +6,14 @@ import java.math.BigDecimal;
 import ampa.sa.student.Student;
 
 @SuppressWarnings("serial")
-public class ReceiptLine implements Serializable {
+public class BillLine implements Serializable {
 	private String concept;
 	private BigDecimal price;
 	private int units;
 	private BigDecimal unitPrice;
 	private Student student;
 
-	public ReceiptLine(String concept, BigDecimal price, int units,
+	public BillLine(String concept, BigDecimal price, int units,
 			BigDecimal unitPrice, Student student) {
 		super();
 		this.concept = concept;

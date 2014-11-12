@@ -36,7 +36,7 @@ import javax.swing.table.DefaultTableModel;
 import ampa.sa.activity.Activity;
 import ampa.sa.booking.BookingService;
 import ampa.sa.persistence.Persistence;
-import ampa.sa.receipt.ReceiptService;
+import ampa.sa.receipt.BillService;
 import ampa.sa.student.FamilyService;
 import ampa.sa.student.Student;
 import ampa.sa.util.exceptions.InstanceNotFoundException;
@@ -47,7 +47,7 @@ public class MainWindow extends JFrame {
 	private JTable studentsTable;
 	private FamilyService familyService;
 	private BookingService bookingService;
-	private ReceiptService receiptService;
+	private BillService receiptService;
 	private JPanel rigthPanel;
 	private MainWindow now;
 
@@ -166,7 +166,7 @@ public class MainWindow extends JFrame {
 	}
 
 	public void fillRightPanel(JPanel panel) {
-		receiptService = ReceiptService.getInstance();
+		receiptService = BillService.getInstance();
 		if (studentsTable.getRowCount() == 0) {
 			return;
 		}

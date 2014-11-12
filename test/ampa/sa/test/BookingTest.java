@@ -1,7 +1,6 @@
 package ampa.sa.test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
@@ -18,7 +17,6 @@ import ampa.sa.booking.BookingService;
 import ampa.sa.diningHall.DiningHall;
 import ampa.sa.student.FamilyService;
 import ampa.sa.student.Student;
-import ampa.sa.util.Schedule;
 import ampa.sa.util.exceptions.DuplicateInstanceException;
 import ampa.sa.util.exceptions.InstanceNotFoundException;
 import ampa.sa.util.exceptions.MaxCapacityException;
@@ -236,10 +234,8 @@ public class BookingTest {
 			Student testSt1 = familyService.findStudent(0);
 			Student testSt2 = familyService.findStudent(1);
 
-			Schedule sch = new Schedule();
-			sch.setStartTime("12:30pm");
-			sch.setEndTime("14:00pm");
-			DiningHall d1 = new DiningHall(sch, 1, BigDecimal.valueOf(4.00));
+			DiningHall d1 = new DiningHall(1, BigDecimal.valueOf(4.00),
+					DiningHall.Type.MADRUGADORES);
 
 			SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
 			Calendar testDate = Calendar.getInstance();
@@ -258,10 +254,8 @@ public class BookingTest {
 	public void forbiddenBookingTest() throws NotValidDateException {
 		try {
 			Student testSt1 = familyService.findStudent(1);
-			Schedule sch = new Schedule();
-			sch.setStartTime("12:30pm");
-			sch.setEndTime("14:00pm");
-			DiningHall d1 = new DiningHall(sch, 2, BigDecimal.valueOf(4.00));
+			DiningHall d1 = new DiningHall(2, BigDecimal.valueOf(4.00),
+					DiningHall.Type.MADRUGADORES);
 
 			SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
 			Calendar testDate = Calendar.getInstance();
@@ -279,17 +273,10 @@ public class BookingTest {
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
 
-			Schedule sc1 = new Schedule();
-			sc1.setStartTime("8:00am");
-			sc1.setEndTime("9:30am");
-
-			DiningHall d1 = new DiningHall(sc1, 24, BigDecimal.valueOf(4.00));
-
-			Schedule sc2 = new Schedule();
-			sc2.setStartTime("12:30pm");
-			sc2.setEndTime("14:00pm");
-
-			DiningHall d2 = new DiningHall(sc2, 20, BigDecimal.valueOf(5.00));
+			DiningHall d1 = new DiningHall(24, BigDecimal.valueOf(4.00),
+					DiningHall.Type.MADRUGADORES);
+			DiningHall d2 = new DiningHall(20, BigDecimal.valueOf(5.00),
+					DiningHall.Type.COMEDOR);
 
 			Calendar cal1 = Calendar.getInstance();
 			cal1.setTime(sdf.parse("27/10/2014"));
@@ -347,17 +334,10 @@ public class BookingTest {
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
 
-			Schedule sc1 = new Schedule();
-			sc1.setStartTime("8:00am");
-			sc1.setEndTime("9:30am");
-
-			DiningHall d1 = new DiningHall(sc1, 24, BigDecimal.valueOf(4.00));
-
-			Schedule sc2 = new Schedule();
-			sc1.setStartTime("8:00am");
-			sc1.setEndTime("9:30am");
-
-			DiningHall d2 = new DiningHall(sc2, 24, BigDecimal.valueOf(4.00));
+			DiningHall d1 = new DiningHall(24, BigDecimal.valueOf(4.00),
+					DiningHall.Type.MADRUGADORES);
+			DiningHall d2 = new DiningHall(24, BigDecimal.valueOf(4.00),
+					DiningHall.Type.MADRUGADORES);
 
 			Calendar cal1 = Calendar.getInstance();
 			cal1.setTime(sdf.parse("27/10/2016"));
@@ -422,7 +402,7 @@ public class BookingTest {
 		String string = bookingService.isBookingAllDayOfWeekInMonth(student);
 		assertEquals("", "Comedor mensual: LMXJV", string);
 	}
-	
+
 	@Test
 	public void isBookingAllDayOfWeekInMonthTest2()
 			throws InstanceNotFoundException, ParseException {
@@ -431,14 +411,14 @@ public class BookingTest {
 		String string = bookingService.isBookingAllDayOfWeekInMonth(student);
 		assertEquals("", string);
 	}
-	
+
 	@Test(expected = InstanceNotFoundException.class)
-	public void findInexistentStudent() throws InstanceNotFoundException{
+	public void findInexistentStudent() throws InstanceNotFoundException {
 		bookingService.find(-1);
 	}
-	
+
 	@Test(expected = InstanceNotFoundException.class)
-	public void findInexistentDiningHall() throws InstanceNotFoundException{
+	public void findInexistentDiningHall() throws InstanceNotFoundException {
 		bookingService.findDiningHall(-1);
 	}
 }

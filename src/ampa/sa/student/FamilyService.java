@@ -74,21 +74,21 @@ public class FamilyService implements Serializable {
 
 	public void removeStudent(long id) throws InstanceNotFoundException {
 		Student s = null;
-		try{
-			s = students.get((int)id);
-		}catch(IndexOutOfBoundsException e){	
+		try {
+			s = students.get((int) id);
+		} catch (IndexOutOfBoundsException e) {
 			throw new InstanceNotFoundException(id, "Student");
 		}
 		s.getHouseHold().getMentored().remove(s);
 		students.remove(s);
 		Persistence.getInstance().save();
-		
+
 	}
 
 	public void removeHousehold(String bankAccount)
 			throws InstanceNotFoundException {
 		Household hh = findHousehold(bankAccount);
-		for(Student s : hh.getMentored()){
+		for (Student s : hh.getMentored()) {
 			students.remove(s);
 		}
 		households.remove(hh);
@@ -111,7 +111,7 @@ public class FamilyService implements Serializable {
 				Persistence.getInstance().save();
 			}
 		}
-		if(!found){
+		if (!found) {
 			throw new InstanceNotFoundException(student, "student");
 		}
 	}
@@ -152,10 +152,10 @@ public class FamilyService implements Serializable {
 	}
 
 	public Student findStudent(long id) throws InstanceNotFoundException {
-		try{
+		try {
 			return students.get((int) id);
-		}catch(IndexOutOfBoundsException e){
-			throw new InstanceNotFoundException(id, "Student");			
+		} catch (IndexOutOfBoundsException e) {
+			throw new InstanceNotFoundException(id, "Student");
 		}
 	}
 
@@ -191,12 +191,12 @@ public class FamilyService implements Serializable {
 		else
 			return "INFANTIL";
 	}
-	
-	public Household findHousehold(long id) throws InstanceNotFoundException{
-		try{
+
+	public Household findHousehold(long id) throws InstanceNotFoundException {
+		try {
 			return households.get((int) id);
-		}catch(IndexOutOfBoundsException e){
-			throw new InstanceNotFoundException(id, "Household");			
+		} catch (IndexOutOfBoundsException e) {
+			throw new InstanceNotFoundException(id, "Household");
 		}
 	}
 }

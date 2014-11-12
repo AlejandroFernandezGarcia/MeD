@@ -19,20 +19,20 @@ import ampa.sa.util.exceptions.InstanceNotFoundException;
 import ampa.sa.util.exceptions.ReceiptsNotFoundException;
 
 @SuppressWarnings("serial")
-public class ReceiptService implements Serializable {
+public class BillService implements Serializable {
 
-	private static ReceiptService instance = null;
+	private static BillService instance = null;
 
-	private ReceiptService() {
+	private BillService() {
 	}
 
 	private synchronized static void createInstance() {
 		if (instance == null) {
-			instance = new ReceiptService();
+			instance = new BillService();
 		}
 	}
 
-	public static ReceiptService getInstance() {
+	public static BillService getInstance() {
 		createInstance();
 		return instance;
 	}
@@ -41,18 +41,18 @@ public class ReceiptService implements Serializable {
 		// TODO Falta el tema de licencias.
 		BookingService bookingService = BookingService.getInstance();
 		Set<Student> students = household.getMentored();
-		Set<ReceiptLine> receiptLines = new HashSet<ReceiptLine>();
+		Set<BillLine> receiptLines = new HashSet<BillLine>();
 		Calendar now = Calendar.getInstance();
-		
+
 		BigDecimal total = new BigDecimal(0);
-		ReceiptLine rl;
+		BillLine rl;
 		for (Student student : students) {
 			Set<Activity> activities = student.getActivities();
 			List<Booking> bookings = bookingService
 					.findStudentBookingsByMonthAndYear(student, now);
 			for (Activity activity : activities) {
-				rl = new ReceiptLine(activity.getName(), activity.getPrize(),
-						1, activity.getPrize(), student);
+				rl = new BillLine(activity.getName(), activity.getPrize(), 1,
+						activity.getPrize(), student);
 				receiptLines.add(rl);
 			}
 			int count = 0;
@@ -65,29 +65,29 @@ public class ReceiptService implements Serializable {
 					}
 				}
 				if (count != 0) {
-					rl = new ReceiptLine(dh.getSchedule().toString(), dh
-							.getPrice().multiply(new BigDecimal(count)), count,
-							dh.getPrice(), student);
+					rl = new BillLine(dh.toString(), dh.getPrice().multiply(
+							new BigDecimal(count)), count, dh.getPrice(),
+							student);
 					receiptLines.add(rl);
 				}
 			}
 
 		}
-		for (ReceiptLine receiptLine : receiptLines) {
+		for (BillLine receiptLine : receiptLines) {
 			total = total.add(receiptLine.getPrice());
 		}
 		now.add(Calendar.MONTH, -1);
-		Receipt receipt = new Receipt(household, total, receiptLines, now);
-		if(household.getReceipts().contains(receipt)){
+		Bill receipt = new Bill(household, total, receiptLines, now);
+		if (household.getReceipts().contains(receipt)) {
 			household.getReceipts().remove(receipt);
 		}
-		household.getReceipts().add(receipt);	
+		household.getReceipts().add(receipt);
 	}
 
-	public List<Receipt> findReceiptsByHousehold(Household household)
+	public List<Bill> findReceiptsByHousehold(Household household)
 			throws ReceiptsNotFoundException {
-		Set<Receipt> receipts = household.getReceipts();
-		List<Receipt> result = new ArrayList<Receipt>();
+		Set<Bill> receipts = household.getReceipts();
+		List<Bill> result = new ArrayList<Bill>();
 		if (receipts.size() == 0) {
 			throw new ReceiptsNotFoundException(household, "Receipt");
 		}
@@ -98,10 +98,10 @@ public class ReceiptService implements Serializable {
 
 	}
 
-	public Receipt findReceiptByDate(Household household, Calendar calendar)
+	public Bill findReceiptByDate(Household household, Calendar calendar)
 			throws InstanceNotFoundException {
-		Set<Receipt> receipts = household.getReceipts();
-		for (Receipt receipt : receipts) {
+		Set<Bill> receipts = household.getReceipts();
+		for (Bill receipt : receipts) {
 			if (((receipt.getDate().get(Calendar.MONTH)) == (calendar
 					.get(Calendar.MONTH)))
 					&& ((receipt.getDate().get(Calendar.YEAR)) == (calendar
@@ -113,12 +113,11 @@ public class ReceiptService implements Serializable {
 
 	}
 
-	public Set<ReceiptLine> getReceiptLinesByStudent(Receipt receipt,
-			Student student) {
+	public Set<BillLine> getReceiptLinesByStudent(Bill receipt, Student student) {
 
-		Set<ReceiptLine> receiptLines = receipt.getReceiptLines();
-		Set<ReceiptLine> receiptLinesByStudent = new HashSet<ReceiptLine>();
-		for (ReceiptLine receiptLine : receiptLines) {
+		Set<BillLine> receiptLines = receipt.getReceiptLines();
+		Set<BillLine> receiptLinesByStudent = new HashSet<BillLine>();
+		for (BillLine receiptLine : receiptLines) {
 			if (receiptLine.getStudent().equals(student)) {
 				receiptLinesByStudent.add(receiptLine);
 			}

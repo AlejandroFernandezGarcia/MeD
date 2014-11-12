@@ -80,7 +80,7 @@ public class ActivityService implements Serializable {
 				Persistence.getInstance().save();
 			}
 		}
-		if(!found){
+		if (!found) {
 			throw new InstanceNotFoundException(activity, "Activity");
 		}
 	}
@@ -96,12 +96,12 @@ public class ActivityService implements Serializable {
 
 	public Activity find(long id) throws InstanceNotFoundException {
 		Activity a = null;
-		try{
+		try {
 			a = activities.get((int) id);
-		}catch(ArrayIndexOutOfBoundsException e){
-			throw new InstanceNotFoundException(id, "Activity");			
+		} catch (ArrayIndexOutOfBoundsException e) {
+			throw new InstanceNotFoundException(id, "Activity");
 		}
-			return a;
+		return a;
 	}
 
 	public Activity findByName(String name) throws InstanceNotFoundException {

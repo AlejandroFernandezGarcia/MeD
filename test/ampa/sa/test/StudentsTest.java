@@ -18,7 +18,7 @@ import ampa.sa.activity.Activity;
 import ampa.sa.activity.ActivityService;
 import ampa.sa.booking.Booking;
 import ampa.sa.booking.BookingService;
-import ampa.sa.receipt.Receipt;
+import ampa.sa.receipt.Bill;
 import ampa.sa.student.FamilyService;
 import ampa.sa.student.Household;
 import ampa.sa.student.Student;
@@ -38,7 +38,6 @@ public class StudentsTest {
 		new DatosMock();
 	}
 
-	
 	@Test
 	public void TestCreateStudent() throws InstanceNotFoundException,
 			ParseException, DuplicateInstanceException {
@@ -53,10 +52,10 @@ public class StudentsTest {
 
 		familyService.createStudent(student);
 
-		assertTrue("Student not created",familyService.getStudents().contains(student));
-		
+		assertTrue("Student not created",
+				familyService.getStudents().contains(student));
+
 		assertTrue(familyService.findStudents(household).contains(student));
-		
 
 	}
 
@@ -78,7 +77,7 @@ public class StudentsTest {
 	public void TestCreateHousehold() throws InstanceNotFoundException {
 
 		Household household = new Household("111-111-333-333",
-				new HashSet<Student>(),new HashSet<Receipt>());
+				new HashSet<Student>(), new HashSet<Bill>());
 
 		try {
 			familyService.createHousehold(household);
@@ -89,16 +88,15 @@ public class StudentsTest {
 		assertEquals(familyService.findHousehold("111-111-333-333"), household);
 
 	}
-	
+
 	@Test(expected = DuplicateInstanceException.class)
 	public void TestCreateDuplicateHousehold()
 			throws InstanceNotFoundException, DuplicateInstanceException {
 		Household hh = null;
-		
-		hh = familyService.getHousehold().get(0);
-		
-		familyService.createHousehold(hh);
 
+		hh = familyService.getHousehold().get(0);
+
+		familyService.createHousehold(hh);
 
 	}
 
@@ -146,11 +144,11 @@ public class StudentsTest {
 		Household hh = s.getHouseHold();
 		hh.setBanckAccount("xxx-yyy");
 		s.setHouseHold(hh);
-		
+
 		familyService.removeStudent(0);
 		familyService.updateStudent(s);
 	}
-	
+
 	@Test
 	public void TestFindStudents() throws InstanceNotFoundException {
 
@@ -224,7 +222,8 @@ public class StudentsTest {
 		Set<Student> students = new HashSet<Student>();
 		students.add(student);
 
-		Household household = new Household("111-222-111-222", students,new HashSet<Receipt>());
+		Household household = new Household("111-222-111-222", students,
+				new HashSet<Bill>());
 		familyService.createHousehold(household);
 
 		assertEquals(familyService.getHouseholdExpenses(familyService
@@ -248,23 +247,26 @@ public class StudentsTest {
 	}
 
 	@Test
-	public void findStudentByHousehold() throws InstanceNotFoundException{
+	public void findStudentByHousehold() throws InstanceNotFoundException {
 		Household hh = familyService.findHousehold(0);
-		assertEquals(hh.getMentored().size(),familyService.findStudents(hh).size());
+		assertEquals(hh.getMentored().size(), familyService.findStudents(hh)
+				.size());
 	}
-	
+
 	@Test(expected = InstanceNotFoundException.class)
 	public void findInexistentHousehold() throws InstanceNotFoundException {
 		Household hh = familyService.findHousehold(-1);
 	}
 
 	@Test(expected = InstanceNotFoundException.class)
-	public void findInexistentHouseholdByBankAccount() throws InstanceNotFoundException {
+	public void findInexistentHouseholdByBankAccount()
+			throws InstanceNotFoundException {
 		Household hh = familyService.findHousehold("");
 	}
-	
+
 	@Test
-	public void removeHousehold() throws InstanceNotFoundException, ParseException, DuplicateInstanceException{
+	public void removeHousehold() throws InstanceNotFoundException,
+			ParseException, DuplicateInstanceException {
 		Household hh = familyService.findHousehold(0);
 		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
 		Calendar cal3 = Calendar.getInstance();
@@ -274,19 +276,18 @@ public class StudentsTest {
 				new HashSet<Booking>());
 
 		familyService.createStudent(student);
-		
-		
+
 		familyService.removeHousehold(hh.getBanckAccount());
-		try{
+		try {
 			familyService.findHousehold(hh.getBanckAccount());
-		}catch(InstanceNotFoundException e){
+		} catch (InstanceNotFoundException e) {
 			assertTrue(true);
 		}
 	}
-	
+
 	@Test(expected = InstanceNotFoundException.class)
-	public void removeInexistenHousehold() throws InstanceNotFoundException{
+	public void removeInexistenHousehold() throws InstanceNotFoundException {
 		familyService.removeHousehold("a");
 	}
-	
+
 }

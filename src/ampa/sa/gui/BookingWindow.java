@@ -97,8 +97,8 @@ public class BookingWindow extends JFrame {
 	 * @throws ParseException
 	 * @throws InstanceNotFoundException
 	 */
-	public BookingWindow(MainWindow mainWindow,Student stu) throws ParseException,
-			InstanceNotFoundException {
+	public BookingWindow(MainWindow mainWindow, Student stu)
+			throws ParseException, InstanceNotFoundException {
 		sdf = new SimpleDateFormat(DATE_FORMAT);
 		this.student = stu;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -201,12 +201,11 @@ public class BookingWindow extends JFrame {
 					Booking selected = (Booking) bookingsTable.getModel()
 							.getValueAt(bookingsTable.getSelectedRow(), 2);
 
-					// FIX ME
+					// FIXME
 					System.out.println(selected);
 					try {
 						bookingService.remove(selected);
 					} catch (InstanceNotFoundException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					fillBookings();
@@ -583,8 +582,8 @@ public class BookingWindow extends JFrame {
 		for (Booking booking : bookings) {
 			Calendar date = booking.getDate();
 			String dateS = sdf.format(date.getTime());
-			Object[] data = { dateS,
-					booking.getDiningHall().getSchedule().toString(), booking };
+			Object[] data = { dateS, booking.getDiningHall().toString(),
+					booking };
 			modelTB.addRow(data);
 		}
 		if (bookings.size() == 0)
@@ -633,9 +632,10 @@ public class BookingWindow extends JFrame {
 					bookingService.create(b);
 					transaction.add(b);
 				} catch (DuplicateInstanceException | MaxCapacityException e) {
-					JOptionPane.showMessageDialog(null,
-							"Error creando reserva para "
-									+ dh.getSchedule().toString() + " (D�a "
+					JOptionPane.showMessageDialog(
+							null,
+							"Error creando reserva para " + dh.toString()
+									+ " (D�a "
 									+ cal1.get(Calendar.DAY_OF_MONTH)
 									+ "). Operaci�n de reservas canceladas");
 					for (int i = 0; i < transaction.size(); i++) {

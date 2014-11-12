@@ -8,14 +8,14 @@ import java.util.Set;
 import ampa.sa.student.Household;
 
 @SuppressWarnings("serial")
-public class Receipt implements Serializable, Comparable<Receipt> {
+public class Bill implements Serializable, Comparable<Bill> {
 	private Household houseHold;
 	private BigDecimal total;
-	private Set<ReceiptLine> receiptLines;
+	private Set<BillLine> receiptLines;
 	private Calendar date;
 
-	public Receipt(Household houseHold, BigDecimal total,
-			Set<ReceiptLine> receiptLines, Calendar date) {
+	public Bill(Household houseHold, BigDecimal total,
+			Set<BillLine> receiptLines, Calendar date) {
 		super();
 		this.houseHold = houseHold;
 		this.total = total;
@@ -39,11 +39,11 @@ public class Receipt implements Serializable, Comparable<Receipt> {
 		this.total = total;
 	}
 
-	public Set<ReceiptLine> getReceiptLines() {
+	public Set<BillLine> getReceiptLines() {
 		return receiptLines;
 	}
 
-	public void setReceiptLines(Set<ReceiptLine> receiptLines) {
+	public void setReceiptLines(Set<BillLine> receiptLines) {
 		this.receiptLines = receiptLines;
 	}
 
@@ -56,7 +56,7 @@ public class Receipt implements Serializable, Comparable<Receipt> {
 	}
 
 	@Override
-	public int compareTo(Receipt o) {
+	public int compareTo(Bill o) {
 		if (this.date.before(o.getDate())) {
 			return -1;
 		} else if (this.date.after(o.getDate())) {
@@ -67,9 +67,9 @@ public class Receipt implements Serializable, Comparable<Receipt> {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (((((Receipt) obj).getDate().get(Calendar.MONTH)) == (date
+		if (((((Bill) obj).getDate().get(Calendar.MONTH)) == (date
 				.get(Calendar.MONTH)))
-				&& (((Receipt) obj).getDate().get(Calendar.YEAR)) == (date
+				&& (((Bill) obj).getDate().get(Calendar.YEAR)) == (date
 						.get(Calendar.YEAR))) {
 			return true;
 		}

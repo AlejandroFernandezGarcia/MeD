@@ -56,7 +56,7 @@ public class Booking implements Serializable {
 		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
 		return this.student.getName() + " " + this.student.getLastname()
 				+ " | " + sdf.format(this.date.getTime()) + " | "
-				+ this.getDiningHall().getSchedule().toString() + "\n";
+				+ this.getDiningHall().toString() + "\n";
 	}
 
 }

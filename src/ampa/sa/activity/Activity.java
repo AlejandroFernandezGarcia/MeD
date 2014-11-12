@@ -58,11 +58,11 @@ public class Activity implements Serializable {
 	}
 
 	@Override
-	public boolean equals(Object activity){
-		if(this.getName().compareTo(((Activity)activity).getName())==0){
+	public boolean equals(Object activity) {
+		if (this.getName().compareTo(((Activity) activity).getName()) == 0) {
 			return true;
-		}
-		else return false;
+		} else
+			return false;
 	}
-	
+
 }

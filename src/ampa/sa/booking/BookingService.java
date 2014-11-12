@@ -228,6 +228,7 @@ public class BookingService implements Serializable {
 	}
 
 	public String isBookingAllDayOfWeekInMonth(Student student) {
+		// FIXME Comprobar varias reservas por un usuario el mismo dia
 		String result = "";
 		Calendar calendar = Calendar.getInstance();
 		int days[] = { 0, 0, 0, 0, 0, 0, 0, 0 };

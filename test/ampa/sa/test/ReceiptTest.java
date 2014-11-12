@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
@@ -17,9 +16,9 @@ import ampa.sa.activity.Activity;
 import ampa.sa.activity.ActivityService;
 import ampa.sa.booking.Booking;
 import ampa.sa.booking.BookingService;
-import ampa.sa.receipt.Receipt;
-import ampa.sa.receipt.ReceiptLine;
-import ampa.sa.receipt.ReceiptService;
+import ampa.sa.receipt.Bill;
+import ampa.sa.receipt.BillLine;
+import ampa.sa.receipt.BillService;
 import ampa.sa.student.FamilyService;
 import ampa.sa.student.Household;
 import ampa.sa.util.exceptions.InstanceNotFoundException;
@@ -27,7 +26,7 @@ import ampa.sa.util.exceptions.ReceiptsNotFoundException;
 
 public class ReceiptTest {
 
-	private ReceiptService receiptService = ReceiptService.getInstance();
+	private BillService receiptService = BillService.getInstance();
 	private FamilyService familyService = FamilyService.getInstance();
 	private BookingService bookingService = BookingService.getInstance();
 	private ActivityService activityService = ActivityService.getInstance();
@@ -48,7 +47,7 @@ public class ReceiptTest {
 		}
 		receiptService.createReceipt(hh);
 		assertEquals(1, hh.getReceipts().size());
-		ArrayList<Receipt> ar = new ArrayList<Receipt>();
+		ArrayList<Bill> ar = new ArrayList<Bill>();
 		ar.addAll(hh.getReceipts());
 		assertEquals(Calendar.getInstance().get(Calendar.MONTH) - 1, ar.get(0)
 				.getDate().get(Calendar.MONTH));
@@ -67,10 +66,10 @@ public class ReceiptTest {
 		receiptService.createReceipt(hh);
 		assertEquals(1, hh.getReceipts().size());
 
-		ArrayList<Receipt> ar = new ArrayList<Receipt>();
+		ArrayList<Bill> ar = new ArrayList<Bill>();
 		ar.addAll(hh.getReceipts());
 
-		ArrayList<Receipt> ar2 = new ArrayList<Receipt>();
+		ArrayList<Bill> ar2 = new ArrayList<Bill>();
 		ar2.addAll(receiptService.findReceiptsByHousehold(hh));
 
 		assertEquals(ar.get(0), ar2.get(0));
@@ -90,7 +89,7 @@ public class ReceiptTest {
 
 	@Test
 	public void getReceiptLinesByStudentTest() throws InstanceNotFoundException {
-		
+
 		Calendar cb3 = Calendar.getInstance();
 		Booking b3 = new Booking(cb3, familyService.findStudent(0),
 				bookingService.findDiningHall(0));
@@ -114,24 +113,22 @@ public class ReceiptTest {
 		receiptService.createReceipt(hh);
 		assertEquals(1, hh.getReceipts().size());
 
-		ArrayList<Receipt> ar = new ArrayList<Receipt>();
+		ArrayList<Bill> ar = new ArrayList<Bill>();
 		ar.addAll(hh.getReceipts());
 
-		HashSet<ReceiptLine> hs = null;
-		HashSet<ReceiptLine> hs2 = null;
+		HashSet<BillLine> hs = null;
+		HashSet<BillLine> hs2 = null;
 		try {
-			hs = (HashSet<ReceiptLine>) receiptService
-					.getReceiptLinesByStudent(ar.get(0),
-							familyService.findStudent(0));
-			hs2 = (HashSet<ReceiptLine>) receiptService
-					.getReceiptLinesByStudent(ar.get(0),
-							familyService.findStudent(1));
+			hs = (HashSet<BillLine>) receiptService.getReceiptLinesByStudent(
+					ar.get(0), familyService.findStudent(0));
+			hs2 = (HashSet<BillLine>) receiptService.getReceiptLinesByStudent(
+					ar.get(0), familyService.findStudent(1));
 		} catch (InstanceNotFoundException e1) {
 			fail("Student not found");
 		}
 
-		Iterator<ReceiptLine> irl = hs.iterator();
-		Iterator<ReceiptLine> irl2 = hs2.iterator();
+		Iterator<BillLine> irl = hs.iterator();
+		Iterator<BillLine> irl2 = hs2.iterator();
 		int count = 0;
 		while (irl.hasNext()) {
 			count += irl.next().getUnits();
