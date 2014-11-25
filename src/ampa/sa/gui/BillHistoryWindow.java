@@ -224,7 +224,6 @@ public class BillHistoryWindow extends JFrame {
 					}
 
 				} catch (InstanceNotFoundException e1) {
-					// e1.printStackTrace();
 					lblNewLabel_1.setText("Coste Total: NaN");
 				}
 

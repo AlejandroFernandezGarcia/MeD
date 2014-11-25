@@ -45,7 +45,7 @@ public class CreateActivityWindow extends JFrame {
 		this.activityService = ActivityService.getInstance();
 
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 439, 190);
+		setBounds(100, 100, 439, 197);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -72,34 +72,30 @@ public class CreateActivityWindow extends JFrame {
 		JTextField textFieldActivityPrice = new JTextField();
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
+			gl_contentPane.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addContainerGap()
-					.addComponent(lblActivityName)
-					.addGap(52)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
-								.addComponent(textFieldActivityPrice, Alignment.LEADING)
-								.addComponent(spinnerActivityPlaces, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE))
-							.addGap(205))
+							.addComponent(lblActivityName)
+							.addGap(52)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
+									.addComponent(textFieldActivityPrice, Alignment.LEADING)
+									.addComponent(spinnerActivityPlaces, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE))
+								.addComponent(textActivityName, GroupLayout.PREFERRED_SIZE, 218, GroupLayout.PREFERRED_SIZE))
+							.addGap(29))
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addComponent(textActivityName, GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE)
-							.addContainerGap())))
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(lblActivityPlaces)
-					.addContainerGap(276, Short.MAX_VALUE))
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(lblActivityPrice)
-					.addContainerGap(307, Short.MAX_VALUE))
-				.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
-					.addContainerGap(259, Short.MAX_VALUE)
-					.addComponent(btnCancel)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(btnCreateActivity)
-					.addGap(12))
+							.addComponent(lblActivityPlaces)
+							.addContainerGap(276, Short.MAX_VALUE))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(lblActivityPrice)
+							.addContainerGap(307, Short.MAX_VALUE))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(btnCancel)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(btnCreateActivity)
+							.addGap(34))))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -120,7 +116,7 @@ public class CreateActivityWindow extends JFrame {
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 						.addComponent(btnCancel)
 						.addComponent(btnCreateActivity))
-					.addContainerGap(14, Short.MAX_VALUE))
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 		);
 
 		btnCreateActivity.addActionListener(new ActionListener() {

@@ -296,6 +296,14 @@ public class MainWindow extends JFrame {
 
 		JMenuItem mntmModificarActividad = new JMenuItem("Modificar actividad");
 		mnActividad.add(mntmModificarActividad);
+		mntmModificarActividad.setName("Update Activity");
+		mntmModificarActividad.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				UpdateActivityWindow uaw;
+				uaw = new UpdateActivityWindow();
+				uaw.setVisible(true);
+			}
+		});
 
 		JMenuItem mntmBorrarActividad = new JMenuItem("Borrar actividad");
 		mnActividad.add(mntmBorrarActividad);
