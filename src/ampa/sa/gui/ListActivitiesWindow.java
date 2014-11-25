@@ -30,22 +30,6 @@ public class ListActivitiesWindow extends JFrame {
 	private ActivityService activityService;
 
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ListActivitiesWindow frame = new ListActivitiesWindow();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
 	 * Create the frame.
 	 */
 	public ListActivitiesWindow() {
