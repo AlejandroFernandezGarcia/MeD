@@ -272,6 +272,17 @@ public class MainWindow extends JFrame {
 		JMenu mnActividad = new JMenu("Actividad");
 		menuBar.add(mnActividad);
 
+		JMenuItem mntmListarActividades = new JMenuItem("Listar actividades");
+		mnActividad.add(mntmListarActividades);
+		mntmListarActividades.setName("List Activities");
+		mntmListarActividades.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ListActivitiesWindow law;
+				law = new ListActivitiesWindow();
+				law.setVisible(true);
+			}
+		});
+		
 		JMenuItem mntmAadirActividad = new JMenuItem("Añadir actividad");
 		mnActividad.add(mntmAadirActividad);
 		mntmAadirActividad.setName("Create Activity");

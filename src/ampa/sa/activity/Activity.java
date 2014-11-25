@@ -21,7 +21,6 @@ public class Activity implements Serializable {
 		this.name = name;
 		this.places = places;
 		this.prize = price.setScale(2, RoundingMode.HALF_UP);
-		;
 		this.students = students;
 	}
 
