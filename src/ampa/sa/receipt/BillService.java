@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -77,11 +78,13 @@ public class BillService implements Serializable {
 			total = total.add(receiptLine.getPrice());
 		}
 		now.add(Calendar.MONTH, -1);
+		household.setReceipts(this.removeReceiptByDate(household.getReceipts(),
+				now));
+
 		Bill receipt = new Bill(household, total, receiptLines, now);
-		if (household.getReceipts().contains(receipt)) {
-			household.getReceipts().remove(receipt);
-		}
-		household.getReceipts().add(receipt);
+		Set<Bill> newBills = household.getReceipts();
+		newBills.add(receipt);
+		household.setReceipts(newBills);
 	}
 
 	public List<Bill> findReceiptsByHousehold(Household household)
@@ -124,5 +127,21 @@ public class BillService implements Serializable {
 		}
 		return receiptLinesByStudent;
 
+	}
+
+	private Set<Bill> removeReceiptByDate(Set<Bill> b, Calendar c) {
+
+		Iterator<Bill> bIt = b.iterator();
+		Set<Bill> bills = b;
+		while (bIt.hasNext()) {
+			Bill bAux = bIt.next();
+			if ((bAux.getDate().get(Calendar.MONTH) == c.get(Calendar.MONTH))
+					&& ((bAux.getDate().get(Calendar.YEAR) == c
+							.get(Calendar.YEAR)))) {
+				bIt.remove();
+			}
+
+		}
+		return bills;
 	}
 }
