@@ -285,6 +285,6 @@ public class BillHistoryWindow extends JFrame {
 			dtm.addRow(data);
 		}
 
-		table.updateUI();// DUDA Es necesario?
+		table.updateUI();
 	}
 }
