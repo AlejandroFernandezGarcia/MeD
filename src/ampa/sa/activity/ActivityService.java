@@ -114,14 +114,22 @@ public class ActivityService implements Serializable {
 	}
 
 	public void enrollmentStudentInActivity(Student student, Activity activity) {
-		student.getActivities().add(activity);
-		activity.getStudents().add(student);
+		Set<Activity> activities = student.getActivities();
+		activities.add(activity);
+		student.setActivities(activities);
+		Set<Student> students = activity.getStudents();
+		students.add(student);
+		activity.setStudents(students);
 		Persistence.getInstance().save();
 	}
 
 	public void unEnrollsStudentToActivity(Student student, Activity activity) {
-		student.getActivities().remove(activity);
-		activity.getStudents().remove(student);
+		Set<Activity> activities = student.getActivities();
+		activities.remove(activity);
+		student.setActivities(activities);
+		Set<Student> students = activity.getStudents();
+		students.remove(student);
+		activity.setStudents(students);
 		Persistence.getInstance().save();
 	}
 
