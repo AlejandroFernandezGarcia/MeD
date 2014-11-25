@@ -307,6 +307,14 @@ public class MainWindow extends JFrame {
 
 		JMenuItem mntmBorrarActividad = new JMenuItem("Borrar actividad");
 		mnActividad.add(mntmBorrarActividad);
+		mntmBorrarActividad.setName("Delete Activity");
+		mntmBorrarActividad.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				DeleteActivityWindow daw;
+				daw = new DeleteActivityWindow();
+				daw.setVisible(true);
+			}
+		});
 
 		JMenu mnComedor = new JMenu("Comedor");
 		menuBar.add(mnComedor);
