@@ -14,6 +14,8 @@ import java.util.Set;
 import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -29,6 +31,8 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
@@ -42,7 +46,9 @@ import ampa.sa.student.Student;
 import ampa.sa.util.exceptions.InstanceNotFoundException;
 
 public class MainWindow extends JFrame {
-
+	// TODO Añadir representantes
+	// TODO Separar comedores por tipo
+	// TODO Acceso a añadir usuarios
 	private JPanel contentPane;
 	private JTable studentsTable;
 	private FamilyService familyService;
@@ -249,6 +255,23 @@ public class MainWindow extends JFrame {
 			}
 			i++;
 		}
+		Icon icon = new ImageIcon("src/ampa/sa/util/add-Student.png");
+		tabPanel.addTab("", icon, createExplainPanel(studentSelected),
+				"Añadir estudiante a esta unidad familiar");
+		ChangeListener changeListener = new ChangeListener() {
+			public void stateChanged(ChangeEvent changeEvent) {
+				JTabbedPane sourceTabbedPane = (JTabbedPane) changeEvent
+						.getSource();
+				int index = sourceTabbedPane.getSelectedIndex();
+				if (index == (sourceTabbedPane.getTabCount() - 1)) {
+					StudentManagementWindow smw = new StudentManagementWindow(
+							studentSelected.getHouseHold());
+					smw.setVisible(true);
+					//DUDA Necesario actualizar MainWindow?
+				}
+			}
+		};
+		tabPanel.addChangeListener(changeListener);
 
 	}
 
@@ -268,6 +291,13 @@ public class MainWindow extends JFrame {
 
 		JMenuItem mntmAadirAlumno = new JMenuItem("Añadir alumno");
 		mnAlumno.add(mntmAadirAlumno);
+		mntmAadirAlumno.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				StudentManagementWindow smw = new StudentManagementWindow(null);
+				smw.setVisible(true);
+				//DUDA Actualizar al volver??
+			}
+		});
 
 		JMenu mnActividad = new JMenu("Actividad");
 		menuBar.add(mnActividad);
@@ -282,7 +312,7 @@ public class MainWindow extends JFrame {
 				law.setVisible(true);
 			}
 		});
-		
+
 		JMenuItem mntmAadirActividad = new JMenuItem("Añadir actividad");
 		mnActividad.add(mntmAadirActividad);
 		mntmAadirActividad.setName("Create Activity");

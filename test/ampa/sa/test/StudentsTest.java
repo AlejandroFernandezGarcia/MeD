@@ -77,7 +77,7 @@ public class StudentsTest {
 	public void TestCreateHousehold() throws InstanceNotFoundException {
 
 		Household household = new Household("111-111-333-333",
-				new HashSet<Student>(), new HashSet<Bill>());
+				new HashSet<Student>(), new HashSet<Bill>(),"Francisca");
 
 		try {
 			familyService.createHousehold(household);
@@ -223,7 +223,7 @@ public class StudentsTest {
 		students.add(student);
 
 		Household household = new Household("111-222-111-222", students,
-				new HashSet<Bill>());
+				new HashSet<Bill>(),"Manuela");
 		familyService.createHousehold(household);
 
 		assertEquals(familyService.getHouseholdExpenses(familyService
