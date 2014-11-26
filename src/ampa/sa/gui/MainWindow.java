@@ -46,9 +46,7 @@ import ampa.sa.student.Student;
 import ampa.sa.util.exceptions.InstanceNotFoundException;
 
 public class MainWindow extends JFrame {
-	// TODO Añadir representantes
 	// TODO Separar comedores por tipo
-	// TODO Acceso a añadir usuarios
 	private JPanel contentPane;
 	private JTable studentsTable;
 	private FamilyService familyService;
@@ -189,6 +187,14 @@ public class MainWindow extends JFrame {
 				if (component.getName().compareTo("lblHouseHold") == 0) {
 					((JLabel) component).setText("Núcleo familiar: "
 							+ studentSelected.getHouseHold().getBanckAccount());
+				} else if (component.getName().compareTo("lblRepresentative") == 0) {
+					String rep1 = studentSelected.getHouseHold()
+							.getRepresentative();
+					String rep2 = studentSelected.getHouseHold()
+							.getRepresentative1();
+					((JLabel) component).setText("Representante/s: "
+							+ (rep1 != null ? rep1 + ", " : "")
+							+ (rep2 != null ? rep2 : ""));
 				} else if (component.getName().compareTo("btnCreateBooking") == 0) {
 					ActionListener[] al = ((JButton) component)
 							.getListeners(ActionListener.class);
@@ -414,8 +420,16 @@ public class MainWindow extends JFrame {
 		});
 		scrollStudents.setViewportView(studentsTable);
 
-		JButton btnAddStudent = new JButton("Add student");
+		JButton btnAddStudent = new JButton("Añadir estudiante");
 		leftPanel.add(btnAddStudent, BorderLayout.SOUTH);
+		btnAddStudent.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				StudentManagementWindow smw = new StudentManagementWindow(null);
+				smw.setVisible(true);
+				//DUDA Actualizar la lista?
+			}
+		});
 
 		rigthPanel = new JPanel();
 		contentPane.add(rigthPanel);
@@ -438,6 +452,9 @@ public class MainWindow extends JFrame {
 		JButton btnShowBills = new JButton("Mostrar recibos");
 		btnShowBills.setName("btnShowBills");
 
+		JLabel lblLblrepresentative = new JLabel("Representante/s:");
+		lblLblrepresentative.setName("lblRepresentative");
+
 		GroupLayout gl_rigthPanel = new GroupLayout(rigthPanel);
 		gl_rigthPanel
 				.setHorizontalGroup(gl_rigthPanel
@@ -454,43 +471,55 @@ public class MainWindow extends JFrame {
 																gl_rigthPanel
 																		.createSequentialGroup()
 																		.addComponent(
+																				lblHouseHold,
+																				GroupLayout.DEFAULT_SIZE,
+																				286,
+																				Short.MAX_VALUE)
+																		.addGap(25))
+														.addGroup(
+																Alignment.TRAILING,
+																gl_rigthPanel
+																		.createSequentialGroup()
+																		.addGroup(
+																				gl_rigthPanel
+																						.createParallelGroup(
+																								Alignment.TRAILING)
+																						.addComponent(
+																								btnSignUpActivity,
+																								Alignment.LEADING,
+																								GroupLayout.DEFAULT_SIZE,
+																								299,
+																								Short.MAX_VALUE)
+																						.addComponent(
+																								btnReservasComedor,
+																								Alignment.LEADING,
+																								GroupLayout.DEFAULT_SIZE,
+																								299,
+																								Short.MAX_VALUE)
+																						.addComponent(
+																								btnShowBills,
+																								Alignment.LEADING,
+																								GroupLayout.DEFAULT_SIZE,
+																								299,
+																								Short.MAX_VALUE))
+																		.addContainerGap())
+														.addGroup(
+																Alignment.TRAILING,
+																gl_rigthPanel
+																		.createSequentialGroup()
+																		.addComponent(
 																				tabAlumno,
 																				GroupLayout.DEFAULT_SIZE,
-																				298,
+																				299,
 																				Short.MAX_VALUE)
 																		.addContainerGap())
 														.addGroup(
 																gl_rigthPanel
 																		.createSequentialGroup()
 																		.addComponent(
-																				lblHouseHold,
-																				GroupLayout.DEFAULT_SIZE,
-																				285,
-																				Short.MAX_VALUE)
-																		.addGap(25))
-														.addGroup(
-																gl_rigthPanel
-																		.createSequentialGroup()
-																		.addComponent(
-																				btnSignUpActivity)
+																				lblLblrepresentative)
 																		.addContainerGap(
-																				104,
-																				Short.MAX_VALUE))
-														.addGroup(
-																gl_rigthPanel
-																		.createSequentialGroup()
-																		.addComponent(
-																				btnReservasComedor)
-																		.addContainerGap(
-																				146,
-																				Short.MAX_VALUE))
-														.addGroup(
-																gl_rigthPanel
-																		.createSequentialGroup()
-																		.addComponent(
-																				btnShowBills)
-																		.addContainerGap(
-																				164,
+																				240,
 																				Short.MAX_VALUE)))));
 		gl_rigthPanel.setVerticalGroup(gl_rigthPanel.createParallelGroup(
 				Alignment.LEADING).addGroup(
@@ -499,14 +528,16 @@ public class MainWindow extends JFrame {
 						.addGap(18)
 						.addComponent(lblHouseHold, GroupLayout.PREFERRED_SIZE,
 								23, GroupLayout.PREFERRED_SIZE)
-						.addGap(31)
-						.addComponent(tabAlumno, GroupLayout.DEFAULT_SIZE, 210,
+						.addGap(18)
+						.addComponent(lblLblrepresentative)
+						.addGap(13)
+						.addComponent(tabAlumno, GroupLayout.DEFAULT_SIZE, 239,
 								Short.MAX_VALUE).addGap(18)
 						.addComponent(btnSignUpActivity)
 						.addPreferredGap(ComponentPlacement.RELATED)
 						.addComponent(btnReservasComedor)
 						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(btnShowBills).addGap(15)));
+						.addComponent(btnShowBills)));
 
 		JPanel explainPanel = new JPanel();
 		tabAlumno.addTab("New tab", null, explainPanel, null);

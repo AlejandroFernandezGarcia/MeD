@@ -53,7 +53,7 @@ public class MockForGUI {
 
 		// Familias
 		Household house1 = new Household("111-222-333-444",
-				new HashSet<Student>(), new HashSet<Bill>(),"Pepe");
+				new HashSet<Student>(), new HashSet<Bill>(),"Pepe", "Maria");
 		Household house2 = new Household("222-333-444-555",
 				new HashSet<Student>(), new HashSet<Bill>(),"Luis");
 		Household house3 = new Household("666-777-888-999",
