@@ -6,6 +6,8 @@ import java.awt.EventQueue;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.List;
@@ -31,8 +33,6 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
@@ -56,6 +56,7 @@ public class MainWindow extends JFrame {
 	private BillService receiptService;
 	private JPanel rigthPanel;
 	private MainWindow now;
+	StudentManagementWindow smw = null;
 
 	/**
 	 * Launch the application.
@@ -256,22 +257,42 @@ public class MainWindow extends JFrame {
 			i++;
 		}
 		Icon icon = new ImageIcon("src/ampa/sa/util/add-Student.png");
-		tabPanel.addTab("", icon, createExplainPanel(studentSelected),
+		tabPanel.addTab("", icon, null,
 				"Añadir estudiante a esta unidad familiar");
-		ChangeListener changeListener = new ChangeListener() {
-			public void stateChanged(ChangeEvent changeEvent) {
-				JTabbedPane sourceTabbedPane = (JTabbedPane) changeEvent
-						.getSource();
-				int index = sourceTabbedPane.getSelectedIndex();
-				if (index == (sourceTabbedPane.getTabCount() - 1)) {
-					StudentManagementWindow smw = new StudentManagementWindow(
-							studentSelected.getHouseHold());
-					smw.setVisible(true);
-					//DUDA Necesario actualizar MainWindow?
+
+		tabPanel.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if ((smw == null) || (!smw.isVisible())) {
+					JTabbedPane sourceTabbedPane = (JTabbedPane) e.getSource();
+					int index = sourceTabbedPane.getSelectedIndex();
+					if (index == (sourceTabbedPane.getTabCount() - 1)
+							&& (index != 0)) {
+						smw = new StudentManagementWindow(studentSelected
+								.getHouseHold());
+						smw.setVisible(true);
+						// DUDA Necesario actualizar MainWindow?
+					}
 				}
 			}
-		};
-		tabPanel.addChangeListener(changeListener);
+		});
 
 	}
 
@@ -295,7 +316,7 @@ public class MainWindow extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				StudentManagementWindow smw = new StudentManagementWindow(null);
 				smw.setVisible(true);
-				//DUDA Actualizar al volver??
+				// DUDA Actualizar al volver??
 			}
 		});
 
@@ -392,6 +413,9 @@ public class MainWindow extends JFrame {
 			}
 		});
 		scrollStudents.setViewportView(studentsTable);
+
+		JButton btnAddStudent = new JButton("Add student");
+		leftPanel.add(btnAddStudent, BorderLayout.SOUTH);
 
 		rigthPanel = new JPanel();
 		contentPane.add(rigthPanel);
