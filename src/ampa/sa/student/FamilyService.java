@@ -115,6 +115,26 @@ public class FamilyService implements Serializable {
 			throw new InstanceNotFoundException(student, "student");
 		}
 	}
+	
+	public void updateHousehold(Household hh) throws InstanceNotFoundException {
+		boolean found = false;
+		Iterator<Household> iter;
+		iter = households.iterator();
+		while (iter.hasNext() && !found) {
+			Household h = iter.next();
+			if (h.equals(hh)) {
+				found = true;
+				h.setBanckAccount(hh.getBanckAccount());
+				h.setMentored(hh.getMentored());
+				h.setReceipts(hh.getReceipts());
+				h.setRepresentative(hh.getRepresentative());
+				h.setRepresentative1(hh.getRepresentative());
+			}
+		}
+		if (!found) {
+			throw new InstanceNotFoundException(hh,"Household");
+		}
+	}
 
 	public List<Student> findStudents() {
 		return students;

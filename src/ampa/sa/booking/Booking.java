@@ -58,5 +58,4 @@ public class Booking implements Serializable {
 				+ " | " + sdf.format(this.date.getTime()) + " | "
 				+ this.getDiningHall().toString() + "\n";
 	}
-
 }

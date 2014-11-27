@@ -448,6 +448,7 @@ public class BookingWindow extends JFrame {
 
 		chckbxLun = new JCheckBox("lun");
 		chckbxLun.setEnabled(false);
+		
 
 		chckbxMar = new JCheckBox("mar");
 		chckbxMar.setEnabled(false);
@@ -466,10 +467,15 @@ public class BookingWindow extends JFrame {
 		rdbtnDay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				chckbxLun.setEnabled(false);
+				chckbxLun.setSelected(false);
 				chckbxMar.setEnabled(false);
+				chckbxMar.setSelected(false);
 				chckbxMie.setEnabled(false);
+				chckbxMie.setSelected(false);
 				chckbxJue.setEnabled(false);
+				chckbxJue.setSelected(false);
 				chckbxVie.setEnabled(false);
+				chckbxVie.setSelected(false);
 			}
 		});
 
