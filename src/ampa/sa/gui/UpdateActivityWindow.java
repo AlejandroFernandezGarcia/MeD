@@ -45,9 +45,7 @@ public class UpdateActivityWindow extends JFrame {
 		setContentPane(contentPane);
 
 		List<Activity> listActivities = activityService.getActivities();
-
 		JComboBox comboBox = new JComboBox();
-
 		for (Activity a : listActivities) {
 			comboBox.addItem(a.getName());
 		}
