@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import ampa.sa.diningHall.DiningHall;
 import ampa.sa.persistence.Persistence;
@@ -60,7 +61,7 @@ public class BookingService implements Serializable {
 
 	public void create(Booking booking) throws DuplicateInstanceException,
 			MaxCapacityException, NotValidDateException {
-		if (!bookings.contains(booking)) {
+		if (!existsBooking(booking)) {
 			checkCapacity(booking);
 			try {
 				if (SchoolCalendar.isNotHoliday(booking.getDate())) {
@@ -272,4 +273,16 @@ public class BookingService implements Serializable {
 
 	}
 
+	public boolean existsBooking(Booking booking){
+		List<Booking> bookings = this.getBookings();
+		Iterator<Booking> iter = bookings.iterator();
+		while(iter.hasNext()){
+			Booking b = iter.next();
+			if(b.getDate().equals(booking.getDate())
+			   && b.getDiningHall().equals(booking.getDiningHall())
+			   && b.getStudent().equals(booking.getStudent()))
+				return true;
+		}
+		return false;
+	}
 }
