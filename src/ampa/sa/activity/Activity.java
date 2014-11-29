@@ -2,7 +2,6 @@ package ampa.sa.activity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Set;
 
 import ampa.sa.student.Student;
@@ -13,14 +12,16 @@ public class Activity implements Serializable {
 	private String name;
 	private int places;
 	private BigDecimal prize;
+	private BigDecimal license;
 	private Set<Student> students;
 
-	public Activity(String name, int places, BigDecimal price,
-			Set<Student> students) {
+	public Activity(String name, int places, BigDecimal prize,
+			BigDecimal license, Set<Student> students) {
 		super();
 		this.name = name;
 		this.places = places;
-		this.prize = price.setScale(2, RoundingMode.HALF_UP);
+		this.prize = prize;
+		this.license = license;
 		this.students = students;
 	}
 
@@ -46,6 +47,14 @@ public class Activity implements Serializable {
 
 	public void setPrize(BigDecimal prize) {
 		this.prize = prize;
+	}
+
+	public BigDecimal getLicense() {
+		return license;
+	}
+
+	public void setLicense(BigDecimal license) {
+		this.license = license;
 	}
 
 	public Set<Student> getStudents() {

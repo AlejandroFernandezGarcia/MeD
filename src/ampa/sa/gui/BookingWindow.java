@@ -71,27 +71,6 @@ public class BookingWindow extends JFrame {
 	private JTable bookingsTable;
 
 	/**
-	 * Launch the application.
-	 */
-	// public static void main(String[] args) {
-	// EventQueue.invokeLater(new Runnable() {
-	// public void run() {
-	// try {
-	//
-	// DatosMock dtm = new DatosMock();
-	// BookingWindow frame = new BookingWindow(familyService.findStudent(1));
-	//
-	//
-	//
-	// frame.setVisible(true);
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// }
-	// }
-	// });
-	// }
-
-	/**
 	 * Create the frame.
 	 * 
 	 * @throws ParseException
@@ -101,7 +80,7 @@ public class BookingWindow extends JFrame {
 			throws ParseException, InstanceNotFoundException {
 		sdf = new SimpleDateFormat(DATE_FORMAT);
 		this.student = stu;
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 657, 454);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -194,15 +173,13 @@ public class BookingWindow extends JFrame {
 		btnDeleteBooking.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int select = JOptionPane.showConfirmDialog(null,
-						"ï¿½Realmente desea cancelar la reserva?",
+						"¿Realmente desea cancelar la reserva?",
 						"Cancelar reserva", JOptionPane.YES_NO_OPTION,
 						JOptionPane.QUESTION_MESSAGE);
 				if (select == 0) {
 					Booking selected = (Booking) bookingsTable.getModel()
 							.getValueAt(bookingsTable.getSelectedRow(), 2);
 
-					// FIXME
-					System.out.println(selected);
 					try {
 						bookingService.remove(selected);
 					} catch (InstanceNotFoundException e) {
@@ -216,8 +193,6 @@ public class BookingWindow extends JFrame {
 		JButton btnReservar = new JButton("Realizar reserva");
 		btnReservar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO ids unicas. De momento no hacen falta
-
 				try {
 					if (!daysAreChecked()) {
 						Calendar cal = Calendar.getInstance();
@@ -448,7 +423,6 @@ public class BookingWindow extends JFrame {
 
 		chckbxLun = new JCheckBox("lun");
 		chckbxLun.setEnabled(false);
-		
 
 		chckbxMar = new JCheckBox("mar");
 		chckbxMar.setEnabled(false);
@@ -641,20 +615,19 @@ public class BookingWindow extends JFrame {
 					JOptionPane.showMessageDialog(
 							null,
 							"Error creando reserva para " + dh.toString()
-									+ " (Dï¿½a "
+									+ " (Día "
 									+ cal1.get(Calendar.DAY_OF_MONTH)
-									+ "). Operaciï¿½n de reservas canceladas");
+									+ "). Operación de reservas canceladas");
 					for (int i = 0; i < transaction.size(); i++) {
 						try {
 							bookingService.remove(transaction.get(i));
 						} catch (InstanceNotFoundException e1) {
-							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
 					}
 				} catch (NotValidDateException e) {
 					JOptionPane.showMessageDialog(null,
-							"AVISO: Alguno de los dï¿½as es festivo");
+							"AVISO: Alguno de los días es festivo");
 				}
 			}
 			cal1.add(Calendar.DATE, 1);

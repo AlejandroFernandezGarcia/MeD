@@ -37,19 +37,19 @@ public class MockForGUI {
 
 		// Actividades
 		activities.add(new Activity("Ajedrez", 14, new BigDecimal(15.5),
-				new HashSet<Student>()));
+				new BigDecimal(0), new HashSet<Student>()));
 		activities.add(new Activity("Tiro con arco", 8, new BigDecimal(30.0),
-				new HashSet<Student>()));
+				new BigDecimal(10),new HashSet<Student>()));
 		activities.add(new Activity("Kárate", 15, new BigDecimal(18.5),
-				new HashSet<Student>()));
+				new BigDecimal(0),new HashSet<Student>()));
 		activities.add(new Activity("Baloncesto", 10, new BigDecimal(20.0),
-				new HashSet<Student>()));
+				new BigDecimal(0),new HashSet<Student>()));
 		activities.add(new Activity("Fútbol", 20, new BigDecimal(20.0),
-				new HashSet<Student>()));
+				new BigDecimal(0),new HashSet<Student>()));
 		activities.add(new Activity("Tenis de mesa", 6, new BigDecimal(17.25),
-				new HashSet<Student>()));
+				new BigDecimal(0),new HashSet<Student>()));
 		activities.add(new Activity("Tenis", 8, new BigDecimal(25.0),
-				new HashSet<Student>()));
+				new BigDecimal(0),new HashSet<Student>()));
 
 		// Familias
 		Household house1 = new Household("111-222-333-444",

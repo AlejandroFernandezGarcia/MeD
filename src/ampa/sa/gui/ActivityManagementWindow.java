@@ -39,6 +39,7 @@ public class ActivityManagementWindow extends JFrame implements ActionListener {
 	private MainWindow mainWindow;
 
 	public ActivityManagementWindow(MainWindow mainWindow, Student stu) {
+		setTitle("Modificar actividades de un alumno");
 		setResizable(false);
 
 		this.mainWindow = mainWindow;

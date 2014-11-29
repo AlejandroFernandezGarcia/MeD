@@ -46,7 +46,9 @@ import ampa.sa.student.Student;
 import ampa.sa.util.exceptions.InstanceNotFoundException;
 
 public class MainWindow extends JFrame {
-	// TODO Separar comedores por tipo
+	//TODO Separar comedores por tipo
+	//TODO AÃ±adir licencias a actividad
+	
 	private JPanel contentPane;
 	private JTable studentsTable;
 	private FamilyService familyService;
@@ -185,7 +187,7 @@ public class MainWindow extends JFrame {
 				tabPanel = (JTabbedPane) component;
 			} else if (component.getName() != null) {
 				if (component.getName().compareTo("lblHouseHold") == 0) {
-					((JLabel) component).setText("NÃºcleo familiar: "
+					((JLabel) component).setText("Núcleo familiar: "
 							+ studentSelected.getHouseHold().getBanckAccount());
 				} else if (component.getName().compareTo("lblRepresentative") == 0) {
 					String rep1 = studentSelected.getHouseHold()
@@ -264,7 +266,7 @@ public class MainWindow extends JFrame {
 		}
 		Icon icon = new ImageIcon("src/ampa/sa/util/add-Student.png");
 		tabPanel.addTab("", icon, null,
-				"AÃ±adir estudiante a esta unidad familiar");
+				"Añadir estudiante a esta unidad familiar");
 
 		tabPanel.addMouseListener(new MouseListener() {
 
@@ -291,7 +293,7 @@ public class MainWindow extends JFrame {
 					int index = sourceTabbedPane.getSelectedIndex();
 					if (index == (sourceTabbedPane.getTabCount() - 1)
 							&& (index != 0)) {
-						smw = new StudentManagementWindow(studentSelected
+						smw = new StudentManagementWindow(now,studentSelected
 								.getHouseHold());
 						smw.setVisible(true);
 						// DUDA Necesario actualizar MainWindow?
@@ -320,7 +322,7 @@ public class MainWindow extends JFrame {
 		mnAlumno.add(mntmAadirAlumno);
 		mntmAadirAlumno.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				StudentManagementWindow smw = new StudentManagementWindow(null);
+				StudentManagementWindow smw = new StudentManagementWindow(now,null);
 				smw.setVisible(true);
 				// DUDA Actualizar al volver??
 			}
@@ -379,7 +381,7 @@ public class MainWindow extends JFrame {
 		JMenuItem mntmModificar = new JMenuItem("Modificar");
 		mnComedor.add(mntmModificar);
 
-		JMenuItem mntmAadirNuevoHorario = new JMenuItem("AÃ±adir nuevo horario");
+		JMenuItem mntmAadirNuevoHorario = new JMenuItem("Añadir nuevo horario");
 		mnComedor.add(mntmAadirNuevoHorario);
 
 		JMenu mnAyuda = new JMenu("Ayuda");
@@ -425,7 +427,7 @@ public class MainWindow extends JFrame {
 		btnAddStudent.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				StudentManagementWindow smw = new StudentManagementWindow(null);
+				StudentManagementWindow smw = new StudentManagementWindow(now,null);
 				smw.setVisible(true);
 				//DUDA Actualizar la lista?
 			}

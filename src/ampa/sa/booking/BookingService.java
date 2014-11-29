@@ -229,7 +229,9 @@ public class BookingService implements Serializable {
 	}
 
 	public String isBookingAllDayOfWeekInMonth(Student student) {
-		// FIXME Comprobar varias reservas por un usuario el mismo dia
+		// FIXME Devolver un String [] o arrayList para aprovechar
+				// que en esta clase ya tengo los diningHall.
+				// Filtrar por DiningHall
 		String result = "";
 		Calendar calendar = Calendar.getInstance();
 		int days[] = { 0, 0, 0, 0, 0, 0, 0, 0 };
