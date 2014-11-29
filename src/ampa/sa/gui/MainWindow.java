@@ -38,22 +38,22 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 import ampa.sa.activity.Activity;
+import ampa.sa.bill.BillService;
 import ampa.sa.booking.BookingService;
 import ampa.sa.persistence.Persistence;
-import ampa.sa.receipt.BillService;
 import ampa.sa.student.FamilyService;
 import ampa.sa.student.Student;
 import ampa.sa.util.exceptions.InstanceNotFoundException;
 
 public class MainWindow extends JFrame {
 	//TODO Separar comedores por tipo
-	//TODO AÃ±adir licencias a actividad
+	//TODO Ventanas modales
 	
 	private JPanel contentPane;
 	private JTable studentsTable;
 	private FamilyService familyService;
 	private BookingService bookingService;
-	private BillService receiptService;
+	private BillService billService;
 	private JPanel rigthPanel;
 	private MainWindow now;
 	StudentManagementWindow smw = null;
@@ -88,7 +88,6 @@ public class MainWindow extends JFrame {
 			dtm.removeRow(i);
 		}
 
-		// FIXME Ordenar students
 		for (Student student : students) {
 			Calendar date = student.getDateBorn();
 			String dateS = date.get(Calendar.DAY_OF_MONTH) + "/"
@@ -173,11 +172,10 @@ public class MainWindow extends JFrame {
 	}
 
 	public void fillRightPanel(JPanel panel) {
-		receiptService = BillService.getInstance();
+		billService = BillService.getInstance();
 		if (studentsTable.getRowCount() == 0) {
 			return;
 		}
-		// FIXME Ordenar students
 		JTabbedPane tabPanel = null;
 		List<Student> students = familyService.getStudents();
 		Student studentSelected = students.get(studentsTable.getSelectedRow());
@@ -227,8 +225,8 @@ public class MainWindow extends JFrame {
 							.addActionListener(new ActionListener() {
 								public void actionPerformed(ActionEvent e) {
 									BillHistoryWindow bhw;
-									receiptService
-											.createReceipt(studentSelected
+									billService
+											.createBill(studentSelected
 													.getHouseHold());
 									bhw = new BillHistoryWindow(studentSelected
 											.getHouseHold());
@@ -296,7 +294,6 @@ public class MainWindow extends JFrame {
 						smw = new StudentManagementWindow(now,studentSelected
 								.getHouseHold());
 						smw.setVisible(true);
-						// DUDA Necesario actualizar MainWindow?
 					}
 				}
 			}
@@ -318,13 +315,12 @@ public class MainWindow extends JFrame {
 		JMenu mnAlumno = new JMenu("Alumno");
 		menuBar.add(mnAlumno);
 
-		JMenuItem mntmAadirAlumno = new JMenuItem("AÃ±adir alumno");
+		JMenuItem mntmAadirAlumno = new JMenuItem("Añadir alumno");
 		mnAlumno.add(mntmAadirAlumno);
 		mntmAadirAlumno.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				StudentManagementWindow smw = new StudentManagementWindow(now,null);
 				smw.setVisible(true);
-				// DUDA Actualizar al volver??
 			}
 		});
 
@@ -342,7 +338,7 @@ public class MainWindow extends JFrame {
 			}
 		});
 
-		JMenuItem mntmAadirActividad = new JMenuItem("AÃ±adir actividad");
+		JMenuItem mntmAadirActividad = new JMenuItem("Añadir actividad");
 		mnActividad.add(mntmAadirActividad);
 		mntmAadirActividad.setName("Create Activity");
 		mntmAadirActividad.addActionListener(new ActionListener() {
@@ -422,21 +418,20 @@ public class MainWindow extends JFrame {
 		});
 		scrollStudents.setViewportView(studentsTable);
 
-		JButton btnAddStudent = new JButton("AÃ±adir estudiante");
+		JButton btnAddStudent = new JButton("Añadir estudiante");
 		leftPanel.add(btnAddStudent, BorderLayout.SOUTH);
 		btnAddStudent.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				StudentManagementWindow smw = new StudentManagementWindow(now,null);
 				smw.setVisible(true);
-				//DUDA Actualizar la lista?
 			}
 		});
 
 		rigthPanel = new JPanel();
 		contentPane.add(rigthPanel);
 
-		JLabel lblHouseHold = new JLabel("NÃºcleo familiar: ");
+		JLabel lblHouseHold = new JLabel("Núcleo familiar: ");
 		lblHouseHold.setName("lblHouseHold");
 		lblHouseHold.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblHouseHold.setHorizontalAlignment(SwingConstants.CENTER);

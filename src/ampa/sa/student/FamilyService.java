@@ -126,7 +126,7 @@ public class FamilyService implements Serializable {
 				found = true;
 				h.setBanckAccount(hh.getBanckAccount());
 				h.setMentored(hh.getMentored());
-				h.setReceipts(hh.getReceipts());
+				h.setBills(hh.getBills());
 				h.setRepresentative(hh.getRepresentative());
 				h.setRepresentative1(hh.getRepresentative());
 			}

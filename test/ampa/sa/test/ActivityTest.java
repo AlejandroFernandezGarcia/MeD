@@ -33,7 +33,7 @@ public class ActivityTest {
 	public void addActivityTest() {
 
 		Activity activity = new Activity("Baloncesto Primaria", 10,
-				new BigDecimal(20.0), new HashSet<Student>());
+				new BigDecimal(20.0), new BigDecimal(0),new HashSet<Student>());
 
 		try {
 			activityService.create(activity);

@@ -16,9 +16,9 @@ import org.junit.Test;
 
 import ampa.sa.activity.Activity;
 import ampa.sa.activity.ActivityService;
+import ampa.sa.bill.Bill;
 import ampa.sa.booking.Booking;
 import ampa.sa.booking.BookingService;
-import ampa.sa.receipt.Bill;
 import ampa.sa.student.FamilyService;
 import ampa.sa.student.Household;
 import ampa.sa.student.Student;

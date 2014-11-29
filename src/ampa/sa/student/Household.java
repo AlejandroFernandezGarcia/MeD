@@ -3,33 +3,33 @@ package ampa.sa.student;
 import java.io.Serializable;
 import java.util.Set;
 
-import ampa.sa.receipt.Bill;
+import ampa.sa.bill.Bill;
 
 @SuppressWarnings("serial")
 public class Household implements Serializable {
 
 	private String banckAccount;
 	private Set<Student> mentored;
-	private Set<Bill> receipts;
+	private Set<Bill> bills;
 	private String representative;
 	private String representative1;
 
 	public Household(String banckAccount, Set<Student> mentored,
-			Set<Bill> receipts, String representative) {
+			Set<Bill> bills, String representative) {
 		super();
 		this.banckAccount = banckAccount;
 		this.mentored = mentored;
-		this.receipts = receipts;
+		this.bills = bills;
 		this.representative = representative;
 		this.representative1 = null;
 	}
 
 	public Household(String banckAccount, Set<Student> mentored,
-			Set<Bill> receipts, String representative, String representative1) {
+			Set<Bill> bills, String representative, String representative1) {
 		super();
 		this.banckAccount = banckAccount;
 		this.mentored = mentored;
-		this.receipts = receipts;
+		this.bills = bills;
 		this.representative = representative;
 		this.representative1 = representative1;
 	}
@@ -50,12 +50,12 @@ public class Household implements Serializable {
 		this.mentored = mentored;
 	}
 
-	public Set<Bill> getReceipts() {
-		return receipts;
+	public Set<Bill> getBills() {
+		return bills;
 	}
 
-	public void setReceipts(Set<Bill> receipts) {
-		this.receipts = receipts;
+	public void setBills(Set<Bill> bills) {
+		this.bills = bills;
 	}
 
 	public String getRepresentative() {
@@ -72,6 +72,20 @@ public class Household implements Serializable {
 
 	public void setRepresentative1(String representative1) {
 		this.representative1 = representative1;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((banckAccount == null) ? 0 : banckAccount.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return (banckAccount.compareTo(((Household) obj).getBanckAccount()) == 0);
 	}
 
 }

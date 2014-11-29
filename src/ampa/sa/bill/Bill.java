@@ -1,4 +1,4 @@
-package ampa.sa.receipt;
+package ampa.sa.bill;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -11,15 +11,15 @@ import ampa.sa.student.Household;
 public class Bill implements Serializable, Comparable<Bill> {
 	private Household houseHold;
 	private BigDecimal total;
-	private Set<BillLine> receiptLines;
+	private Set<BillLine> billLines;
 	private Calendar date;
 
 	public Bill(Household houseHold, BigDecimal total,
-			Set<BillLine> receiptLines, Calendar date) {
+			Set<BillLine> billLines, Calendar date) {
 		super();
 		this.houseHold = houseHold;
 		this.total = total;
-		this.receiptLines = receiptLines;
+		this.billLines = billLines;
 		this.date = date;
 	}
 
@@ -39,12 +39,12 @@ public class Bill implements Serializable, Comparable<Bill> {
 		this.total = total;
 	}
 
-	public Set<BillLine> getReceiptLines() {
-		return receiptLines;
+	public Set<BillLine> getBillLines() {
+		return billLines;
 	}
 
-	public void setReceiptLines(Set<BillLine> receiptLines) {
-		this.receiptLines = receiptLines;
+	public void setBillLines(Set<BillLine> billLines) {
+		this.billLines = billLines;
 	}
 
 	public Calendar getDate() {

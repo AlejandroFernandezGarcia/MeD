@@ -22,8 +22,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 
 import ampa.sa.activity.Activity;
+import ampa.sa.bill.Bill;
 import ampa.sa.booking.Booking;
-import ampa.sa.receipt.Bill;
 import ampa.sa.student.FamilyService;
 import ampa.sa.student.Household;
 import ampa.sa.student.Student;
@@ -45,7 +45,6 @@ public class StudentManagementWindow extends JFrame {
 	private JTextField txtLastName;
 	private JDateChooser dateChooser;
 	private JComboBox<Student.Category> combo;
-	private Boolean checkNull = true;
 
 	private static FamilyService familyService = FamilyService.getInstance();
 
@@ -54,7 +53,7 @@ public class StudentManagementWindow extends JFrame {
 	 */
 	public StudentManagementWindow(MainWindow mainWindow, Household houseHold) {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 417, 386);
+		setBounds(100, 100, 447, 386);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -105,34 +104,27 @@ public class StudentManagementWindow extends JFrame {
 						&& (dateChooser.getDate() != null)) {
 					Calendar cal = Calendar.getInstance();
 					cal.setTime(dateChooser.getDate());
-					if (!checkNull) {
+					if (houseHold != null) {
 
 						Student student = new Student(houseHold, txtName
 								.getText(), txtLastName.getText(),
 								(Student.Category) combo.getSelectedItem(),
 								cal, new HashSet<Activity>(),
 								new HashSet<Booking>());
-						Set<Student> mentored = houseHold.getMentored();
-						mentored.add(student);
-						houseHold.setMentored(mentored);
-
 						try {
-							familyService.updateHousehold(houseHold);
 							familyService.createStudent(student);
 							JOptionPane.showMessageDialog(null,
 									"Estudiante creado correctamente");
 							StudentManagementWindow thisWindow = (StudentManagementWindow) ((JButton) arg0
 									.getSource()).getTopLevelAncestor();
-							//FIXME Actualizar
+							mainWindow.dispose();
+							MainWindow mw = new MainWindow();
+							mw.setVisible(true);
 							thisWindow.setVisible(false);
 							thisWindow.dispose();
 						} catch (DuplicateInstanceException e) {
 							JOptionPane.showMessageDialog(null,
 									"ERROR: No se ha podido crear el usuario");
-						} catch (InstanceNotFoundException e) {
-							JOptionPane
-									.showMessageDialog(null,
-											"ERROR: El núcleo familiar no se ha podido actualizar correctamente");
 						}
 					} else {
 						if ((txtAcc1.getText().length() == 3)
@@ -140,48 +132,59 @@ public class StudentManagementWindow extends JFrame {
 								&& (txtAcc3.getText().length() == 3)
 								&& (txtAcc4.getText().length() == 3)
 								&& (txtTutor1.getText().length() != 0)) {
-
 							String account = txtAcc1.getText() + "-"
 									+ txtAcc2.getText() + "-"
 									+ txtAcc3.getText() + "-"
 									+ txtAcc4.getText();
-							Household h1;
-							if (txtTutor2.getText().length() == 0) {
-								h1 = new Household(account,
-										new HashSet<Student>(),
-										new HashSet<Bill>(), txtTutor1
-												.getText());
-							} else {
-								h1 = new Household(account,
-										new HashSet<Student>(),
-										new HashSet<Bill>(), txtTutor1
-												.getText(), txtTutor2.getText());
-							}
-
-							Student student = new Student(h1,
-									txtName.getText(), txtLastName.getText(),
-									(Student.Category) combo.getSelectedItem(),
-									cal, new HashSet<Activity>(),
-									new HashSet<Booking>());
-
-							Set<Student> hs = new HashSet<Student>();
-							hs.add(student);
-							h1.setMentored(hs);
 							try {
-								familyService.createStudent(student);
-								familyService.createHousehold(h1);
+								familyService.findHousehold(account);
+								Household h1;
+								if (txtTutor2.getText().length() == 0) {
+									h1 = new Household(account,
+											new HashSet<Student>(),
+											new HashSet<Bill>(), txtTutor1
+													.getText());
+								} else {
+									h1 = new Household(account,
+											new HashSet<Student>(),
+											new HashSet<Bill>(), txtTutor1
+													.getText(), txtTutor2
+													.getText());
+								}
+
+								Student student = new Student(h1, txtName
+										.getText(), txtLastName.getText(),
+										(Student.Category) combo
+												.getSelectedItem(), cal,
+										new HashSet<Activity>(),
+										new HashSet<Booking>());
+
+								Set<Student> hs = new HashSet<Student>();
+								hs.add(student);
+								h1.setMentored(hs);
+								try {
+									familyService.createStudent(student);
+									familyService.createHousehold(h1);
+									JOptionPane
+											.showMessageDialog(null,
+													"Estudiante y núcleo familiar creados correctamente");
+									StudentManagementWindow thisWindow = (StudentManagementWindow) ((JButton) arg0
+											.getSource()).getTopLevelAncestor();
+									mainWindow.dispose();
+									MainWindow mw = new MainWindow();
+									mw.setVisible(true);
+									thisWindow.setVisible(false);
+									thisWindow.dispose();
+								} catch (DuplicateInstanceException e) {
+									JOptionPane.showMessageDialog(null,
+											"ERROR: Datos duplicados en BD");
+								}
+							} catch (InstanceNotFoundException e1) {
 								JOptionPane
 										.showMessageDialog(null,
-												"Estudiante y núcleo familiar creados correctamente");
-								StudentManagementWindow thisWindow = (StudentManagementWindow) ((JButton) arg0
-										.getSource()).getTopLevelAncestor();
-								//FIXME Actualizar
-								thisWindow.setVisible(false);
-								thisWindow.dispose();
-							} catch (DuplicateInstanceException e) {
-								JOptionPane.showMessageDialog(null,
-										"ERROR: Datos duplicados en BD");
+												"ERROR: La cuenta bancaria ya esta asociada a otro núcleo familiar");
 							}
+
 						} else {
 							JOptionPane
 									.showMessageDialog(null,

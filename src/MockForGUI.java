@@ -9,12 +9,12 @@ import java.util.Set;
 
 import ampa.sa.activity.Activity;
 import ampa.sa.activity.ActivityService;
+import ampa.sa.bill.Bill;
+import ampa.sa.bill.BillLine;
 import ampa.sa.booking.Booking;
 import ampa.sa.booking.BookingService;
 import ampa.sa.diningHall.DiningHall;
 import ampa.sa.persistence.Persistence;
-import ampa.sa.receipt.Bill;
-import ampa.sa.receipt.BillLine;
 import ampa.sa.student.FamilyService;
 import ampa.sa.student.Household;
 import ampa.sa.student.Student;
@@ -25,7 +25,7 @@ public class MockForGUI {
 	private List<Activity> activities = new ArrayList<Activity>();
 	private List<Booking> bookings = new ArrayList<Booking>();
 	private List<DiningHall> diningHall = new ArrayList<DiningHall>();
-	private Set<Bill> receiptList = new HashSet<Bill>();
+	private Set<Bill> billList = new HashSet<Bill>();
 	ActivityService activityService = ActivityService.getInstance();
 	BookingService bookingService = BookingService.getInstance();
 	FamilyService familyService = FamilyService.getInstance();
@@ -40,11 +40,11 @@ public class MockForGUI {
 				new BigDecimal(0), new HashSet<Student>()));
 		activities.add(new Activity("Tiro con arco", 8, new BigDecimal(30.0),
 				new BigDecimal(10),new HashSet<Student>()));
-		activities.add(new Activity("KÃ¡rate", 15, new BigDecimal(18.5),
+		activities.add(new Activity("Kárate", 15, new BigDecimal(18.5),
 				new BigDecimal(0),new HashSet<Student>()));
 		activities.add(new Activity("Baloncesto", 10, new BigDecimal(20.0),
 				new BigDecimal(0),new HashSet<Student>()));
-		activities.add(new Activity("FÃºtbol", 20, new BigDecimal(20.0),
+		activities.add(new Activity("Fútbol", 20, new BigDecimal(20.0),
 				new BigDecimal(0),new HashSet<Student>()));
 		activities.add(new Activity("Tenis de mesa", 6, new BigDecimal(17.25),
 				new BigDecimal(0),new HashSet<Student>()));
@@ -65,7 +65,7 @@ public class MockForGUI {
 		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
 		Calendar cal1 = Calendar.getInstance();
 		cal1.setTime(sdf.parse("20/05/2009"));
-		students.add(new Student(house1, "Alberto", "PÃ©rez",
+		students.add(new Student(house1, "Alberto", "Pérez",
 				Student.Category.INFANTIL, cal1, new HashSet<Activity>(),
 				new HashSet<Booking>()));
 		Calendar cal2 = Calendar.getInstance();
@@ -160,19 +160,19 @@ public class MockForGUI {
 		Set<BillLine> rllist2 = new HashSet<BillLine>();
 		rllist2.add(rl3);
 
-		Calendar calReceipt1 = Calendar.getInstance();
-		calReceipt1.setTime(sdf.parse("01/05/2009"));
+		Calendar calBill1 = Calendar.getInstance();
+		calBill1.setTime(sdf.parse("01/05/2009"));
 
-		Calendar calReceipt2 = Calendar.getInstance();
-		calReceipt2.setTime(sdf.parse("01/06/2009"));
+		Calendar calBill2 = Calendar.getInstance();
+		calBill2.setTime(sdf.parse("01/06/2009"));
 
-		Bill r1 = new Bill(house1, new BigDecimal(15), rllist, calReceipt1);
-		Bill r2 = new Bill(house1, new BigDecimal(8), rllist2, calReceipt2);
+		Bill r1 = new Bill(house1, new BigDecimal(15), rllist, calBill1);
+		Bill r2 = new Bill(house1, new BigDecimal(8), rllist2, calBill2);
 
-		receiptList.add(r1);
-		receiptList.add(r2);
+		billList.add(r1);
+		billList.add(r2);
 
-		house1.setReceipts(receiptList);
+		house1.setBills(billList);
 
 		activityService.setActivities(activities);
 		bookingService.setBookings(bookings);

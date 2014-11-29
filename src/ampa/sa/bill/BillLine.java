@@ -1,4 +1,4 @@
-package ampa.sa.receipt;
+package ampa.sa.bill;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -63,4 +63,5 @@ public class BillLine implements Serializable {
 		this.student = student;
 	}
 
+	
 }

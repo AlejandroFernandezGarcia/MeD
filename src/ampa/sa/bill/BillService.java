@@ -1,4 +1,4 @@
-package ampa.sa.receipt;
+package ampa.sa.bill;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -16,8 +16,8 @@ import ampa.sa.booking.BookingService;
 import ampa.sa.diningHall.DiningHall;
 import ampa.sa.student.Household;
 import ampa.sa.student.Student;
+import ampa.sa.util.exceptions.BillNotFoundException;
 import ampa.sa.util.exceptions.InstanceNotFoundException;
-import ampa.sa.util.exceptions.ReceiptsNotFoundException;
 
 @SuppressWarnings("serial")
 public class BillService implements Serializable {
@@ -38,13 +38,13 @@ public class BillService implements Serializable {
 		return instance;
 	}
 
-	public void createReceipt(Household household) {
-		//FIXME Compruebo si hay algún recibo más con
-		//la actividad que no sea del curso actual. Si lo hay 
-		//esta pagado sino no.
+	public void createBill(Household household) {
+		// FIXME Compruebo si hay algún recibo más con
+		// la actividad que no sea del curso actual. Si lo hay
+		// esta pagado sino no.
 		BookingService bookingService = BookingService.getInstance();
 		Set<Student> students = household.getMentored();
-		Set<BillLine> receiptLines = new HashSet<BillLine>();
+		Set<BillLine> billLines = new HashSet<BillLine>();
 		Calendar now = Calendar.getInstance();
 
 		BigDecimal total = new BigDecimal(0);
@@ -56,7 +56,12 @@ public class BillService implements Serializable {
 			for (Activity activity : activities) {
 				rl = new BillLine(activity.getName(), activity.getPrize(), 1,
 						activity.getPrize(), student);
-				receiptLines.add(rl);
+				billLines.add(rl);
+				if (!studentPaidLicense(activity, student)) {
+					billLines.add(new BillLine("Licencia de "
+							+ activity.getName(), activity.getLicense(), 1,
+							activity.getLicense(), student));
+				}
 			}
 			int count = 0;
 			List<DiningHall> dhs = bookingService.getDiningHall();
@@ -71,67 +76,66 @@ public class BillService implements Serializable {
 					rl = new BillLine(dh.toString(), dh.getPrice().multiply(
 							new BigDecimal(count)), count, dh.getPrice(),
 							student);
-					receiptLines.add(rl);
+					billLines.add(rl);
 				}
 			}
 
 		}
-		for (BillLine receiptLine : receiptLines) {
-			total = total.add(receiptLine.getPrice());
+		for (BillLine billLine : billLines) {
+			total = total.add(billLine.getPrice());
 		}
 		now.add(Calendar.MONTH, -1);
-		household.setReceipts(this.removeReceiptByDate(household.getReceipts(),
-				now));
+		household.setBills(this.removeBillByDate(household.getBills(), now));
 
-		Bill receipt = new Bill(household, total, receiptLines, now);
-		Set<Bill> newBills = household.getReceipts();
-		newBills.add(receipt);
-		household.setReceipts(newBills);
+		Bill bill = new Bill(household, total, billLines, now);
+		Set<Bill> newBills = household.getBills();
+		newBills.add(bill);
+		household.setBills(newBills);
 	}
 
-	public List<Bill> findReceiptsByHousehold(Household household)
-			throws ReceiptsNotFoundException {
-		Set<Bill> receipts = household.getReceipts();
+	public List<Bill> findBillsByHousehold(Household household)
+			throws BillNotFoundException {
+		Set<Bill> bills = household.getBills();
 		List<Bill> result = new ArrayList<Bill>();
-		if (receipts.size() == 0) {
-			throw new ReceiptsNotFoundException(household, "Receipt");
+		if (bills.size() == 0) {
+			throw new BillNotFoundException(household, "Bill");
 		}
-		result.addAll(receipts);
+		result.addAll(bills);
 		Collections.sort(result);
 
 		return result;
 
 	}
 
-	public Bill findReceiptByDate(Household household, Calendar calendar)
+	public Bill findBillByDate(Household household, Calendar calendar)
 			throws InstanceNotFoundException {
-		Set<Bill> receipts = household.getReceipts();
-		for (Bill receipt : receipts) {
-			if (((receipt.getDate().get(Calendar.MONTH)) == (calendar
+		Set<Bill> bills = household.getBills();
+		for (Bill bill : bills) {
+			if (((bill.getDate().get(Calendar.MONTH)) == (calendar
 					.get(Calendar.MONTH)))
-					&& ((receipt.getDate().get(Calendar.YEAR)) == (calendar
+					&& ((bill.getDate().get(Calendar.YEAR)) == (calendar
 							.get(Calendar.YEAR)))) {
-				return receipt;
+				return bill;
 			}
 		}
 		throw new InstanceNotFoundException(null, "Bill");
 
 	}
 
-	public Set<BillLine> getReceiptLinesByStudent(Bill receipt, Student student) {
+	public Set<BillLine> getBillLinesByStudent(Bill bill, Student student) {
 
-		Set<BillLine> receiptLines = receipt.getReceiptLines();
-		Set<BillLine> receiptLinesByStudent = new HashSet<BillLine>();
-		for (BillLine receiptLine : receiptLines) {
-			if (receiptLine.getStudent().equals(student)) {
-				receiptLinesByStudent.add(receiptLine);
+		Set<BillLine> billLines = bill.getBillLines();
+		Set<BillLine> billLinesByStudent = new HashSet<BillLine>();
+		for (BillLine billLine : billLines) {
+			if (billLine.getStudent().equals(student)) {
+				billLinesByStudent.add(billLine);
 			}
 		}
-		return receiptLinesByStudent;
+		return billLinesByStudent;
 
 	}
 
-	private Set<Bill> removeReceiptByDate(Set<Bill> b, Calendar c) {
+	private Set<Bill> removeBillByDate(Set<Bill> b, Calendar c) {
 
 		Iterator<Bill> bIt = b.iterator();
 		Set<Bill> bills = b;
@@ -145,5 +149,27 @@ public class BillService implements Serializable {
 
 		}
 		return bills;
+	}
+
+	private boolean studentPaidLicense(Activity activity, Student student) {
+		Calendar previousBillDate = Calendar.getInstance();
+		previousBillDate.add(Calendar.MONTH, -1);
+		Bill oldBill;
+		if(activity.getLicense().equals(new BigDecimal(0))){
+			return true;
+		}
+		try {
+			oldBill = findBillByDate(student.getHouseHold(), previousBillDate);
+		} catch (InstanceNotFoundException e) {
+			return false;
+		}
+		for (BillLine billLine : oldBill.getBillLines()) {
+			if ((activity.getName().compareTo(billLine.getConcept()) == 0)
+					&& (billLine.getStudent().equals(student))) {
+				return true;
+			}
+		}
+		return false;
+
 	}
 }

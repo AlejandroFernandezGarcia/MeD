@@ -14,19 +14,19 @@ import org.junit.Test;
 
 import ampa.sa.activity.Activity;
 import ampa.sa.activity.ActivityService;
+import ampa.sa.bill.Bill;
+import ampa.sa.bill.BillLine;
+import ampa.sa.bill.BillService;
 import ampa.sa.booking.Booking;
 import ampa.sa.booking.BookingService;
-import ampa.sa.receipt.Bill;
-import ampa.sa.receipt.BillLine;
-import ampa.sa.receipt.BillService;
 import ampa.sa.student.FamilyService;
 import ampa.sa.student.Household;
 import ampa.sa.util.exceptions.InstanceNotFoundException;
-import ampa.sa.util.exceptions.ReceiptsNotFoundException;
+import ampa.sa.util.exceptions.BillNotFoundException;
 
-public class ReceiptTest {
+public class BillTest {
 
-	private BillService receiptService = BillService.getInstance();
+	private BillService billService = BillService.getInstance();
 	private FamilyService familyService = FamilyService.getInstance();
 	private BookingService bookingService = BookingService.getInstance();
 	private ActivityService activityService = ActivityService.getInstance();
@@ -38,17 +38,17 @@ public class ReceiptTest {
 	}
 
 	@Test
-	public void createReceiptTest() {
+	public void createBillTest() {
 		Household hh = null;
 		try {
 			hh = familyService.findHousehold(0);
 		} catch (InstanceNotFoundException e) {
 			fail("Household not found");
 		}
-		receiptService.createReceipt(hh);
-		assertEquals(1, hh.getReceipts().size());
+		billService.createBill(hh);
+		assertEquals(1, hh.getBills().size());
 		ArrayList<Bill> ar = new ArrayList<Bill>();
-		ar.addAll(hh.getReceipts());
+		ar.addAll(hh.getBills());
 		assertEquals(Calendar.getInstance().get(Calendar.MONTH) - 1, ar.get(0)
 				.getDate().get(Calendar.MONTH));
 		assertEquals(Calendar.getInstance().get(Calendar.YEAR), ar.get(0)
@@ -56,39 +56,39 @@ public class ReceiptTest {
 	}
 
 	@Test
-	public void findReceiptsByHouseholdTest() throws ReceiptsNotFoundException {
+	public void findBillssByHouseholdTest() throws BillNotFoundException {
 		Household hh = null;
 		try {
 			hh = familyService.findHousehold(0);
 		} catch (InstanceNotFoundException e) {
 			fail("Household not found");
 		}
-		receiptService.createReceipt(hh);
-		assertEquals(1, hh.getReceipts().size());
+		billService.createBill(hh);
+		assertEquals(1, hh.getBills().size());
 
 		ArrayList<Bill> ar = new ArrayList<Bill>();
-		ar.addAll(hh.getReceipts());
+		ar.addAll(hh.getBills());
 
 		ArrayList<Bill> ar2 = new ArrayList<Bill>();
-		ar2.addAll(receiptService.findReceiptsByHousehold(hh));
+		ar2.addAll(billService.findBillsByHousehold(hh));
 
 		assertEquals(ar.get(0), ar2.get(0));
 	}
 
-	@Test(expected = ReceiptsNotFoundException.class)
-	public void findReceiptsNotExistByHouseholdTest()
-			throws ReceiptsNotFoundException {
+	@Test(expected = BillNotFoundException.class)
+	public void findBillsNotExistByHouseholdTest()
+			throws BillNotFoundException {
 		Household hh = null;
 		try {
 			hh = familyService.findHousehold(0);
 		} catch (InstanceNotFoundException e) {
 			fail("Household not found");
 		}
-		receiptService.findReceiptsByHousehold(hh);
+		billService.findBillsByHousehold(hh);
 	}
 
 	@Test
-	public void getReceiptLinesByStudentTest() throws InstanceNotFoundException {
+	public void getBillLinesByStudentTest() throws InstanceNotFoundException {
 
 		Calendar cb3 = Calendar.getInstance();
 		Booking b3 = new Booking(cb3, familyService.findStudent(0),
@@ -110,18 +110,18 @@ public class ReceiptTest {
 		} catch (InstanceNotFoundException e) {
 			fail("Household not found");
 		}
-		receiptService.createReceipt(hh);
-		assertEquals(1, hh.getReceipts().size());
+		billService.createBill(hh);
+		assertEquals(1, hh.getBills().size());
 
 		ArrayList<Bill> ar = new ArrayList<Bill>();
-		ar.addAll(hh.getReceipts());
+		ar.addAll(hh.getBills());
 
 		HashSet<BillLine> hs = null;
 		HashSet<BillLine> hs2 = null;
 		try {
-			hs = (HashSet<BillLine>) receiptService.getReceiptLinesByStudent(
+			hs = (HashSet<BillLine>) billService.getBillLinesByStudent(
 					ar.get(0), familyService.findStudent(0));
-			hs2 = (HashSet<BillLine>) receiptService.getReceiptLinesByStudent(
+			hs2 = (HashSet<BillLine>) billService.getBillLinesByStudent(
 					ar.get(0), familyService.findStudent(1));
 		} catch (InstanceNotFoundException e1) {
 			fail("Student not found");

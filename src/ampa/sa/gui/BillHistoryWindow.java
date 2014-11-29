@@ -24,22 +24,22 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import ampa.sa.bill.Bill;
+import ampa.sa.bill.BillLine;
+import ampa.sa.bill.BillService;
 import ampa.sa.booking.BookingService;
-import ampa.sa.receipt.Bill;
-import ampa.sa.receipt.BillLine;
-import ampa.sa.receipt.BillService;
 import ampa.sa.student.FamilyService;
 import ampa.sa.student.Household;
 import ampa.sa.student.Student;
+import ampa.sa.util.exceptions.BillNotFoundException;
 import ampa.sa.util.exceptions.InstanceNotFoundException;
-import ampa.sa.util.exceptions.ReceiptsNotFoundException;
 
 public class BillHistoryWindow extends JFrame {
 
 	private JPanel contentPane;
-	private JTable receiptTable;
+	private JTable billTable;
 	private Household household;
-	private BillService receiptService;
+	private BillService billService;
 	private JTable tableLinesBill;
 	private JTable table;
 	private FamilyService familyService;
@@ -50,7 +50,7 @@ public class BillHistoryWindow extends JFrame {
 	/**
 	 * Create the frame.
 	 * 
-	 * @throws ReceiptsNotFoundException
+	 * @throws BillNotFoundException
 	 */
 	public BillHistoryWindow(Household h) {
 		setResizable(false);
@@ -58,7 +58,7 @@ public class BillHistoryWindow extends JFrame {
 		this.household = h;
 
 		this.familyService = FamilyService.getInstance();
-		this.receiptService = BillService.getInstance();
+		this.billService = BillService.getInstance();
 
 		String[] yearString = new String[20];
 		String[] monthString = new String[12];
@@ -209,7 +209,7 @@ public class BillHistoryWindow extends JFrame {
 
 				Bill r = null;
 				try {
-					r = receiptService.findReceiptByDate(h, cb);
+					r = billService.findBillByDate(h, cb);
 					lblNewLabel_1.setText("Coste Total: " + r.getTotal());
 
 					int i = 0;
@@ -278,7 +278,7 @@ public class BillHistoryWindow extends JFrame {
 			dtm.removeRow(i);
 		}
 
-		Set<BillLine> billLines = receiptService.getReceiptLinesByStudent(r, s);
+		Set<BillLine> billLines = billService.getBillLinesByStudent(r, s);
 		for (BillLine rl : billLines) {
 			Object[] data = { rl.getConcept(), rl.getUnitPrice(), rl.getUnits() };
 			dtm.addRow(data);
