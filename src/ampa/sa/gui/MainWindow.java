@@ -2,6 +2,7 @@ package ampa.sa.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -35,6 +36,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import ampa.sa.activity.Activity;
@@ -48,7 +50,7 @@ import ampa.sa.util.exceptions.InstanceNotFoundException;
 public class MainWindow extends JFrame {
 	//TODO Separar comedores por tipo
 	//TODO Ventanas modales
-	//TODO Borrar estudiantes
+	//TODO Borrar estudiantes (falta el mouselistener)
 	//TODO No mostrar estudiantes borrados en bill history
 	
 	private JPanel contentPane;
@@ -96,7 +98,12 @@ public class MainWindow extends JFrame {
 			String dateS = date.get(Calendar.DAY_OF_MONTH) + "/"
 					+ (date.get(Calendar.MONTH) + 1) + "/"
 					+ date.get(Calendar.YEAR);
-			Object[] data = { student.getName(), student.getLastname(), dateS };
+			Icon icon = new ImageIcon("src/ampa/sa/util/remove-Student.png");
+	        DefaultTableCellRenderer renderer = new javax.swing.table.DefaultTableCellRenderer();
+	        renderer.setIcon(icon);
+	        renderer.setHorizontalAlignment(SwingConstants.CENTER);
+	        studentsTable.getColumn("").setCellRenderer(renderer);
+			Object[] data = {null,student.getName(), student.getLastname(), dateS };
 			dtm.addRow(data);
 		}
 		studentsTable.updateUI();
@@ -405,22 +412,30 @@ public class MainWindow extends JFrame {
 		studentsTable = new JTable();
 		studentsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		studentsTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		studentsTable.setModel(new DefaultTableModel(new Object[][] { { null,
-				null, null }, }, new String[] { "Nombre", "Apellidos",
-				"Fecha nacimiento" }) {
-			Class[] columnTypes = new Class[] { String.class, String.class,
-					String.class };
-
+		studentsTable.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null, null, null},
+			},
+			new String[] {
+				"", "Nombre", "Apellidos", "Fecha nacimiento"
+			}
+		) {
+			Class[] columnTypes = new Class[] {
+				Object.class, String.class, String.class, String.class
+			};
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
 			}
-
-			boolean[] columnEditables = new boolean[] { false, true, true };
-
+			boolean[] columnEditables = new boolean[] {
+				false, true, true, true
+			};
 			public boolean isCellEditable(int row, int column) {
 				return columnEditables[column];
 			}
 		});
+		studentsTable.getColumnModel().getColumn(0).setPreferredWidth(15);
+		studentsTable.getColumnModel().getColumn(0).setMaxWidth(15);
+		studentsTable.getColumnModel().getColumn(3).setPreferredWidth(120);
 		scrollStudents.setViewportView(studentsTable);
 
 		JButton btnAddStudent = new JButton("Añadir estudiante");
@@ -563,5 +578,6 @@ public class MainWindow extends JFrame {
 						fillRightPanel(rigthPanel);
 					}
 				});
+		//TODO Añadir el mouselistener
 	}
 }
