@@ -35,7 +35,7 @@ public class CreateActivityWindow extends JFrame {
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 
 	public CreateActivityWindow() {
-		setTitle("AÃ±adir actividad");
+		setTitle("Añadir actividad");
 		setResizable(false);
 
 		this.activityService = ActivityService.getInstance();

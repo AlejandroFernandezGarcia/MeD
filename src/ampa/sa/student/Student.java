@@ -21,6 +21,7 @@ public class Student implements Serializable {
 	private Calendar dateBorn;
 	private Set<Activity> activities;
 	private Set<Booking> bookings;
+	private boolean deleted;
 
 	public Student(Household houseHold, String name, String lastname,
 			Category cat, Calendar dateBorn, Set<Activity> activities,
@@ -33,6 +34,7 @@ public class Student implements Serializable {
 		this.dateBorn = dateBorn;
 		this.activities = activities;
 		this.bookings = bookings;
+		this.deleted = false;
 	}
 
 	public Household getHouseHold() {
@@ -77,6 +79,14 @@ public class Student implements Serializable {
 
 	public void setBookings(Set<Booking> bookings) {
 		this.bookings = bookings;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
 	}
 
 	@Override

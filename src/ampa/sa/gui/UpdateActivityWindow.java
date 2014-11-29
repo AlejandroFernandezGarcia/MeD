@@ -256,7 +256,7 @@ public class UpdateActivityWindow extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if (((int) spinnerActivityPlaces.getValue() == 0)
 						|| textFieldActivityPrice.getText().isEmpty()) {
-					String message = "Existe algun campo vacÌo\n";
+					String message = "Existe algun campo vac√≠o\n";
 					JOptionPane.showMessageDialog(new JFrame(), message,
 							"Dialog", JOptionPane.ERROR_MESSAGE);
 
@@ -266,7 +266,7 @@ public class UpdateActivityWindow extends JFrame {
 					String[] numberSplitted = number.replace(".", ",").split(
 							",");
 					if (numberSplitted.length > 2) {
-						String message = "El precio no est· en un formato v·lido\n";
+						String message = "El precio no est√° en un formato v√°lido\n";
 						JOptionPane.showMessageDialog(new JFrame(), message,
 								"Dialog", JOptionPane.WARNING_MESSAGE);
 
@@ -323,7 +323,7 @@ public class UpdateActivityWindow extends JFrame {
 								thisWindow.dispose();
 							}
 						} catch (NumberFormatException n) {
-							String message = "El precio no est· en un formato v·lido\n";
+							String message = "El precio no est√° en un formato v√°lido\n";
 							JOptionPane.showMessageDialog(new JFrame(),
 									message, "Dialog",
 									JOptionPane.ERROR_MESSAGE);

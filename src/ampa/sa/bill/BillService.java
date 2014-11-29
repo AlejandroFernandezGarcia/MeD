@@ -50,6 +50,7 @@ public class BillService implements Serializable {
 		BigDecimal total = new BigDecimal(0);
 		BillLine rl;
 		for (Student student : students) {
+			if(student.isDeleted()) continue;
 			Set<Activity> activities = student.getActivities();
 			List<Booking> bookings = bookingService
 					.findStudentBookingsByMonthAndYear(student, now);

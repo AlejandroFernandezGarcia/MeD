@@ -173,7 +173,7 @@ public class BookingWindow extends JFrame {
 		btnDeleteBooking.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int select = JOptionPane.showConfirmDialog(null,
-						"¿Realmente desea cancelar la reserva?",
+						"Â¿Realmente desea cancelar la reserva?",
 						"Cancelar reserva", JOptionPane.YES_NO_OPTION,
 						JOptionPane.QUESTION_MESSAGE);
 				if (select == 0) {
@@ -615,9 +615,9 @@ public class BookingWindow extends JFrame {
 					JOptionPane.showMessageDialog(
 							null,
 							"Error creando reserva para " + dh.toString()
-									+ " (Día "
+									+ " (DÃ­a "
 									+ cal1.get(Calendar.DAY_OF_MONTH)
-									+ "). Operación de reservas canceladas");
+									+ "). OperaciÃ³n de reservas canceladas");
 					for (int i = 0; i < transaction.size(); i++) {
 						try {
 							bookingService.remove(transaction.get(i));
@@ -627,7 +627,7 @@ public class BookingWindow extends JFrame {
 					}
 				} catch (NotValidDateException e) {
 					JOptionPane.showMessageDialog(null,
-							"AVISO: Alguno de los días es festivo");
+							"AVISO: Alguno de los dÃ­as es festivo");
 				}
 			}
 			cal1.add(Calendar.DATE, 1);

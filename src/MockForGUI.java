@@ -40,11 +40,11 @@ public class MockForGUI {
 				new BigDecimal(0), new HashSet<Student>()));
 		activities.add(new Activity("Tiro con arco", 8, new BigDecimal(30.0),
 				new BigDecimal(10),new HashSet<Student>()));
-		activities.add(new Activity("Kárate", 15, new BigDecimal(18.5),
+		activities.add(new Activity("KÃ¡rate", 15, new BigDecimal(18.5),
 				new BigDecimal(0),new HashSet<Student>()));
 		activities.add(new Activity("Baloncesto", 10, new BigDecimal(20.0),
 				new BigDecimal(0),new HashSet<Student>()));
-		activities.add(new Activity("Fútbol", 20, new BigDecimal(20.0),
+		activities.add(new Activity("FÃºtbol", 20, new BigDecimal(20.0),
 				new BigDecimal(0),new HashSet<Student>()));
 		activities.add(new Activity("Tenis de mesa", 6, new BigDecimal(17.25),
 				new BigDecimal(0),new HashSet<Student>()));
@@ -65,7 +65,7 @@ public class MockForGUI {
 		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
 		Calendar cal1 = Calendar.getInstance();
 		cal1.setTime(sdf.parse("20/05/2009"));
-		students.add(new Student(house1, "Alberto", "Pérez",
+		students.add(new Student(house1, "Alberto", "PÃ©rez",
 				Student.Category.INFANTIL, cal1, new HashSet<Activity>(),
 				new HashSet<Booking>()));
 		Calendar cal2 = Calendar.getInstance();

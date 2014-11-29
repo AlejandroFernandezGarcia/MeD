@@ -48,6 +48,8 @@ import ampa.sa.util.exceptions.InstanceNotFoundException;
 public class MainWindow extends JFrame {
 	//TODO Separar comedores por tipo
 	//TODO Ventanas modales
+	//TODO Borrar estudiantes
+	//TODO No mostrar estudiantes borrados en bill history
 	
 	private JPanel contentPane;
 	private JTable studentsTable;
@@ -87,8 +89,9 @@ public class MainWindow extends JFrame {
 		for (int i = 0; i < dtm.getRowCount(); i++) {
 			dtm.removeRow(i);
 		}
-
+		//FIXME Comprobar borrado perezoso
 		for (Student student : students) {
+			if(student.isDeleted()) continue;
 			Calendar date = student.getDateBorn();
 			String dateS = date.get(Calendar.DAY_OF_MONTH) + "/"
 					+ (date.get(Calendar.MONTH) + 1) + "/"
@@ -185,7 +188,7 @@ public class MainWindow extends JFrame {
 				tabPanel = (JTabbedPane) component;
 			} else if (component.getName() != null) {
 				if (component.getName().compareTo("lblHouseHold") == 0) {
-					((JLabel) component).setText("Núcleo familiar: "
+					((JLabel) component).setText("NÃºcleo familiar: "
 							+ studentSelected.getHouseHold().getBanckAccount());
 				} else if (component.getName().compareTo("lblRepresentative") == 0) {
 					String rep1 = studentSelected.getHouseHold()
@@ -256,6 +259,8 @@ public class MainWindow extends JFrame {
 		tabPanel.removeAll();
 		int i = 0;
 		for (Student student : studentsOfHouseHold) {
+			//FIXME Borrado perezoso
+			if(student.isDeleted()) continue;
 			tabPanel.addTab(student.getName(), createExplainPanel(student));
 			if (student.equals(studentSelected)) {
 				tabPanel.setSelectedIndex(i);
@@ -264,7 +269,7 @@ public class MainWindow extends JFrame {
 		}
 		Icon icon = new ImageIcon("src/ampa/sa/util/add-Student.png");
 		tabPanel.addTab("", icon, null,
-				"Añadir estudiante a esta unidad familiar");
+				"AÃ±adir estudiante a esta unidad familiar");
 
 		tabPanel.addMouseListener(new MouseListener() {
 
@@ -315,7 +320,7 @@ public class MainWindow extends JFrame {
 		JMenu mnAlumno = new JMenu("Alumno");
 		menuBar.add(mnAlumno);
 
-		JMenuItem mntmAadirAlumno = new JMenuItem("Añadir alumno");
+		JMenuItem mntmAadirAlumno = new JMenuItem("AÃ±adir alumno");
 		mnAlumno.add(mntmAadirAlumno);
 		mntmAadirAlumno.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -338,7 +343,7 @@ public class MainWindow extends JFrame {
 			}
 		});
 
-		JMenuItem mntmAadirActividad = new JMenuItem("Añadir actividad");
+		JMenuItem mntmAadirActividad = new JMenuItem("AÃ±adir actividad");
 		mnActividad.add(mntmAadirActividad);
 		mntmAadirActividad.setName("Create Activity");
 		mntmAadirActividad.addActionListener(new ActionListener() {
@@ -377,7 +382,7 @@ public class MainWindow extends JFrame {
 		JMenuItem mntmModificar = new JMenuItem("Modificar");
 		mnComedor.add(mntmModificar);
 
-		JMenuItem mntmAadirNuevoHorario = new JMenuItem("Añadir nuevo horario");
+		JMenuItem mntmAadirNuevoHorario = new JMenuItem("AÃ±adir nuevo horario");
 		mnComedor.add(mntmAadirNuevoHorario);
 
 		JMenu mnAyuda = new JMenu("Ayuda");
@@ -418,7 +423,7 @@ public class MainWindow extends JFrame {
 		});
 		scrollStudents.setViewportView(studentsTable);
 
-		JButton btnAddStudent = new JButton("Añadir estudiante");
+		JButton btnAddStudent = new JButton("AÃ±adir estudiante");
 		leftPanel.add(btnAddStudent, BorderLayout.SOUTH);
 		btnAddStudent.addActionListener(new ActionListener() {
 			@Override
@@ -431,7 +436,7 @@ public class MainWindow extends JFrame {
 		rigthPanel = new JPanel();
 		contentPane.add(rigthPanel);
 
-		JLabel lblHouseHold = new JLabel("Núcleo familiar: ");
+		JLabel lblHouseHold = new JLabel("NÃºcleo familiar: ");
 		lblHouseHold.setName("lblHouseHold");
 		lblHouseHold.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblHouseHold.setHorizontalAlignment(SwingConstants.CENTER);

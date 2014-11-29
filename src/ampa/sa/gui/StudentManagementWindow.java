@@ -62,7 +62,7 @@ public class StudentManagementWindow extends JFrame {
 		JPanel panel = new JPanel();
 		contentPane.add(panel, BorderLayout.CENTER);
 
-		JLabel lblNmeroDeCuenta = new JLabel("Número de cuenta : ");
+		JLabel lblNmeroDeCuenta = new JLabel("NÃºmero de cuenta : ");
 
 		txtAcc1 = new JTextField();
 		txtAcc1.setColumns(3);
@@ -167,7 +167,7 @@ public class StudentManagementWindow extends JFrame {
 									familyService.createHousehold(h1);
 									JOptionPane
 											.showMessageDialog(null,
-													"Estudiante y núcleo familiar creados correctamente");
+													"Estudiante y nÃºcleo familiar creados correctamente");
 									StudentManagementWindow thisWindow = (StudentManagementWindow) ((JButton) arg0
 											.getSource()).getTopLevelAncestor();
 									mainWindow.dispose();
@@ -182,13 +182,13 @@ public class StudentManagementWindow extends JFrame {
 							} catch (InstanceNotFoundException e1) {
 								JOptionPane
 										.showMessageDialog(null,
-												"ERROR: La cuenta bancaria ya esta asociada a otro núcleo familiar");
+												"ERROR: La cuenta bancaria ya esta asociada a otro nÃºcleo familiar");
 							}
 
 						} else {
 							JOptionPane
 									.showMessageDialog(null,
-											"ERROR: Los campos del número de cuenta son obligatorios");
+											"ERROR: Los campos del nÃºmero de cuenta son obligatorios");
 						}
 					}
 				} else {
@@ -202,7 +202,7 @@ public class StudentManagementWindow extends JFrame {
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 
-		JLabel lblDatosDelNucleo = new JLabel("Datos del nucleo familiar :");
+		JLabel lblDatosDelNucleo = new JLabel("Datos del nÃºcleo familiar :");
 
 		JButton btnVolver = new JButton("Volver");
 		btnVolver.addActionListener(new ActionListener() {
