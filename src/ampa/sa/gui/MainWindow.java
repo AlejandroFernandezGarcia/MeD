@@ -2,17 +2,16 @@ package ampa.sa.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
+import java.util.Vector;
 
 import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
@@ -26,6 +25,7 @@ import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -45,14 +45,14 @@ import ampa.sa.booking.BookingService;
 import ampa.sa.persistence.Persistence;
 import ampa.sa.student.FamilyService;
 import ampa.sa.student.Student;
+import ampa.sa.util.MouseListenerOnlyClick;
 import ampa.sa.util.exceptions.InstanceNotFoundException;
 
 public class MainWindow extends JFrame {
-	//TODO Separar comedores por tipo
-	//TODO Ventanas modales
-	//TODO Borrar estudiantes (falta el mouselistener)
-	//TODO No mostrar estudiantes borrados en bill history
-	
+	// TODO Separar comedores por tipo
+	// TODO Ventanas modales
+	// TODO No mostrar estudiantes borrados en bill history
+
 	private JPanel contentPane;
 	private JTable studentsTable;
 	private FamilyService familyService;
@@ -91,22 +91,27 @@ public class MainWindow extends JFrame {
 		for (int i = 0; i < dtm.getRowCount(); i++) {
 			dtm.removeRow(i);
 		}
-		//FIXME Comprobar borrado perezoso
+		// FIXME Comprobar borrado perezoso
 		for (Student student : students) {
-			if(student.isDeleted()) continue;
+			if (student.isDeleted())
+				continue;
 			Calendar date = student.getDateBorn();
 			String dateS = date.get(Calendar.DAY_OF_MONTH) + "/"
 					+ (date.get(Calendar.MONTH) + 1) + "/"
 					+ date.get(Calendar.YEAR);
 			Icon icon = new ImageIcon("src/ampa/sa/util/remove-Student.png");
-	        DefaultTableCellRenderer renderer = new javax.swing.table.DefaultTableCellRenderer();
-	        renderer.setIcon(icon);
-	        renderer.setHorizontalAlignment(SwingConstants.CENTER);
-	        studentsTable.getColumn("").setCellRenderer(renderer);
-			Object[] data = {null,student.getName(), student.getLastname(), dateS };
+			DefaultTableCellRenderer renderer = new javax.swing.table.DefaultTableCellRenderer();
+			renderer.setIcon(icon);
+			renderer.setHorizontalAlignment(SwingConstants.CENTER);
+			studentsTable.getColumn("").setCellRenderer(renderer);
+			Object[] data = { null, student.getName(), student.getLastname(),
+					dateS };
 			dtm.addRow(data);
 		}
-		studentsTable.updateUI();
+		if(dtm.getRowCount() != 0){
+			studentsTable.setRowSelectionInterval(0, 0);
+		}
+		//studentsTable.updateUI();
 	}
 
 	private void fillConceptList(Student student, JList<String> list) {
@@ -120,12 +125,37 @@ public class MainWindow extends JFrame {
 			dlm.addElement(a.getName());
 		}
 
+		//FIXME Lo de comedor mensual
 		String booking = bookingService.isBookingAllDayOfWeekInMonth(student);
 		if (booking.compareTo("") != 0) {
 			dlm.addElement(booking);
 		}
 
 		list.updateUI();
+	}
+
+	private Student getStudentFromTable() {
+		DefaultTableModel dtm = (DefaultTableModel) studentsTable.getModel();
+		Vector data = dtm.getDataVector();
+		int rowSelected = studentsTable.getSelectedRow();
+		String name = ((Vector) data.elementAt(rowSelected)).elementAt(1)
+				.toString();
+		String lastName = ((Vector) data.elementAt(rowSelected)).elementAt(2)
+				.toString();
+		String date = ((Vector) data.elementAt(rowSelected)).elementAt(3)
+				.toString();
+		String[] dateS = date.split("/");
+		Calendar dateBorn = Calendar.getInstance();
+		dateBorn.set(Calendar.DAY_OF_MONTH, Integer.parseInt(dateS[0]));
+		dateBorn.set(Calendar.MONTH, Integer.parseInt(dateS[1]) - 1);
+		dateBorn.set(Calendar.YEAR, Integer.parseInt(dateS[2]));
+		try {
+			Student student = familyService.findStudent(new Student(name,
+					lastName, dateBorn));
+			return student;
+		} catch (InstanceNotFoundException e1) {
+			return null;
+		}
 	}
 
 	private JPanel createExplainPanel(Student student) {
@@ -188,7 +218,7 @@ public class MainWindow extends JFrame {
 		}
 		JTabbedPane tabPanel = null;
 		List<Student> students = familyService.getStudents();
-		Student studentSelected = students.get(studentsTable.getSelectedRow());
+		Student studentSelected = getStudentFromTable();
 		Component[] componentsPanel = panel.getComponents();
 		for (Component component : componentsPanel) {
 			if (component.getClass() == JTabbedPane.class) {
@@ -235,9 +265,8 @@ public class MainWindow extends JFrame {
 							.addActionListener(new ActionListener() {
 								public void actionPerformed(ActionEvent e) {
 									BillHistoryWindow bhw;
-									billService
-											.createBill(studentSelected
-													.getHouseHold());
+									billService.createBill(studentSelected
+											.getHouseHold());
 									bhw = new BillHistoryWindow(studentSelected
 											.getHouseHold());
 									bhw.setVisible(true);
@@ -266,8 +295,9 @@ public class MainWindow extends JFrame {
 		tabPanel.removeAll();
 		int i = 0;
 		for (Student student : studentsOfHouseHold) {
-			//FIXME Borrado perezoso
-			if(student.isDeleted()) continue;
+			// FIXME Borrado perezoso
+			if (student.isDeleted())
+				continue;
 			tabPanel.addTab(student.getName(), createExplainPanel(student));
 			if (student.equals(studentSelected)) {
 				tabPanel.setSelectedIndex(i);
@@ -278,23 +308,7 @@ public class MainWindow extends JFrame {
 		tabPanel.addTab("", icon, null,
 				"Añadir estudiante a esta unidad familiar");
 
-		tabPanel.addMouseListener(new MouseListener() {
-
-			@Override
-			public void mouseReleased(MouseEvent e) {
-			}
-
-			@Override
-			public void mousePressed(MouseEvent e) {
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-			}
+		tabPanel.addMouseListener(new MouseListenerOnlyClick() {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -303,7 +317,7 @@ public class MainWindow extends JFrame {
 					int index = sourceTabbedPane.getSelectedIndex();
 					if (index == (sourceTabbedPane.getTabCount() - 1)
 							&& (index != 0)) {
-						smw = new StudentManagementWindow(now,studentSelected
+						smw = new StudentManagementWindow(now, studentSelected
 								.getHouseHold());
 						smw.setVisible(true);
 					}
@@ -332,7 +346,8 @@ public class MainWindow extends JFrame {
 		mnAlumno.add(mntmAadirAlumno);
 		mntmAadirAlumno.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				StudentManagementWindow smw = new StudentManagementWindow(now,null);
+				StudentManagementWindow smw = new StudentManagementWindow(now,
+						null);
 				smw.setVisible(true);
 			}
 		});
@@ -406,7 +421,7 @@ public class MainWindow extends JFrame {
 				auw.setVisible(true);
 			}
 		});
-		
+
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -422,23 +437,18 @@ public class MainWindow extends JFrame {
 		studentsTable = new JTable();
 		studentsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		studentsTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		studentsTable.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null, null},
-			},
-			new String[] {
-				"", "Nombre", "Apellidos", "Fecha nacimiento"
-			}
-		) {
-			Class[] columnTypes = new Class[] {
-				Object.class, String.class, String.class, String.class
-			};
+		studentsTable.setModel(new DefaultTableModel(new Object[][] { { null,
+				null, null, null }, }, new String[] { "", "Nombre",
+				"Apellidos", "Fecha nacimiento" }) {
+			Class[] columnTypes = new Class[] { Object.class, String.class,
+					String.class, String.class };
+
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
 			}
-			boolean[] columnEditables = new boolean[] {
-				false, true, true, true
-			};
+
+			boolean[] columnEditables = new boolean[] { false, true, true, true };
+
 			public boolean isCellEditable(int row, int column) {
 				return columnEditables[column];
 			}
@@ -453,7 +463,8 @@ public class MainWindow extends JFrame {
 		btnAddStudent.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				StudentManagementWindow smw = new StudentManagementWindow(now,null);
+				StudentManagementWindow smw = new StudentManagementWindow(now,
+						null);
 				smw.setVisible(true);
 			}
 		});
@@ -579,15 +590,44 @@ public class MainWindow extends JFrame {
 		// Editado
 
 		fillStudentsTable();
-		studentsTable.setRowSelectionInterval(0, 0);
 		fillRightPanel(rigthPanel);
 
 		studentsTable.getSelectionModel().addListSelectionListener(
 				new ListSelectionListener() {
 					public void valueChanged(ListSelectionEvent event) {
 						fillRightPanel(rigthPanel);
+
 					}
 				});
-		//TODO Añadir el mouselistener
+		studentsTable.addMouseListener(new MouseListenerOnlyClick() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (studentsTable.getSelectedColumn() == 0) {
+					int selected = JOptionPane
+							.showConfirmDialog(
+									null,
+									"¿Realmente desea eliminar al estudiante seleccionado?",
+									"Borrar estudiante",
+									JOptionPane.YES_NO_OPTION,
+									JOptionPane.QUESTION_MESSAGE);
+					if (selected == 0) {
+						Student student = getStudentFromTable();
+						student.setDeleted(true);
+						try {
+							familyService.updateStudent(student);
+						} catch (InstanceNotFoundException e1) {
+							e1.printStackTrace();
+						}
+						MainWindow newWindow = new MainWindow();
+						newWindow.setVisible(true);
+						newWindow.setBounds(now.getBounds());
+						now.setVisible(false);
+						now.dispose();
+					}
+
+				}
+			}
+		});
 	}
 }

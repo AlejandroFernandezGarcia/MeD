@@ -23,6 +23,12 @@ public class Student implements Serializable {
 	private Set<Booking> bookings;
 	private boolean deleted;
 
+	public Student(String name, String lastname, Calendar dateBorn) {
+		this.name = name;
+		this.lastname = lastname;
+		this.dateBorn = dateBorn;
+	}
+
 	public Student(Household houseHold, String name, String lastname,
 			Category cat, Calendar dateBorn, Set<Activity> activities,
 			Set<Booking> bookings) {
@@ -93,8 +99,12 @@ public class Student implements Serializable {
 	public boolean equals(Object obj) {
 		return ((this.name.compareTo(((Student) obj).getName()) == 0))
 				&& ((this.lastname.compareTo(((Student) obj).getLastname()) == 0))
-				&& ((this.getDateBorn()
-						.compareTo(((Student) obj).getDateBorn()) == 0));
+				&& ((this.getDateBorn().get(Calendar.DAY_OF_MONTH) == (((Student) obj)
+						.getDateBorn().get(Calendar.DAY_OF_MONTH))))
+				&& ((this.getDateBorn().get(Calendar.MONTH) == (((Student) obj)
+						.getDateBorn().get(Calendar.MONTH))))
+				&& ((this.getDateBorn().get(Calendar.YEAR) == (((Student) obj)
+						.getDateBorn().get(Calendar.YEAR))));
 	}
 
 }

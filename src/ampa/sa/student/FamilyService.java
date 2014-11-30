@@ -108,6 +108,7 @@ public class FamilyService implements Serializable {
 				s.setCategory(student.getCategory());
 				s.setActivities(student.getActivities());
 				s.setBookings(student.getBookings());
+				s.setDeleted(student.isDeleted());
 				Persistence.getInstance().save();
 			}
 		}
@@ -218,5 +219,15 @@ public class FamilyService implements Serializable {
 		} catch (IndexOutOfBoundsException e) {
 			throw new InstanceNotFoundException(id, "Household");
 		}
+	}
+	
+	public Student findStudent(Student student)
+			throws InstanceNotFoundException {
+		for (Student s : students) {
+			if(s.equals(student)){
+				return s;
+			}
+		}
+		throw new InstanceNotFoundException(student, "Student");
 	}
 }

@@ -35,7 +35,7 @@ public class CreateActivityWindow extends JFrame {
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 
 	public CreateActivityWindow() {
-		setTitle("AÒadir actividad");
+		setTitle("A√±adir actividad");
 		setResizable(false);
 
 		this.activityService = ActivityService.getInstance();
@@ -49,7 +49,7 @@ public class CreateActivityWindow extends JFrame {
 		JLabel lblActivityName = new JLabel("Nombre de la Actividad:");
 
 		JLabel lblActivityPlaces = new JLabel(
-				"N˙mero de plazas de la Actividad:");
+				"N√∫mero de plazas: ");
 
 		JLabel lblActivityPrice = new JLabel("Precio de la Actividad:");
 
@@ -268,7 +268,7 @@ public class CreateActivityWindow extends JFrame {
 						|| textFieldActivityPrice.getText().isEmpty()
 						|| (textFieldLicensePrice.getText().isEmpty() && (rdBtnYesLicense
 								.isSelected()))) {
-					String message = "Existe algun campo vacÌo\n";
+					String message = "Existe algun campo vac√≠o\n";
 					JOptionPane.showMessageDialog(new JFrame(), message,
 							"Dialog", JOptionPane.ERROR_MESSAGE);
 
@@ -278,7 +278,7 @@ public class CreateActivityWindow extends JFrame {
 					String[] numberSplitted = number.replace(".", ",").split(
 							",");
 					if (numberSplitted.length > 2) {
-						String message = "El precio no est· en un formato v·lido\n";
+						String message = "El precio no est√° en un formato v√°lido\n";
 						JOptionPane.showMessageDialog(new JFrame(), message,
 								"Dialog", JOptionPane.WARNING_MESSAGE);
 
@@ -326,7 +326,7 @@ public class CreateActivityWindow extends JFrame {
 							thisWindow.setVisible(false);
 							thisWindow.dispose();
 						} catch (NumberFormatException n) {
-							String message = "El precio no est· en un formato v·lido\n";
+							String message = "El precio no est√° en un formato v√°lido\n";
 							JOptionPane.showMessageDialog(new JFrame(),
 									message, "Dialog",
 									JOptionPane.WARNING_MESSAGE);
