@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -272,6 +273,8 @@ public class ActivityManagementWindow extends JFrame implements ActionListener {
 				activityService.unEnrollsStudentToActivity(student, activity);
 			}
 
+			List<Activity> exceededCapacityActivities = new ArrayList<Activity>();
+			
 			for (i = 0; i < matriculated.size(); i++) {
 				Activity activity = null;
 				try {
@@ -281,7 +284,33 @@ public class ActivityManagementWindow extends JFrame implements ActionListener {
 					e1.printStackTrace();
 				}
 				activityService.enrollmentStudentInActivity(student, activity);
+				
+				if (familyService.exceededCapacity(activity)) {
+					exceededCapacityActivities.add(activity);
+				}	
 			}
+			
+			if (exceededCapacityActivities.size() != 0) {
+				String message = "";
+				if (exceededCapacityActivities.size() > 1) {
+					message += "Existen actividades cuyo número de matriculados excede al número de plazas: ";
+				} else {
+					message += "Existe una actividad cuyo número de matriculados excede al número de plazas: ";
+				}
+				
+				for (i = 0; i < exceededCapacityActivities.size(); i++) {
+					if (i > 0) {
+						message += ", ";
+					}
+					message += exceededCapacityActivities.get(i).getName();
+				}
+
+				JOptionPane.showMessageDialog(new JFrame(),
+						message, "Alerta",
+						JOptionPane.WARNING_MESSAGE);
+			}
+			
+			
 			ActivityManagementWindow thisWindow = (ActivityManagementWindow) ((JButton) e
 					.getSource()).getTopLevelAncestor();
 			mainWindow.fillRightPanel(mainWindow.getRigthPanel());

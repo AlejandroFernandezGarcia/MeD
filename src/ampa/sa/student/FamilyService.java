@@ -230,4 +230,8 @@ public class FamilyService implements Serializable {
 		}
 		throw new InstanceNotFoundException(student, "Student");
 	}
+	
+	public boolean exceededCapacity(Activity activity) {
+		return (activity.getStudents().size() > activity.getPlaces());
+	}
 }
