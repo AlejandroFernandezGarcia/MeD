@@ -317,6 +317,7 @@ public class MainWindow extends JFrame {
 	 * Create the frame.
 	 */
 	public MainWindow() {
+		setTitle("AMPA S.A.");
 		this.now = this;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 657, 462);
@@ -397,6 +398,15 @@ public class MainWindow extends JFrame {
 
 		JMenuItem mntmAcercaDe = new JMenuItem("Acerca de");
 		mnAyuda.add(mntmAcercaDe);
+		mntmAcercaDe.setName("About us");
+		mntmAcercaDe.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				AboutUsWindow auw;
+				auw = new AboutUsWindow();
+				auw.setVisible(true);
+			}
+		});
+		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
