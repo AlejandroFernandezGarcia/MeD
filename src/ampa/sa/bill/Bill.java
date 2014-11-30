@@ -2,6 +2,7 @@ package ampa.sa.bill;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Set;
 
@@ -74,6 +75,12 @@ public class Bill implements Serializable, Comparable<Bill> {
 			return true;
 		}
 		return false;
+	}
+	
+	@Override
+	public String toString(){
+		SimpleDateFormat sdf = new SimpleDateFormat("MMMM | yyyy");
+		return sdf.format(date.getTime());
 	}
 
 }

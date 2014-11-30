@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -28,6 +29,7 @@ import ampa.sa.bill.Bill;
 import ampa.sa.bill.BillLine;
 import ampa.sa.bill.BillService;
 import ampa.sa.booking.BookingService;
+import ampa.sa.diningHall.DiningHall;
 import ampa.sa.student.FamilyService;
 import ampa.sa.student.Household;
 import ampa.sa.student.Student;
@@ -81,16 +83,23 @@ public class BillHistoryWindow extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 
-		JComboBox comboBox = new JComboBox(monthString);
+		JComboBox<Bill> comboBox = new JComboBox<Bill>();
 
-		comboBox.setSelectedIndex(0);
+		
 
-		for (int i = 0; i < yearString.length; i++) {
-			yearString[i] = String.valueOf(2000 + i);
+		Set<Bill> bills = household.getBills();
+		
+		
+		if(bills.size()==0){
+			comboBox.setEnabled(false);
+		}else{
+			Iterator<Bill> iter = bills.iterator();
+			while(iter.hasNext())
+			{
+				comboBox.addItem(iter.next());
+			}
+			comboBox.setSelectedIndex(0);
 		}
-
-		JComboBox comboBox_1 = new JComboBox(yearString);
-		comboBox_1.setSelectedIndex(14);
 
 		JButton btnNewButton = new JButton("Buscar");
 
@@ -101,73 +110,36 @@ public class BillHistoryWindow extends JFrame {
 
 		JLabel lblNewLabel_1 = new JLabel("Coste Total: ");
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane.setHorizontalGroup(gl_contentPane
-				.createParallelGroup(Alignment.LEADING)
-				.addGroup(
-						gl_contentPane
-								.createSequentialGroup()
-								.addContainerGap()
-								.addComponent(comboBox,
-										GroupLayout.PREFERRED_SIZE,
-										GroupLayout.DEFAULT_SIZE,
-										GroupLayout.PREFERRED_SIZE)
-								.addGap(58)
-								.addComponent(comboBox_1,
-										GroupLayout.PREFERRED_SIZE,
-										GroupLayout.DEFAULT_SIZE,
-										GroupLayout.PREFERRED_SIZE).addGap(59)
-								.addComponent(btnNewButton)
-								.addContainerGap(186, Short.MAX_VALUE))
-				.addComponent(panel, Alignment.TRAILING,
-						GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE,
-						Short.MAX_VALUE)
-				.addGroup(
-						gl_contentPane
-								.createSequentialGroup()
-								.addContainerGap()
-								.addComponent(lblNewLabel)
-								.addPreferredGap(ComponentPlacement.RELATED,
-										118, Short.MAX_VALUE)
-								.addComponent(lblNewLabel_1).addGap(111)));
-		gl_contentPane
-				.setVerticalGroup(gl_contentPane
-						.createParallelGroup(Alignment.LEADING)
-						.addGroup(
-								gl_contentPane
-										.createSequentialGroup()
-										.addContainerGap()
-										.addGroup(
-												gl_contentPane
-														.createParallelGroup(
-																Alignment.BASELINE)
-														.addComponent(
-																comboBox,
-																GroupLayout.PREFERRED_SIZE,
-																GroupLayout.DEFAULT_SIZE,
-																GroupLayout.PREFERRED_SIZE)
-														.addComponent(
-																comboBox_1,
-																GroupLayout.PREFERRED_SIZE,
-																GroupLayout.DEFAULT_SIZE,
-																GroupLayout.PREFERRED_SIZE)
-														.addComponent(
-																btnNewButton))
-										.addPreferredGap(
-												ComponentPlacement.UNRELATED)
-										.addGroup(
-												gl_contentPane
-														.createParallelGroup(
-																Alignment.BASELINE)
-														.addComponent(
-																lblNewLabel)
-														.addComponent(
-																lblNewLabel_1))
-										.addPreferredGap(
-												ComponentPlacement.RELATED, 26,
-												Short.MAX_VALUE)
-										.addComponent(panel,
-												GroupLayout.PREFERRED_SIZE,
-												177, GroupLayout.PREFERRED_SIZE)));
+		gl_contentPane.setHorizontalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGap(145)
+					.addComponent(btnNewButton)
+					.addContainerGap(186, Short.MAX_VALUE))
+				.addComponent(panel, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(lblNewLabel)
+					.addPreferredGap(ComponentPlacement.RELATED, 118, Short.MAX_VALUE)
+					.addComponent(lblNewLabel_1)
+					.addGap(111))
+		);
+		gl_contentPane.setVerticalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(btnNewButton))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblNewLabel)
+						.addComponent(lblNewLabel_1))
+					.addPreferredGap(ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+					.addComponent(panel, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE))
+		);
 
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		GroupLayout gl_panel = new GroupLayout(panel);
@@ -188,7 +160,7 @@ public class BillHistoryWindow extends JFrame {
 
 				tabbedPane.removeAll();
 
-				SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+				/*SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
 				Calendar cb = Calendar.getInstance();
 				String s = new String("01/");
 				if (comboBox.getSelectedIndex() < 10) {
@@ -205,27 +177,24 @@ public class BillHistoryWindow extends JFrame {
 					cb.setTime(sdf.parse(s));
 				} catch (ParseException t) {
 					assertTrue("Bad format to calendar", false);
-				}
+				}*/
+				
+				
 
-				Bill r = null;
-				try {
-					r = billService.findBillByDate(h, cb);
-					lblNewLabel_1.setText("Coste Total: " + r.getTotal());
+				Bill r = (Bill) comboBox.getSelectedItem();
+				lblNewLabel_1.setText("Coste Total: " + r.getTotal());
 
-					int i = 0;
+				int i = 0;
 
-					List<Student> students = familyService
+				List<Student> students = familyService
 							.findStudents(household);
-					for (Student student : students) {
+				for (Student student : students) {
 						tabbedPane.addTab(student.getName(),
 								createPanelBills(r, student));
 						tabbedPane.setSelectedIndex(i);
 						i++;
-					}
-
-				} catch (InstanceNotFoundException e1) {
-					lblNewLabel_1.setText("Coste Total: NaN");
 				}
+
 
 			}
 		});
