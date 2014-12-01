@@ -49,6 +49,8 @@ public class BillHistoryWindow extends JFrame {
 	 * @throws BillNotFoundException
 	 */
 	public BillHistoryWindow(Household h) {
+		setResizable(false);
+		setTitle("Recibos");
 		this.household = h;
 
 		this.familyService = FamilyService.getInstance();
@@ -93,8 +95,6 @@ public class BillHistoryWindow extends JFrame {
 
 		JButton btnNewButton = new JButton("Buscar");
 
-		JPanel panel = new JPanel();
-
 		JLabel lblNewLabel = new JLabel("Núcleo Familiar: "
 				+ household.getBanckAccount());
 
@@ -109,15 +109,14 @@ public class BillHistoryWindow extends JFrame {
 					.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addGap(145)
 					.addComponent(btnNewButton)
-					.addContainerGap(183, Short.MAX_VALUE))
-				.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
-					.addComponent(tabbedPane, GroupLayout.PREFERRED_SIZE, 452, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(panel, GroupLayout.DEFAULT_SIZE, 454, Short.MAX_VALUE))
+					.addContainerGap(190, Short.MAX_VALUE))
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addComponent(tabbedPane, GroupLayout.PREFERRED_SIZE, 440, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(18, Short.MAX_VALUE))
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addContainerGap()
 					.addComponent(lblNewLabel)
-					.addPreferredGap(ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.RELATED, 142, Short.MAX_VALUE)
 					.addComponent(lblNewLabel_1)
 					.addGap(111))
 		);
@@ -132,11 +131,12 @@ public class BillHistoryWindow extends JFrame {
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblNewLabel)
 						.addComponent(lblNewLabel_1))
-					.addPreferredGap(ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-						.addComponent(panel, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE)
-						.addComponent(tabbedPane, GroupLayout.PREFERRED_SIZE, 193, GroupLayout.PREFERRED_SIZE)))
+					.addPreferredGap(ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+					.addComponent(tabbedPane, GroupLayout.PREFERRED_SIZE, 193, GroupLayout.PREFERRED_SIZE))
 		);
+		
+				JPanel panel = new JPanel();
+				tabbedPane.addTab("New tab", null, panel, null);
 		GroupLayout gl_panel = new GroupLayout(panel);
 		gl_panel.setHorizontalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
@@ -146,6 +146,8 @@ public class BillHistoryWindow extends JFrame {
 			gl_panel.createParallelGroup(Alignment.TRAILING)
 				.addGap(0, 205, Short.MAX_VALUE)
 		);
+		
+				panel.setLayout(gl_panel);
 
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -177,8 +179,6 @@ public class BillHistoryWindow extends JFrame {
 
 			}
 		});
-
-		panel.setLayout(gl_panel);
 		contentPane.setLayout(gl_contentPane);
 
 	}
@@ -192,14 +192,14 @@ public class BillHistoryWindow extends JFrame {
 		GroupLayout gl_panel_1 = new GroupLayout(panel_1);
 		gl_panel_1.setHorizontalGroup(gl_panel_1.createParallelGroup(
 				Alignment.LEADING).addComponent(scrollPane,
-				GroupLayout.DEFAULT_SIZE, 418, Short.MAX_VALUE));
+				GroupLayout.DEFAULT_SIZE, 700, Short.MAX_VALUE));
 		gl_panel_1.setVerticalGroup(gl_panel_1.createParallelGroup(
 				Alignment.LEADING).addGroup(
 				gl_panel_1
 						.createSequentialGroup()
-						.addGap(26)
+						.addGap(0)
 						.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE,
-								81, GroupLayout.PREFERRED_SIZE)
+								175, GroupLayout.PREFERRED_SIZE)
 						.addContainerGap(24, Short.MAX_VALUE)));
 
 		table = new JTable();

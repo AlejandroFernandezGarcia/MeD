@@ -41,7 +41,7 @@ public class CreateActivityWindow extends JFrame {
 		this.activityService = ActivityService.getInstance();
 
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 481, 239);
+		setBounds(100, 100, 462, 258);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -79,173 +79,69 @@ public class CreateActivityWindow extends JFrame {
 		textFieldLicensePrice = new JTextField();
 		textFieldLicensePrice.setColumns(10);
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane
-				.setHorizontalGroup(gl_contentPane
-						.createParallelGroup(Alignment.TRAILING)
-						.addGroup(
-								gl_contentPane
-										.createSequentialGroup()
-										.addContainerGap()
-										.addGroup(
-												gl_contentPane
-														.createParallelGroup(
-																Alignment.LEADING)
-														.addGroup(
-																Alignment.TRAILING,
-																gl_contentPane
-																		.createSequentialGroup()
-																		.addComponent(
-																				lblActivityPlaces)
-																		.addContainerGap(
-																				254,
-																				Short.MAX_VALUE))
-														.addGroup(
-																Alignment.TRAILING,
-																gl_contentPane
-																		.createSequentialGroup()
-																		.addComponent(
-																				lblActivityPrice)
-																		.addContainerGap(
-																				300,
-																				Short.MAX_VALUE))
-														.addGroup(
-																Alignment.TRAILING,
-																gl_contentPane
-																		.createSequentialGroup()
-																		.addGroup(
-																				gl_contentPane
-																						.createParallelGroup(
-																								Alignment.LEADING)
-																						.addGroup(
-																								Alignment.TRAILING,
-																								gl_contentPane
-																										.createSequentialGroup()
-																										.addComponent(
-																												lblActivityName)
-																										.addGap(52))
-																						.addGroup(
-																								gl_contentPane
-																										.createSequentialGroup()
-																										.addComponent(
-																												lblNewLabel)
-																										.addGap(18)
-																										.addComponent(
-																												rdBtnYesLicense)
-																										.addPreferredGap(
-																												ComponentPlacement.UNRELATED)
-																										.addComponent(
-																												rdbtnNoLicense)
-																										.addGap(58)))
-																		.addGroup(
-																				gl_contentPane
-																						.createParallelGroup(
-																								Alignment.LEADING)
-																						.addGroup(
-																								gl_contentPane
-																										.createParallelGroup(
-																												Alignment.TRAILING,
-																												false)
-																										.addComponent(
-																												textFieldActivityPrice,
-																												Alignment.LEADING)
-																										.addComponent(
-																												spinnerActivityPlaces,
-																												Alignment.LEADING,
-																												GroupLayout.DEFAULT_SIZE,
-																												42,
-																												Short.MAX_VALUE)
-																										.addComponent(
-																												textFieldLicensePrice,
-																												Alignment.LEADING,
-																												0,
-																												0,
-																												Short.MAX_VALUE))
-																						.addGroup(
-																								gl_contentPane
-																										.createParallelGroup(
-																												Alignment.TRAILING)
-																										.addGroup(
-																												gl_contentPane
-																														.createSequentialGroup()
-																														.addComponent(
-																																btnCancel)
-																														.addPreferredGap(
-																																ComponentPlacement.RELATED)
-																														.addComponent(
-																																btnCreateActivity))
-																										.addComponent(
-																												textActivityName,
-																												GroupLayout.PREFERRED_SIZE,
-																												218,
-																												GroupLayout.PREFERRED_SIZE)))
-																		.addGap(29)))));
-		gl_contentPane
-				.setVerticalGroup(gl_contentPane
-						.createParallelGroup(Alignment.LEADING)
-						.addGroup(
-								gl_contentPane
-										.createSequentialGroup()
-										.addContainerGap()
-										.addGroup(
-												gl_contentPane
-														.createParallelGroup(
-																Alignment.BASELINE)
-														.addComponent(
-																textActivityName,
-																GroupLayout.PREFERRED_SIZE,
-																GroupLayout.DEFAULT_SIZE,
-																GroupLayout.PREFERRED_SIZE)
-														.addComponent(
-																lblActivityName))
-										.addGap(18)
-										.addGroup(
-												gl_contentPane
-														.createParallelGroup(
-																Alignment.BASELINE)
-														.addComponent(
-																lblActivityPlaces)
-														.addComponent(
-																spinnerActivityPlaces,
-																GroupLayout.PREFERRED_SIZE,
-																GroupLayout.DEFAULT_SIZE,
-																GroupLayout.PREFERRED_SIZE))
-										.addGap(18)
-										.addGroup(
-												gl_contentPane
-														.createParallelGroup(
-																Alignment.BASELINE)
-														.addComponent(
-																lblActivityPrice)
-														.addComponent(
-																textFieldActivityPrice,
-																GroupLayout.PREFERRED_SIZE,
-																GroupLayout.DEFAULT_SIZE,
-																GroupLayout.PREFERRED_SIZE))
-										.addGap(18)
-										.addGroup(
-												gl_contentPane
-														.createParallelGroup(
-																Alignment.BASELINE)
-														.addComponent(
-																lblNewLabel)
-														.addComponent(
-																rdBtnYesLicense)
-														.addComponent(
-																rdbtnNoLicense)
-														.addComponent(
-																textFieldLicensePrice,
-																GroupLayout.PREFERRED_SIZE,
-																GroupLayout.DEFAULT_SIZE,
-																GroupLayout.PREFERRED_SIZE))
-										.addGap(39)
-										.addGroup(
-												gl_contentPane
-														.createParallelGroup(
-																Alignment.BASELINE)
-														.addComponent(
-																btnCreateActivity)
-														.addComponent(btnCancel))
-										.addContainerGap(64, Short.MAX_VALUE)));
+		gl_contentPane.setHorizontalGroup(
+			gl_contentPane.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(lblActivityPlaces)
+							.addContainerGap(363, Short.MAX_VALUE))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(lblActivityPrice)
+							.addContainerGap(349, Short.MAX_VALUE))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addComponent(lblNewLabel)
+									.addPreferredGap(ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
+									.addComponent(rdBtnYesLicense)
+									.addPreferredGap(ComponentPlacement.UNRELATED)
+									.addComponent(rdbtnNoLicense)
+									.addGap(58))
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addComponent(lblActivityName)
+									.addPreferredGap(ComponentPlacement.RELATED)))
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
+									.addComponent(textFieldActivityPrice, Alignment.LEADING)
+									.addComponent(spinnerActivityPlaces, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)
+									.addComponent(textFieldLicensePrice, Alignment.LEADING, 0, 0, Short.MAX_VALUE))
+								.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+									.addGroup(gl_contentPane.createSequentialGroup()
+										.addComponent(btnCancel)
+										.addPreferredGap(ComponentPlacement.RELATED)
+										.addComponent(btnCreateActivity))
+									.addComponent(textActivityName, GroupLayout.PREFERRED_SIZE, 218, GroupLayout.PREFERRED_SIZE)))
+							.addGap(29))))
+		);
+		gl_contentPane.setVerticalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(textActivityName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblActivityName))
+					.addGap(18)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblActivityPlaces)
+						.addComponent(spinnerActivityPlaces, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(18)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblActivityPrice)
+						.addComponent(textFieldActivityPrice, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(18)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(rdBtnYesLicense)
+						.addComponent(rdbtnNoLicense)
+						.addComponent(textFieldLicensePrice, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblNewLabel))
+					.addGap(39)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(btnCreateActivity)
+						.addComponent(btnCancel))
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+		);
 
 		textFieldLicensePrice.setEnabled(false);
 
@@ -270,7 +166,7 @@ public class CreateActivityWindow extends JFrame {
 								.isSelected()))) {
 					String message = "Existe algun campo vacío\n";
 					JOptionPane.showMessageDialog(new JFrame(), message,
-							"Dialog", JOptionPane.ERROR_MESSAGE);
+							"ERROR", JOptionPane.ERROR_MESSAGE);
 
 				} else {
 					String number = textFieldActivityPrice.getText();
@@ -280,7 +176,7 @@ public class CreateActivityWindow extends JFrame {
 					if (numberSplitted.length > 2) {
 						String message = "El precio no está en un formato válido\n";
 						JOptionPane.showMessageDialog(new JFrame(), message,
-								"Dialog", JOptionPane.WARNING_MESSAGE);
+								"ERROR", JOptionPane.ERROR_MESSAGE);
 
 					} else {
 						Set<Student> students = new HashSet<Student>();
@@ -317,7 +213,7 @@ public class CreateActivityWindow extends JFrame {
 
 								String message = "La actividad ya existe en el sistema\n";
 								JOptionPane.showMessageDialog(new JFrame(),
-										message, "Dialog",
+										message, "ERROR",
 										JOptionPane.ERROR_MESSAGE);
 							}
 
@@ -328,8 +224,8 @@ public class CreateActivityWindow extends JFrame {
 						} catch (NumberFormatException n) {
 							String message = "El precio no está en un formato válido\n";
 							JOptionPane.showMessageDialog(new JFrame(),
-									message, "Dialog",
-									JOptionPane.WARNING_MESSAGE);
+									message, "ERROR",
+									JOptionPane.ERROR_MESSAGE);
 						}
 					}
 				}
