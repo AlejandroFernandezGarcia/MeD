@@ -77,8 +77,11 @@ public class MockForGUI {
 		Set<Activity> sa = new HashSet<Activity>();
 		sa.add(activities.get(0));
 		sa.add(activities.get(1));
+		Set<Activity> sa1 = new HashSet<Activity>();
+		sa1.add(activities.get(0));
+		sa1.add(activities.get(2));
 		students.get(0).setActivities(sa);
-		students.get(1).setActivities(sa);
+		students.get(1).setActivities(sa1);
 		
 		
 		Set<Student> ss = new HashSet<Student>();
