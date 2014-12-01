@@ -33,7 +33,7 @@ public class ActivityTest {
 	public void addActivityTest() {
 
 		Activity activity = new Activity("Baloncesto Primaria", 10,
-				new BigDecimal(20.0), new BigDecimal(0),new HashSet<Student>());
+				new BigDecimal(20.0), new BigDecimal(0), new HashSet<Student>());
 
 		try {
 			activityService.create(activity);
@@ -190,10 +190,10 @@ public class ActivityTest {
 				.contains(s));
 
 	}
-	
+
 	@Test
 	public void exceededCapacityTest() {
-		
+
 		Student student1 = null;
 		Student student2 = null;
 		try {
@@ -202,19 +202,33 @@ public class ActivityTest {
 		} catch (InstanceNotFoundException e) {
 			fail("Activity not exists");
 		}
-		
+
 		Activity activity = new Activity("Baloncesto Primaria", 1,
-				new BigDecimal(20.0), new BigDecimal(0),new HashSet<Student>());
+				new BigDecimal(20.0), new BigDecimal(0), new HashSet<Student>());
 
 		try {
 			activityService.create(activity);
 		} catch (DuplicateInstanceException e) {
 			fail("Duplicated activity");
 		}
-		
+
 		activityService.enrollmentStudentInActivity(student1, activity);
 		activityService.enrollmentStudentInActivity(student2, activity);
 
-		assertTrue(familyService.exceededCapacity(activity));
+		assertTrue(activityService.exceededCapacity(activity));
+	}
+	
+	@Test
+	public void exceededCapacityTest2() {
+
+		Activity activity = new Activity("Baloncesto Primaria", 1,
+				new BigDecimal(20.0), new BigDecimal(0), new HashSet<Student>());
+
+		try {
+			activityService.create(activity);
+		} catch (DuplicateInstanceException e) {
+			fail("Duplicated activity");
+		}
+		assertFalse(activityService.exceededCapacity(activity));
 	}
 }

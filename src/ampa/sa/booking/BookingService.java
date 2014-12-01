@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import ampa.sa.diningHall.DiningHall;
 import ampa.sa.persistence.Persistence;
@@ -228,61 +227,64 @@ public class BookingService implements Serializable {
 		return b;
 	}
 
-	public String isBookingAllDayOfWeekInMonth(Student student) {
-		// FIXME Devolver un String [] o arrayList para aprovechar
-				// que en esta clase ya tengo los diningHall.
-				// Filtrar por DiningHall
-		String result = "";
-		Calendar calendar = Calendar.getInstance();
-		int days[] = { 0, 0, 0, 0, 0, 0, 0, 0 };
-		int month = calendar.get(Calendar.MONTH);
-		while (calendar.get(Calendar.MONTH) == month) {
-			try {
-				if (SchoolCalendar.isNotHoliday(calendar)) {
-					days[calendar.get(Calendar.DAY_OF_WEEK)]++;
+	public String[] isBookingAllDayOfWeekInMonth(Student student) {
+		String[] result = new String[diningHall.size()];
+		int index = 0;
+		for (DiningHall dh : diningHall) {
+			Calendar calendar = Calendar.getInstance();
+			int days[] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+			int month = calendar.get(Calendar.MONTH);
+			while (calendar.get(Calendar.MONTH) == month) {
+				try {
+					if (SchoolCalendar.isNotHoliday(calendar)) {
+						days[calendar.get(Calendar.DAY_OF_WEEK)]++;
+					}
+				} catch (ParseException e) {
 				}
-			} catch (ParseException e) {
+				calendar.add(Calendar.DAY_OF_MONTH, 1);
 			}
-			calendar.add(Calendar.DAY_OF_MONTH, 1);
-		}
-		List<Booking> bookingsForStudent = findStudentBookingsByMonthAndYear(
-				student, Calendar.getInstance());
-		for (Booking booking : bookingsForStudent) {
-			days[booking.getDate().get(Calendar.DAY_OF_WEEK)]--;
-		}
+			List<Booking> bookingsForStudent = findStudentBookingsByMonthAndYear(
+					student, Calendar.getInstance());
+			for (Booking booking : bookingsForStudent) {
+				if (dh.getType() == booking.getDiningHall().getType()) {
+					days[booking.getDate().get(Calendar.DAY_OF_WEEK)]--;
+				}
+			}
 
-		result += "Comedor mensual: ";
-		if (days[Calendar.MONDAY] <= 0) {
-			result += "L";
-		}
-		if (days[Calendar.TUESDAY] <= 0) {
-			result += "M";
-		}
-		if (days[Calendar.WEDNESDAY] <= 0) {
-			result += "X";
-		}
-		if (days[Calendar.THURSDAY] <= 0) {
-			result += "J";
-		}
-		if (days[Calendar.FRIDAY] <= 0) {
-			result += "V";
-		}
-		if (result.compareTo("Comedor mensual: ") == 0) {
-			return "";
+			result[index] = dh.toString();
+			if (days[Calendar.MONDAY] <= 0) {
+				result[index] += "L";
+			}
+			if (days[Calendar.TUESDAY] <= 0) {
+				result[index] += "M";
+			}
+			if (days[Calendar.WEDNESDAY] <= 0) {
+				result[index] += "X";
+			}
+			if (days[Calendar.THURSDAY] <= 0) {
+				result[index] += "J";
+			}
+			if (days[Calendar.FRIDAY] <= 0) {
+				result[index] += "V";
+			}
+			if (result[index].compareTo(dh.toString()) == 0) {
+				result[index] = "";
+			}
+			index++;
 		}
 
 		return result;
 
 	}
 
-	public boolean existsBooking(Booking booking){
+	public boolean existsBooking(Booking booking) {
 		List<Booking> bookings = this.getBookings();
 		Iterator<Booking> iter = bookings.iterator();
-		while(iter.hasNext()){
+		while (iter.hasNext()) {
 			Booking b = iter.next();
-			if(b.getDate().equals(booking.getDate())
-			   && b.getDiningHall().equals(booking.getDiningHall())
-			   && b.getStudent().equals(booking.getStudent()))
+			if (b.getDate().equals(booking.getDate())
+					&& b.getDiningHall().equals(booking.getDiningHall())
+					&& b.getStudent().equals(booking.getStudent()))
 				return true;
 		}
 		return false;

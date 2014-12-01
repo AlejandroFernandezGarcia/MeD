@@ -49,9 +49,6 @@ import ampa.sa.util.MouseListenerOnlyClick;
 import ampa.sa.util.exceptions.InstanceNotFoundException;
 
 public class MainWindow extends JFrame {
-	// TODO Separar comedores por tipo
-	// TODO Ventanas modales
-	// TODO No mostrar estudiantes borrados en bill history
 
 	private JPanel contentPane;
 	private JTable studentsTable;
@@ -91,7 +88,6 @@ public class MainWindow extends JFrame {
 		for (int i = 0; i < dtm.getRowCount(); i++) {
 			dtm.removeRow(i);
 		}
-		// FIXME Comprobar borrado perezoso
 		for (Student student : students) {
 			if (student.isDeleted())
 				continue;
@@ -108,10 +104,9 @@ public class MainWindow extends JFrame {
 					dateS };
 			dtm.addRow(data);
 		}
-		if(dtm.getRowCount() != 0){
+		if (dtm.getRowCount() != 0) {
 			studentsTable.setRowSelectionInterval(0, 0);
 		}
-		//studentsTable.updateUI();
 	}
 
 	private void fillConceptList(Student student, JList<String> list) {
@@ -125,13 +120,13 @@ public class MainWindow extends JFrame {
 			dlm.addElement(a.getName());
 		}
 
-		//FIXME Lo de comedor mensual
-		String booking = bookingService.isBookingAllDayOfWeekInMonth(student);
-		if (booking.compareTo("") != 0) {
-			dlm.addElement(booking);
+		String[] bookings = bookingService
+				.isBookingAllDayOfWeekInMonth(student);
+		for (String string : bookings) {
+			if (string.compareTo("") != 0) {
+				dlm.addElement(string);
+			}
 		}
-
-		list.updateUI();
 	}
 
 	private Student getStudentFromTable() {
@@ -295,7 +290,6 @@ public class MainWindow extends JFrame {
 		tabPanel.removeAll();
 		int i = 0;
 		for (Student student : studentsOfHouseHold) {
-			// FIXME Borrado perezoso
 			if (student.isDeleted())
 				continue;
 			tabPanel.addTab(student.getName(), createExplainPanel(student));
@@ -447,7 +441,8 @@ public class MainWindow extends JFrame {
 				return columnTypes[columnIndex];
 			}
 
-			boolean[] columnEditables = new boolean[] { false, true, true, true };
+			boolean[] columnEditables = new boolean[] { false, false, false,
+					false };
 
 			public boolean isCellEditable(int row, int column) {
 				return columnEditables[column];

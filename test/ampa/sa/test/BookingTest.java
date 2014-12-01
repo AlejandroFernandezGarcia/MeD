@@ -2,6 +2,7 @@ package ampa.sa.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -399,8 +400,10 @@ public class BookingTest {
 			calendar.add(Calendar.DAY_OF_MONTH, 1);
 		}
 		student = familyService.findStudent(0);
-		String string = bookingService.isBookingAllDayOfWeekInMonth(student);
-		assertEquals("", "Comedor mensual: LMXJV", string);
+		fail();
+		// FIXME String string =
+		// bookingService.isBookingAllDayOfWeekInMonth(student);
+		// assertEquals("", "Comedor mensual: LMXJV", string);
 	}
 
 	@Test
@@ -408,8 +411,10 @@ public class BookingTest {
 			throws InstanceNotFoundException, ParseException {
 		Student student = familyService.findStudent(0);
 		student = familyService.findStudent(0);
-		String string = bookingService.isBookingAllDayOfWeekInMonth(student);
-		assertEquals("", string);
+		fail();
+		// FIXME String string =
+		// bookingService.isBookingAllDayOfWeekInMonth(student);
+		// assertEquals("", string);
 	}
 
 	@Test(expected = InstanceNotFoundException.class)

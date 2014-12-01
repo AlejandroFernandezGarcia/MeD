@@ -22,6 +22,7 @@ public class Student implements Serializable {
 	private Set<Activity> activities;
 	private Set<Booking> bookings;
 	private boolean deleted;
+	private Calendar deleteDate;
 
 	public Student(String name, String lastname, Calendar dateBorn) {
 		this.name = name;
@@ -92,7 +93,12 @@ public class Student implements Serializable {
 	}
 
 	public void setDeleted(boolean deleted) {
+		this.deleteDate = Calendar.getInstance();
 		this.deleted = deleted;
+	}
+	
+	public Calendar getDeleteDate(){
+		return deleteDate;
 	}
 
 	@Override

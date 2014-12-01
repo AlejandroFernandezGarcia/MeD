@@ -138,10 +138,11 @@ public class BillTest {
 		}
 
 		try {
+			//This +2 is because two activities need license.
 			assertEquals(familyService.findStudent(0).getActivities().size()
 					+ familyService.findStudent(0).getBookings().size()
 					+ familyService.findStudent(1).getActivities().size()
-					+ familyService.findStudent(1).getBookings().size(), count);
+					+ familyService.findStudent(1).getBookings().size()+2, count);
 		} catch (InstanceNotFoundException e) {
 			fail("Student not found");
 		}

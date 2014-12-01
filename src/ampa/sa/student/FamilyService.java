@@ -125,7 +125,6 @@ public class FamilyService implements Serializable {
 			Household h = iter.next();
 			if (h.equals(hh)) {
 				found = true;
-				h.setBanckAccount(hh.getBanckAccount());
 				h.setMentored(hh.getMentored());
 				h.setBills(hh.getBills());
 				h.setRepresentative(hh.getRepresentative());
@@ -231,7 +230,4 @@ public class FamilyService implements Serializable {
 		throw new InstanceNotFoundException(student, "Student");
 	}
 	
-	public boolean exceededCapacity(Activity activity) {
-		return (activity.getStudents().size() > activity.getPlaces());
-	}
 }

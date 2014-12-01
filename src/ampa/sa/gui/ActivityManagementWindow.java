@@ -285,7 +285,7 @@ public class ActivityManagementWindow extends JFrame implements ActionListener {
 				}
 				activityService.enrollmentStudentInActivity(student, activity);
 				
-				if (familyService.exceededCapacity(activity)) {
+				if (activityService.exceededCapacity(activity)) {
 					exceededCapacityActivities.add(activity);
 				}	
 			}

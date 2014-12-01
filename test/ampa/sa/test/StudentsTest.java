@@ -2,6 +2,7 @@ package ampa.sa.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -150,6 +151,26 @@ public class StudentsTest {
 	}
 
 	@Test
+	public void updateHousehold(){
+		Household h = familyService.getHousehold().get(0);
+		h.setRepresentative("Pablo");
+		try {
+			familyService.updateHousehold(h);
+		} catch (InstanceNotFoundException e) {
+			fail("Household to update no found");
+		}
+		
+	}
+	
+	@Test(expected = InstanceNotFoundException.class)
+	public void updateInexistentHouseholdTest() throws InstanceNotFoundException{
+		Household h = new Household("", null, null, null);
+		h.setRepresentative("Pablo");
+		familyService.updateHousehold(h);
+		
+	}
+	
+	@Test
 	public void TestFindStudents() throws InstanceNotFoundException {
 
 		List<Student> students = familyService.findStudents();
@@ -157,9 +178,19 @@ public class StudentsTest {
 
 		assertEquals(students.size(), 4);
 		assertTrue(students.contains(student));
+		assertEquals(student, familyService.findStudent(student));
 
 	}
 
+	@Test(expected = InstanceNotFoundException.class)
+	public void FindStudentTest2() throws InstanceNotFoundException{
+		List<Student> students = familyService.findStudents();
+		Student student = familyService.findStudent(0);
+		familyService.removeStudent(0);
+		
+		assertEquals(student, familyService.findStudent(student));
+	}
+	
 	@Test
 	public void TestFindHouseholds() throws InstanceNotFoundException {
 

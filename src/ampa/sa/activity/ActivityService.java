@@ -133,4 +133,8 @@ public class ActivityService implements Serializable {
 		Persistence.getInstance().save();
 	}
 
+	public boolean exceededCapacity(Activity activity) {
+		return (activity.getStudents().size() > activity.getPlaces());
+	}
+
 }

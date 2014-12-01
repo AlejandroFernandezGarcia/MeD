@@ -39,9 +39,6 @@ public class BillService implements Serializable {
 	}
 
 	public void createBill(Household household) {
-		// FIXME Compruebo si hay algún recibo más con
-		// la actividad que no sea del curso actual. Si lo hay
-		// esta pagado sino no.
 		BookingService bookingService = BookingService.getInstance();
 		Set<Student> students = household.getMentored();
 		Set<BillLine> billLines = new HashSet<BillLine>();
