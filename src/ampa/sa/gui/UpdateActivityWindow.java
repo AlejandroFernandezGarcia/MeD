@@ -43,7 +43,7 @@ public class UpdateActivityWindow extends JFrame {
 		this.activityService = ActivityService.getInstance();
 
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 453, 253);
+		setBounds(100, 100, 453, 271);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -258,7 +258,7 @@ public class UpdateActivityWindow extends JFrame {
 						|| textFieldActivityPrice.getText().isEmpty()) {
 					String message = "Existe algun campo vacío\n";
 					JOptionPane.showMessageDialog(new JFrame(), message,
-							"Dialog", JOptionPane.ERROR_MESSAGE);
+							"ERROR", JOptionPane.ERROR_MESSAGE);
 
 				} else {
 					String number = textFieldActivityPrice.getText();
@@ -268,7 +268,7 @@ public class UpdateActivityWindow extends JFrame {
 					if (numberSplitted.length > 2) {
 						String message = "El precio no está en un formato válido\n";
 						JOptionPane.showMessageDialog(new JFrame(), message,
-								"Dialog", JOptionPane.WARNING_MESSAGE);
+								"ERROR", JOptionPane.ERROR_MESSAGE);
 
 					} else {
 						Activity activity = null;
@@ -297,7 +297,7 @@ public class UpdateActivityWindow extends JFrame {
 								String message = "Actualmente la actividad posee "
 										+ studentsEnrolled + " matriculados\n";
 								JOptionPane.showMessageDialog(new JFrame(),
-										message, "Dialog",
+										message, "ERROR",
 										JOptionPane.ERROR_MESSAGE);
 							} else {
 								try {
@@ -325,7 +325,7 @@ public class UpdateActivityWindow extends JFrame {
 						} catch (NumberFormatException n) {
 							String message = "El precio no está en un formato válido\n";
 							JOptionPane.showMessageDialog(new JFrame(),
-									message, "Dialog",
+									message, "ERROR",
 									JOptionPane.ERROR_MESSAGE);
 						}
 					}

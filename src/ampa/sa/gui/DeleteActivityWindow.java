@@ -37,7 +37,7 @@ public class DeleteActivityWindow extends JFrame {
 
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 344, 92);
+		setBounds(100, 100, 344, 109);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -91,7 +91,7 @@ public class DeleteActivityWindow extends JFrame {
 								+ activity.getStudents().size()
 								+ " matriculados\n";
 						JOptionPane.showMessageDialog(new JFrame(), message,
-								"Dialog", JOptionPane.ERROR_MESSAGE);
+								"ERROR", JOptionPane.ERROR_MESSAGE);
 					}
 				} catch (InstanceNotFoundException e1) {
 					e1.printStackTrace();
