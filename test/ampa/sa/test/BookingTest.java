@@ -400,21 +400,8 @@ public class BookingTest {
 			calendar.add(Calendar.DAY_OF_MONTH, 1);
 		}
 		student = familyService.findStudent(0);
-		fail();
-		// FIXME String string =
-		// bookingService.isBookingAllDayOfWeekInMonth(student);
-		// assertEquals("", "Comedor mensual: LMXJV", string);
-	}
-
-	@Test
-	public void isBookingAllDayOfWeekInMonthTest2()
-			throws InstanceNotFoundException, ParseException {
-		Student student = familyService.findStudent(0);
-		student = familyService.findStudent(0);
-		fail();
-		// FIXME String string =
-		// bookingService.isBookingAllDayOfWeekInMonth(student);
-		// assertEquals("", string);
+		String [] result = bookingService.isBookingAllDayOfWeekInMonth(student);
+		assertTrue(("Madrugadores: LMXJV").compareTo(result[0]) == 0);
 	}
 
 	@Test(expected = InstanceNotFoundException.class)

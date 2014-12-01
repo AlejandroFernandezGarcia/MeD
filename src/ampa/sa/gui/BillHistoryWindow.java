@@ -104,7 +104,7 @@ public class BillHistoryWindow extends JFrame {
 
 		JButton btnNewButton = new JButton("Buscar");
 
-		JLabel lblNewLabel = new JLabel("Núcleo Familiar: "
+		JLabel lblNewLabel = new JLabel("NÃºcleo Familiar: "
 				+ household.getBanckAccount());
 
 		JLabel lblNewLabel_1 = new JLabel("Coste Total: ");

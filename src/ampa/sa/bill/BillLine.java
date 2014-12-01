@@ -27,24 +27,12 @@ public class BillLine implements Serializable {
 		return concept;
 	}
 
-	public void setConcept(String concept) {
-		this.concept = concept;
-	}
-
 	public BigDecimal getPrice() {
 		return price;
 	}
 
-	public void setPrice(BigDecimal price) {
-		this.price = price;
-	}
-
 	public int getUnits() {
 		return units;
-	}
-
-	public void setUnits(int units) {
-		this.units = units;
 	}
 
 	public BigDecimal getUnitPrice() {
@@ -58,10 +46,4 @@ public class BillLine implements Serializable {
 	public Student getStudent() {
 		return student;
 	}
-
-	public void setStudent(Student student) {
-		this.student = student;
-	}
-
-	
 }
