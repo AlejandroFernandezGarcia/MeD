@@ -87,24 +87,24 @@ public class BillHistoryWindow extends JFrame {
 		}
 
 		comboBox.removeAllItems();
+
 		if (bills.size() == 0) {
 			comboBox.setEnabled(false);
 		} else {
 			Iterator<Bill> iter = bills.iterator();
 			while (iter.hasNext()) {
-				Bill old = iter.next();
-				old.getDate().add(Calendar.MONTH, 1);
+				//old.getDate().add(Calendar.MONTH, 1);
 				/*Bill b = new Bill(old.getHouseHold(), old.getTotal(),
 						old.getBillLines(), old.getDate());
 				b.getDate().add(Calendar.MONTH, +1);*/
-				comboBox.addItem(old);
+				comboBox.addItem(iter.next());
 			}
 			comboBox.setSelectedIndex(0);
 		}
 
 		JButton btnNewButton = new JButton("Buscar");
 
-		JLabel lblNewLabel = new JLabel("NÃºcleo Familiar: "
+		JLabel lblNewLabel = new JLabel("Núcleo Familiar: "
 				+ household.getBanckAccount());
 
 		JLabel lblNewLabel_1 = new JLabel("Coste Total: ");

@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Set;
 
+import java.util.Date;
 import ampa.sa.student.Household;
 
 @SuppressWarnings("serial")
@@ -20,7 +21,7 @@ public class Bill implements Serializable, Comparable<Bill> {
 		super();
 		this.houseHold = houseHold;
 		this.total = total;
-		this.billLines = billLines;
+		this.billLines = billLines;	
 		this.date = date;
 	}
 
@@ -80,7 +81,10 @@ public class Bill implements Serializable, Comparable<Bill> {
 	@Override
 	public String toString(){
 		SimpleDateFormat sdf = new SimpleDateFormat("MMMM | yyyy");
-		return sdf.format(date.getTime());
+		Calendar aux = Calendar.getInstance();
+		aux.setTime(date.getTime());
+		aux.add(Calendar.MONTH, 1);
+		return sdf.format(aux.getTime());
 	}
 
 }
