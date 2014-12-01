@@ -63,17 +63,17 @@ public class ListActivitiesWindow extends JFrame {
 		activitiesTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		activitiesTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		activitiesTable.setModel(new DefaultTableModel(new Object[][] { { null,
-				null, null, null }, }, new String[] { "Actividad", "Plazas",
+				null, null, null, null }, }, new String[] { "Actividad", "Plazas",
 				"Matriculados", "Precio", "Licencia" }) {
 			Class[] columnTypes = new Class[] { String.class, Integer.class,
-					Integer.class, BigDecimal.class, Object.class };
+					Integer.class, BigDecimal.class, BigDecimal.class };
 
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
 			}
 
 			boolean[] columnEditables = new boolean[] { false, false, false,
-					false };
+					false, false };
 
 			public boolean isCellEditable(int row, int column) {
 				return columnEditables[column];
