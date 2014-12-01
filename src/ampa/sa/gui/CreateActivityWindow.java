@@ -41,7 +41,7 @@ public class CreateActivityWindow extends JFrame {
 		this.activityService = ActivityService.getInstance();
 
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 478, 219);
+		setBounds(100, 100, 481, 239);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);

@@ -251,7 +251,7 @@ public class BookingService implements Serializable {
 				}
 			}
 
-			result[index] = dh.toString();
+			result[index] = dh.toString() + ": ";
 			if (days[Calendar.MONDAY] <= 0) {
 				result[index] += "L";
 			}
@@ -267,7 +267,7 @@ public class BookingService implements Serializable {
 			if (days[Calendar.FRIDAY] <= 0) {
 				result[index] += "V";
 			}
-			if (result[index].compareTo(dh.toString()) == 0) {
+			if (result[index].compareTo(dh.toString()+": ") == 0) {
 				result[index] = "";
 			}
 			index++;

@@ -393,15 +393,6 @@ public class MainWindow extends JFrame {
 			}
 		});
 
-		JMenu mnComedor = new JMenu("Comedor");
-		menuBar.add(mnComedor);
-
-		JMenuItem mntmModificar = new JMenuItem("Modificar");
-		mnComedor.add(mntmModificar);
-
-		JMenuItem mntmAadirNuevoHorario = new JMenuItem("Añadir nuevo horario");
-		mnComedor.add(mntmAadirNuevoHorario);
-
 		JMenu mnAyuda = new JMenu("Ayuda");
 		menuBar.add(mnAyuda);
 

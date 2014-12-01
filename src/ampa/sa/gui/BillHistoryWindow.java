@@ -84,7 +84,9 @@ public class BillHistoryWindow extends JFrame {
 		} else {
 			Iterator<Bill> iter = bills.iterator();
 			while (iter.hasNext()) {
-				comboBox.addItem(iter.next());
+				Bill b = iter.next();
+				b.getDate().add(Calendar.MONTH, +1);
+				comboBox.addItem(b);
 			}
 			comboBox.setSelectedIndex(0);
 		}
@@ -93,82 +95,57 @@ public class BillHistoryWindow extends JFrame {
 
 		JPanel panel = new JPanel();
 
-		JLabel lblNewLabel = new JLabel("N\u00FAcleo Familiar: "
+		JLabel lblNewLabel = new JLabel("Núcleo Familiar: "
 				+ household.getBanckAccount());
 
 		JLabel lblNewLabel_1 = new JLabel("Coste Total: ");
+		
+				tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane.setHorizontalGroup(gl_contentPane
-				.createParallelGroup(Alignment.LEADING)
-				.addGroup(
-						gl_contentPane
-								.createSequentialGroup()
-								.addContainerGap()
-								.addComponent(comboBox,
-										GroupLayout.PREFERRED_SIZE,
-										GroupLayout.DEFAULT_SIZE,
-										GroupLayout.PREFERRED_SIZE).addGap(145)
-								.addComponent(btnNewButton)
-								.addContainerGap(186, Short.MAX_VALUE))
-				.addComponent(panel, Alignment.TRAILING,
-						GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE,
-						Short.MAX_VALUE)
-				.addGroup(
-						gl_contentPane
-								.createSequentialGroup()
-								.addContainerGap()
-								.addComponent(lblNewLabel)
-								.addPreferredGap(ComponentPlacement.RELATED,
-										118, Short.MAX_VALUE)
-								.addComponent(lblNewLabel_1).addGap(111)));
-		gl_contentPane
-				.setVerticalGroup(gl_contentPane
-						.createParallelGroup(Alignment.LEADING)
-						.addGroup(
-								gl_contentPane
-										.createSequentialGroup()
-										.addContainerGap()
-										.addGroup(
-												gl_contentPane
-														.createParallelGroup(
-																Alignment.BASELINE)
-														.addComponent(
-																comboBox,
-																GroupLayout.PREFERRED_SIZE,
-																GroupLayout.DEFAULT_SIZE,
-																GroupLayout.PREFERRED_SIZE)
-														.addComponent(
-																btnNewButton))
-										.addPreferredGap(
-												ComponentPlacement.UNRELATED)
-										.addGroup(
-												gl_contentPane
-														.createParallelGroup(
-																Alignment.BASELINE)
-														.addComponent(
-																lblNewLabel)
-														.addComponent(
-																lblNewLabel_1))
-										.addPreferredGap(
-												ComponentPlacement.RELATED, 26,
-												Short.MAX_VALUE)
-										.addComponent(panel,
-												GroupLayout.PREFERRED_SIZE,
-												177, GroupLayout.PREFERRED_SIZE)));
-
-		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		gl_contentPane.setHorizontalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGap(145)
+					.addComponent(btnNewButton)
+					.addContainerGap(183, Short.MAX_VALUE))
+				.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+					.addComponent(tabbedPane, GroupLayout.PREFERRED_SIZE, 452, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(panel, GroupLayout.DEFAULT_SIZE, 454, Short.MAX_VALUE))
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(lblNewLabel)
+					.addPreferredGap(ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
+					.addComponent(lblNewLabel_1)
+					.addGap(111))
+		);
+		gl_contentPane.setVerticalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(btnNewButton))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblNewLabel)
+						.addComponent(lblNewLabel_1))
+					.addPreferredGap(ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+						.addComponent(panel, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE)
+						.addComponent(tabbedPane, GroupLayout.PREFERRED_SIZE, 193, GroupLayout.PREFERRED_SIZE)))
+		);
 		GroupLayout gl_panel = new GroupLayout(panel);
-		gl_panel.setHorizontalGroup(gl_panel.createParallelGroup(
-				Alignment.LEADING).addComponent(tabbedPane,
-				GroupLayout.DEFAULT_SIZE, 434, Short.MAX_VALUE));
-		gl_panel.setVerticalGroup(gl_panel.createParallelGroup(
-				Alignment.LEADING).addGroup(
-				Alignment.TRAILING,
-				gl_panel.createSequentialGroup()
-						.addComponent(tabbedPane, GroupLayout.PREFERRED_SIZE,
-								176, GroupLayout.PREFERRED_SIZE)
-						.addContainerGap(GroupLayout.DEFAULT_SIZE,
-								Short.MAX_VALUE)));
+		gl_panel.setHorizontalGroup(
+			gl_panel.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 452, Short.MAX_VALUE)
+		);
+		gl_panel.setVerticalGroup(
+			gl_panel.createParallelGroup(Alignment.TRAILING)
+				.addGap(0, 205, Short.MAX_VALUE)
+		);
 
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -183,12 +160,14 @@ public class BillHistoryWindow extends JFrame {
 				List<Student> students = familyService.findStudents(household);
 				for (Student student : students) {
 					Calendar now = Calendar.getInstance();
-					if ((student.getDeleteDate().get(Calendar.MONTH) < now
-							.get(Calendar.MONTH) && (student.getDeleteDate()
-							.get(Calendar.YEAR) == now.get(Calendar.YEAR)))
-							|| (student.getDeleteDate().get(Calendar.YEAR) < now
-									.get(Calendar.YEAR))) {
-						continue;
+					if(student.getDeleteDate()!=null){
+						if ((student.getDeleteDate().get(Calendar.MONTH) < now
+								.get(Calendar.MONTH) && (student.getDeleteDate()
+								.get(Calendar.YEAR) == now.get(Calendar.YEAR)))
+								|| (student.getDeleteDate().get(Calendar.YEAR) < now
+										.get(Calendar.YEAR))) {
+							continue;
+						}
 					}
 					tabbedPane.addTab(student.getName(),
 							createPanelBills(r, student));
@@ -241,7 +220,6 @@ public class BillHistoryWindow extends JFrame {
 	}
 
 	private void fillConceptTable(Bill r, Student s, JTable table) {
-		bookingService = BookingService.getInstance();
 		DefaultTableModel dtm = (DefaultTableModel) table.getModel();
 		for (int i = 0; i < dtm.getRowCount(); i++) {
 			dtm.removeRow(i);
