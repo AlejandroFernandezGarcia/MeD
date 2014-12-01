@@ -588,6 +588,7 @@ public class BookingWindow extends JFrame {
 	}
 
 	public void createBookingsPerMonth(Integer month) {
+		boolean showHolidaysWarning = false;
 		List<Integer> days = new ArrayList<Integer>();
 		List<Booking> transaction = new ArrayList<Booking>();
 		if (chckbxLun.isSelected())
@@ -626,8 +627,11 @@ public class BookingWindow extends JFrame {
 						}
 					}
 				} catch (NotValidDateException e) {
+					if(!showHolidaysWarning){
 					JOptionPane.showMessageDialog(null,
 							"AVISO: Alguno de los días es festivo");
+					showHolidaysWarning=true;
+					}
 				}
 			}
 			cal1.add(Calendar.DATE, 1);
