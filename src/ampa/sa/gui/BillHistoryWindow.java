@@ -34,7 +34,7 @@ public class BillHistoryWindow extends JFrame {
 
 	private JPanel contentPane;
 	private JTable billTable;
-	private Household household;
+	//private Household household;
 	private BillService billService;
 	private JTable tableLinesBill;
 	private JTable table;
@@ -51,7 +51,7 @@ public class BillHistoryWindow extends JFrame {
 	public BillHistoryWindow(Household h) {
 		setResizable(false);
 		setTitle("Recibos");
-		this.household = h;
+		Household household = h;
 
 		this.familyService = FamilyService.getInstance();
 		this.billService = BillService.getInstance();
@@ -79,16 +79,25 @@ public class BillHistoryWindow extends JFrame {
 
 		JComboBox<Bill> comboBox = new JComboBox<Bill>();
 
-		Set<Bill> bills = household.getBills();
+		List<Bill> bills = null;
+		try {
+			bills = billService.findBillsByHousehold(household);
+		} catch (BillNotFoundException e1) {
+			e1.printStackTrace();
+		}
 
+		comboBox.removeAllItems();
 		if (bills.size() == 0) {
 			comboBox.setEnabled(false);
 		} else {
 			Iterator<Bill> iter = bills.iterator();
 			while (iter.hasNext()) {
-				Bill b = iter.next();
-				b.getDate().add(Calendar.MONTH, +1);
-				comboBox.addItem(b);
+				Bill old = iter.next();
+				old.getDate().add(Calendar.MONTH, 1);
+				/*Bill b = new Bill(old.getHouseHold(), old.getTotal(),
+						old.getBillLines(), old.getDate());
+				b.getDate().add(Calendar.MONTH, +1);*/
+				comboBox.addItem(old);
 			}
 			comboBox.setSelectedIndex(0);
 		}
@@ -99,55 +108,80 @@ public class BillHistoryWindow extends JFrame {
 				+ household.getBanckAccount());
 
 		JLabel lblNewLabel_1 = new JLabel("Coste Total: ");
-		
-				tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+
+		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane.setHorizontalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addGap(145)
-					.addComponent(btnNewButton)
-					.addContainerGap(190, Short.MAX_VALUE))
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addComponent(tabbedPane, GroupLayout.PREFERRED_SIZE, 440, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(18, Short.MAX_VALUE))
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(lblNewLabel)
-					.addPreferredGap(ComponentPlacement.RELATED, 142, Short.MAX_VALUE)
-					.addComponent(lblNewLabel_1)
-					.addGap(111))
-		);
-		gl_contentPane.setVerticalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(btnNewButton))
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblNewLabel)
-						.addComponent(lblNewLabel_1))
-					.addPreferredGap(ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
-					.addComponent(tabbedPane, GroupLayout.PREFERRED_SIZE, 193, GroupLayout.PREFERRED_SIZE))
-		);
-		
-				JPanel panel = new JPanel();
-				tabbedPane.addTab("New tab", null, panel, null);
+		gl_contentPane.setHorizontalGroup(gl_contentPane
+				.createParallelGroup(Alignment.LEADING)
+				.addGroup(
+						gl_contentPane
+								.createSequentialGroup()
+								.addContainerGap()
+								.addComponent(comboBox,
+										GroupLayout.PREFERRED_SIZE,
+										GroupLayout.DEFAULT_SIZE,
+										GroupLayout.PREFERRED_SIZE).addGap(145)
+								.addComponent(btnNewButton)
+								.addContainerGap(190, Short.MAX_VALUE))
+				.addGroup(
+						gl_contentPane
+								.createSequentialGroup()
+								.addComponent(tabbedPane,
+										GroupLayout.PREFERRED_SIZE, 440,
+										GroupLayout.PREFERRED_SIZE)
+								.addContainerGap(18, Short.MAX_VALUE))
+				.addGroup(
+						gl_contentPane
+								.createSequentialGroup()
+								.addContainerGap()
+								.addComponent(lblNewLabel)
+								.addPreferredGap(ComponentPlacement.RELATED,
+										142, Short.MAX_VALUE)
+								.addComponent(lblNewLabel_1).addGap(111)));
+		gl_contentPane
+				.setVerticalGroup(gl_contentPane
+						.createParallelGroup(Alignment.LEADING)
+						.addGroup(
+								gl_contentPane
+										.createSequentialGroup()
+										.addContainerGap()
+										.addGroup(
+												gl_contentPane
+														.createParallelGroup(
+																Alignment.BASELINE)
+														.addComponent(
+																comboBox,
+																GroupLayout.PREFERRED_SIZE,
+																GroupLayout.DEFAULT_SIZE,
+																GroupLayout.PREFERRED_SIZE)
+														.addComponent(
+																btnNewButton))
+										.addPreferredGap(
+												ComponentPlacement.UNRELATED)
+										.addGroup(
+												gl_contentPane
+														.createParallelGroup(
+																Alignment.BASELINE)
+														.addComponent(
+																lblNewLabel)
+														.addComponent(
+																lblNewLabel_1))
+										.addPreferredGap(
+												ComponentPlacement.RELATED, 15,
+												Short.MAX_VALUE)
+										.addComponent(tabbedPane,
+												GroupLayout.PREFERRED_SIZE,
+												193, GroupLayout.PREFERRED_SIZE)));
+
+		JPanel panel = new JPanel();
+		tabbedPane.addTab("New tab", null, panel, null);
 		GroupLayout gl_panel = new GroupLayout(panel);
-		gl_panel.setHorizontalGroup(
-			gl_panel.createParallelGroup(Alignment.LEADING)
-				.addGap(0, 452, Short.MAX_VALUE)
-		);
-		gl_panel.setVerticalGroup(
-			gl_panel.createParallelGroup(Alignment.TRAILING)
-				.addGap(0, 205, Short.MAX_VALUE)
-		);
-		
-				panel.setLayout(gl_panel);
+		gl_panel.setHorizontalGroup(gl_panel.createParallelGroup(
+				Alignment.LEADING).addGap(0, 452, Short.MAX_VALUE));
+		gl_panel.setVerticalGroup(gl_panel.createParallelGroup(
+				Alignment.TRAILING).addGap(0, 205, Short.MAX_VALUE));
+
+		panel.setLayout(gl_panel);
 
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -162,10 +196,11 @@ public class BillHistoryWindow extends JFrame {
 				List<Student> students = familyService.findStudents(household);
 				for (Student student : students) {
 					Calendar now = Calendar.getInstance();
-					if(student.getDeleteDate()!=null){
+					if (student.getDeleteDate() != null) {
 						if ((student.getDeleteDate().get(Calendar.MONTH) < now
-								.get(Calendar.MONTH) && (student.getDeleteDate()
-								.get(Calendar.YEAR) == now.get(Calendar.YEAR)))
+								.get(Calendar.MONTH) && (student
+								.getDeleteDate().get(Calendar.YEAR) == now
+								.get(Calendar.YEAR)))
 								|| (student.getDeleteDate().get(Calendar.YEAR) < now
 										.get(Calendar.YEAR))) {
 							continue;
@@ -231,6 +266,6 @@ public class BillHistoryWindow extends JFrame {
 			dtm.addRow(data);
 		}
 
-		table.updateUI();
+		//table.updateUI();
 	}
 }

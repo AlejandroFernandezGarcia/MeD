@@ -1,7 +1,6 @@
 package ampa.sa.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -21,8 +20,9 @@ import ampa.sa.booking.Booking;
 import ampa.sa.booking.BookingService;
 import ampa.sa.student.FamilyService;
 import ampa.sa.student.Household;
-import ampa.sa.util.exceptions.InstanceNotFoundException;
+import ampa.sa.student.Student;
 import ampa.sa.util.exceptions.BillNotFoundException;
+import ampa.sa.util.exceptions.InstanceNotFoundException;
 
 public class BillTest {
 
@@ -146,5 +146,47 @@ public class BillTest {
 		} catch (InstanceNotFoundException e) {
 			fail("Student not found");
 		}
+	}
+	
+	@Test
+	public void findBillByDateTest() throws InstanceNotFoundException{
+		Household hh = null;
+		try {
+			hh = familyService.findHousehold(0);
+		} catch (InstanceNotFoundException e) {
+			fail("Household not found");
+		}
+		billService.createBill(hh);
+		
+		Calendar date = Calendar.getInstance();
+		date.add(Calendar.MONTH, -1);
+		
+		billService.findBillByDate(hh,date );
+	}
+	
+	@Test
+	public void removeBillByDateTest(){
+		Household hh = null;
+		try {
+			hh = familyService.findHousehold(0);
+		} catch (InstanceNotFoundException e) {
+			fail("Household not found");
+		}
+		int billOld = hh.getBills().size();
+		billService.createBill(hh);
+		
+		Calendar date = Calendar.getInstance();
+		date.add(Calendar.MONTH, -1);
+		billService.removeBillByDate(hh.getBills(), date);
+		
+		assertTrue(billOld==hh.getBills().size());
+	}
+	
+	@Test
+	public void studentPaidLicenseTest() throws InstanceNotFoundException{
+		Student s = familyService.findStudent(0);
+		activityService.enrollmentStudentInActivity(s, activityService.find(0));
+		
+		assertFalse(billService.studentPaidLicense(activityService.find(0), s));
 	}
 }

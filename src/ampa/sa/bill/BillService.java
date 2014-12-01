@@ -14,6 +14,7 @@ import ampa.sa.activity.Activity;
 import ampa.sa.booking.Booking;
 import ampa.sa.booking.BookingService;
 import ampa.sa.diningHall.DiningHall;
+import ampa.sa.student.FamilyService;
 import ampa.sa.student.Household;
 import ampa.sa.student.Student;
 import ampa.sa.util.exceptions.BillNotFoundException;
@@ -40,6 +41,7 @@ public class BillService implements Serializable {
 
 	public void createBill(Household household) {
 		BookingService bookingService = BookingService.getInstance();
+		FamilyService familyService = FamilyService.getInstance();
 		Set<Student> students = household.getMentored();
 		Set<BillLine> billLines = new HashSet<BillLine>();
 		Calendar now = Calendar.getInstance();
@@ -89,6 +91,12 @@ public class BillService implements Serializable {
 		Set<Bill> newBills = household.getBills();
 		newBills.add(bill);
 		household.setBills(newBills);
+		try {
+			familyService.updateHousehold(household);
+		} catch (InstanceNotFoundException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	public List<Bill> findBillsByHousehold(Household household)
@@ -133,7 +141,7 @@ public class BillService implements Serializable {
 
 	}
 
-	private Set<Bill> removeBillByDate(Set<Bill> b, Calendar c) {
+	public Set<Bill> removeBillByDate(Set<Bill> b, Calendar c) {
 
 		Iterator<Bill> bIt = b.iterator();
 		Set<Bill> bills = b;
@@ -149,7 +157,7 @@ public class BillService implements Serializable {
 		return bills;
 	}
 
-	private boolean studentPaidLicense(Activity activity, Student student) {
+	public boolean studentPaidLicense(Activity activity, Student student) {
 		Calendar previousBillDate = Calendar.getInstance();
 		previousBillDate.add(Calendar.MONTH, -1);
 		Bill oldBill;
