@@ -28,7 +28,6 @@ import ampa.sa.student.FamilyService;
 import ampa.sa.student.Household;
 import ampa.sa.student.Student;
 import ampa.sa.util.exceptions.DuplicateInstanceException;
-import ampa.sa.util.exceptions.InstanceNotFoundException;
 
 import com.toedter.calendar.JDateChooser;
 
@@ -136,8 +135,8 @@ public class StudentManagementWindow extends JFrame {
 									+ txtAcc2.getText() + "-"
 									+ txtAcc3.getText() + "-"
 									+ txtAcc4.getText();
-							try {
-								familyService.findHousehold(account);
+							//try {
+								//familyService.findHousehold(account);
 								Household h1;
 								if (txtTutor2.getText().length() == 0) {
 									h1 = new Household(account,
@@ -179,11 +178,11 @@ public class StudentManagementWindow extends JFrame {
 									JOptionPane.showMessageDialog(null,
 											"ERROR: Datos duplicados en BD");
 								}
-							} catch (InstanceNotFoundException e1) {
+							/*} catch (InstanceNotFoundException e1) {
 								JOptionPane
 										.showMessageDialog(null,
 												"ERROR: La cuenta bancaria ya esta asociada a otro núcleo familiar");
-							}
+							}*/
 
 						} else {
 							JOptionPane
