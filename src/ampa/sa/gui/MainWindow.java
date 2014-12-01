@@ -311,6 +311,7 @@ public class MainWindow extends JFrame {
 					int index = sourceTabbedPane.getSelectedIndex();
 					if (index == (sourceTabbedPane.getTabCount() - 1)
 							&& (index != 0)) {
+						Student studentSelected = getStudentFromTable();
 						smw = new StudentManagementWindow(now, studentSelected
 								.getHouseHold());
 						smw.setVisible(true);

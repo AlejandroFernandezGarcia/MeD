@@ -73,26 +73,17 @@ public class MockForGUI {
 		students.add(new Student(house1, "Miguel", "Vinha",
 				Student.Category.PRIMARIA, cal1, new HashSet<Activity>(),
 				new HashSet<Booking>()));
-		Calendar cal3 = Calendar.getInstance();
-		cal3.setTime(sdf.parse("12/03/2005"));
-		students.add(new Student(house3, "Alejandro", "Fortes",
-				Student.Category.PRIMARIA, cal3, new HashSet<Activity>(),
-				new HashSet<Booking>()));
-		cal3.setTime(sdf.parse("12/03/2010"));
-		students.add(new Student(house4, "Alejandro", "Fernandez",
-				Student.Category.INFANTIL, cal3, new HashSet<Activity>(),
-				new HashSet<Booking>()));
 
 		Set<Activity> sa = new HashSet<Activity>();
 		sa.add(activities.get(0));
 		sa.add(activities.get(1));
 		students.get(0).setActivities(sa);
-		students.get(2).setActivities(sa);
+		students.get(1).setActivities(sa);
 		
 		
 		Set<Student> ss = new HashSet<Student>();
 		ss.add(students.get(0));
-		ss.add(students.get(2));
+		ss.add(students.get(1));
 		activities.get(0).setStudents(ss);
 		activities.get(1).setStudents(ss);
 
@@ -127,22 +118,22 @@ public class MockForGUI {
 		Booking b4 = new Booking(cb4, students.get(0), diningHall.get(1));
 		Calendar cb5 = Calendar.getInstance();
 		cb5.setTime(sdf.parse("31/10/2014"));
-		Booking b5 = new Booking(cb5, students.get(2), diningHall.get(0));
+		/*Booking b5 = new Booking(cb5, students.get(2), diningHall.get(0));
 		Calendar cb6 = Calendar.getInstance();
 		cb6.setTime(sdf.parse("31/10/2014"));
-		Booking b6 = new Booking(cb6, students.get(2), diningHall.get(1));
+		Booking b6 = new Booking(cb6, students.get(2), diningHall.get(1));*/
 		bookings.add(b1);
 		bookings.add(b2);
 		bookings.add(b3);
 		bookings.add(b4);
-		bookings.add(b5);
-		bookings.add(b6);
+		//bookings.add(b5);
+		//bookings.add(b6);
 		students.get(0).getBookings().add(b1);
 		students.get(0).getBookings().add(b3);
 		students.get(0).getBookings().add(b4);
 		students.get(1).getBookings().add(b2);
-		students.get(2).getBookings().add(b5);
-		students.get(2).getBookings().add(b6);
+		//students.get(2).getBookings().add(b5);
+		//students.get(2).getBookings().add(b6);
 
 		// Bills
 
