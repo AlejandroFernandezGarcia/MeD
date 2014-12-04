@@ -1,4 +1,4 @@
-<h1>AMPA.SA<h1> 
+<h1>AMPA<h1> 
 <h2>Application that manages the association of parents of a college.</h2>
 
 <h3>Features</h3>
@@ -15,4 +15,4 @@
  - JUnit
 
 
-Aplicaction developed using XP (eXtreme Progrming)
+Aplicaction developed using XP (eXtreme Programming)
